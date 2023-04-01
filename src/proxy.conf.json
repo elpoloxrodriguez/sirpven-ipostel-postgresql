@@ -5,7 +5,7 @@
         "logLevel": "debug"
     },
     "/devel/api/*": {
-        "target": "https://localhost",
+        "target": "https://localhost:2004",
         "secure": false,
         "logLevel": "debug"
     }

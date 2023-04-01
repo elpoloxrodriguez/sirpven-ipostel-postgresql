@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 export interface IPOSTEL_C_OPP {
 	nombre_empresa: string
 	rif: string
+	role ?: number
 	password: string
 	status: number
 	tipo_registro: number

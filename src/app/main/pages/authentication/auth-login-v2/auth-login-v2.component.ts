@@ -11,7 +11,7 @@ import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { CoreMenuService } from '@core/components/core-menu/core-menu.service';
 import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
-
+import { VERSION } from '@angular/core';
 
 @Component({
   selector: 'app-auth-login-v2',
@@ -133,6 +133,8 @@ export class AuthLoginV2Component implements OnInit {
    * On init
    */
   async ngOnInit() {
+    console.log(VERSION.full);
+    
     await this.BloqueoSystem()
     let urlQR = this._router.url
     if (urlQR  == undefined) {

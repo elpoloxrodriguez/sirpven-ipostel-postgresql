@@ -24,6 +24,7 @@ import { BlockUIModule } from 'ng-block-ui';
 import { FooterComponent } from './footer/footer.component';
 import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
 import { AsistenteVirtualComponent } from 'app/main/asistente-virtual/asistente-virtual.component';
+import { RegisterOppComponent } from './register-opp/register-opp.component';
 
 
 
@@ -47,7 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'register-private-post-offices',
-    component: AuthRegisterOppComponent,
+    component: RegisterOppComponent,
     data: { animation: 'misc' }
   },
   {
@@ -76,7 +77,8 @@ const routes: Routes = [
     AuthRegisterSubcontratorComponent,
     FooterComponent,
     AsistenteVirtualComponent,
-    AuthAdminComponent
+    AuthAdminComponent,
+    RegisterOppComponent
   ],
   imports: [CommonModule, RouterModule.forChild(routes), NgbModule, NgSelectModule,
     FormsModule, ReactiveFormsModule, CoreCommonModule, ContentHeaderModule,

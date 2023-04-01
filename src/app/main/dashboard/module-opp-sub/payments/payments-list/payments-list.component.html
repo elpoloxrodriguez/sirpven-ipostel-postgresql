@@ -206,7 +206,7 @@
 
                 <ngx-datatable-column name="STATUS" prop="status_pc" [width]="5">
                   <ng-template let-status_pc="value" ngx-datatable-cell-template>
-                    <div *ngIf="status_pc == 2" class="badge badge-pill" ngClass="badge-light-success">
+                    <div *ngIf="status_pc === 2" class="badge badge-pill" ngClass="badge-light-success">
                       Pago Aprobado
                     </div>
                   </ng-template>
@@ -302,7 +302,7 @@
 
                 <ngx-datatable-column name="STATUS" prop="status_pc" [width]="5">
                   <ng-template let-status_pc="value" ngx-datatable-cell-template>
-                    <div *ngIf="status_pc == 3" class="badge badge-pill" ngClass="badge-light-danger">
+                    <div *ngIf="status_pc === 3" class="badge badge-pill" ngClass="badge-light-danger">
                       Pago Rechazado
                     </div>
                   </ng-template>
@@ -401,7 +401,7 @@
 
                 <ngx-datatable-column name="STATUS" prop="status_pc" [width]="5">
                   <ng-template let-status_pc="value" ngx-datatable-cell-template>
-                    <div *ngIf="status_pc == 1" class="badge badge-pill" ngClass="badge-light-danger">
+                    <div *ngIf="status_pc === 1" class="badge badge-pill" ngClass="badge-light-danger">
                       Pago No Liquidado
                     </div>
                   </ng-template>
@@ -506,9 +506,9 @@
         <div class="col-md-12 col-12">
         <div class="form-group">
           <label for="basicInputFile">Ingrese Comprobante de Pago del Banco Emisor<strong><font color="red">(Solo formato PDF)</font></strong></label>
-          <div class="custom-file">
-            <input (change)="fileSelected($event)" class="custom-file-input" name="archivos" type="file" accept=".pdf">
-            <label class="custom-file-label" for="customFile">Seleccione Documento</label>
+          <div class="">
+            <input (change)="fileSelected($event)" class="form-control"name="archivos" type="file" accept=".pdf">
+            <!-- <label class="custom-file-label" for="customFile">Seleccione Documento</label> -->
           </div>
         </div>
         </div>

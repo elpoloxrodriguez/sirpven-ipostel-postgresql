@@ -23,7 +23,7 @@
                       </div>
                       <div class="col-md-3 col-12">
                         <div class="d-flex justify-content-between align-items-center m-1">
-                          <button type="button" class="btn btn-danger"  rippleEffect>
+                          <button type="button" class="btn btn-primary"  rippleEffect>
                             Monto por Liquidar <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                         </div>
                       </div>
@@ -97,8 +97,8 @@
                               <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                             </button>
                             <div ngbDropdownMenu>
-                                  <a [href]="dwUrl(row.rif,row.archivo_adjunto)" ngbDropdownItem><span [size]="16"
-                                    [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Recibo</a>
+                              <a [href]="dwUrl(row.rif,row.archivo_adjunto)" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Bauche</a>
                                     <a (click)="ConciliarPago(ModalConciliarPago,row)" ngbDropdownItem><span [size]="16"
                                       [data-feather]="'edit'" [class]="'mr-50'"></span> Conciliar Pago</a>
                             </div>
@@ -134,7 +134,7 @@
                       </div>
                       <div class="col-md-3 col-12">
                         <div class="d-flex justify-content-between align-items-center m-1">
-                          <button type="button" class="btn btn-danger"  rippleEffect>
+                          <button type="button" class="btn btn-warning"  rippleEffect>
                             Monto No Liquidados <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                         </div>
                       </div>
@@ -303,8 +303,8 @@
                               <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                             </button>
                             <div ngbDropdownMenu>
-                              <a (click)="ConciliarPago(ModalConciliarPago,row)" ngbDropdownItem><span [size]="16"
-                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Recibo</a>
+                              <a [href]="dwUrl(row.rif,row.archivo_adjunto)" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Bauche</a>
                                 <a (click)="ConciliarPago(ModalConciliarPago,row)" ngbDropdownItem><span [size]="16"
                                   [data-feather]="'edit'" [class]="'mr-50'"></span> Conciliar Pago</a>
                             </div>
@@ -340,7 +340,7 @@
                       </div>
                       <div class="col-md-3 col-12">
                         <div class="d-flex justify-content-between align-items-center m-1">
-                          <button type="button" class="btn btn-danger"  rippleEffect>
+                          <button type="button" class="btn btn-success" rippleEffect>
                             Monto Aprobado <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                         </div>
                       </div>
@@ -406,6 +406,8 @@
                               <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                             </button>
                             <div ngbDropdownMenu>
+                              <a [href]="dwUrl(row.rif,row.archivo_adjunto)" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Bauche</a>
                               <a (click)="DescargarFactura(row)" ngbDropdownItem><span [size]="16"
                                 [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Factura</a>
                             </div>
@@ -465,12 +467,12 @@
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label for=" itempmvp">Banco Emisor</label>
-            <!-- <ng-select [items]="SelectBancos" [(ngModel)]="ActualizarPago.id_banco_pc"
+            <ng-select [items]="SelectBancos" [(ngModel)]="ActualizarPago.id_banco_pc"
                     [ngModelOptions]="{standalone: true}"
-                    bindLabel="nombre" bindValue="id_banco"  placeholder="Seleccione Entidad Banco Emisora" required autocomplete="off">
-                  </ng-select> -->
-                  <input type="text" class="form-control"  autocomplete="off" [(ngModel)]="NombreBancoEmisor"
-              [ngModelOptions]="{standalone: true}" readonly  placeholder="Banco Emisor" />
+                    bindLabel="nombre" disabled bindValue="id_banco"  placeholder="Seleccione Entidad Banco Emisora" required autocomplete="off">
+                  </ng-select>
+                  <!-- <input type="text" class="form-control"  autocomplete="off" [(ngModel)]="NombreBancoEmisor"
+              [ngModelOptions]="{standalone: true}" readonly  placeholder="Banco Emisor" /> -->
           </div>
         </div>
 

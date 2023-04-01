@@ -50,9 +50,10 @@ export class NavbarNotificationComponent implements OnInit {
    * On init
    */
   async ngOnInit() {
+    // await this.NotificacionesTotal()
     if (sessionStorage.getItem('token') != null) {
       this.token =  jwt_decode(sessionStorage.getItem('token'));
-      if (this.token.Usuario[0].role == '3' || this.token.Usuario[0].role == '4') {
+      if (this.token.Usuario[0].role === 3 || this.token.Usuario[0].role === 4  || this.token.Usuario[0].role === 6) {
         this.StatusRole = 1
         await this.NotificacionesTotal()
         this._notificationsService.onApiDataChange.subscribe(res => {
@@ -67,7 +68,7 @@ export class NavbarNotificationComponent implements OnInit {
 
   async NotificacionesTotal(){
     this.xAPI.funcion = "IPOSTEL_R_PagoConciliacion_Notificaciones";
-    this.xAPI.parametros = '0'
+    this.xAPI.parametros = `${'0'}`
      await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
          data.Cuerpo.map(e => {

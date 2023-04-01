@@ -24,7 +24,7 @@
             <div class="col-md-6 col-xl-4" [id]="i" [ngbTooltip]="dat.key"  *ngFor="let dat of data  | filter: searchText:'name'; let i = index">
               <div *ngIf="dat.btn === true">
                 <a  [routerLink]="['/postage/movement-of-parts/',dat.mes]">
-                  <div class="card shadow-none bg-transparent border-warning" (click)="SeleccionarMes(dat)">
+                  <div class="card shadow-none bg-transparent border-warning">
                   <div class="card-body">
                     <h4 class="card-title">{{ dat.name }} - {{ dat.fecha }} 
                       <!-- <small *ngIf="dat.btn === false"><font color="red"><strong>Ya Declarado</strong></font></small> -->

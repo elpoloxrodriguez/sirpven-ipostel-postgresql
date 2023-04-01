@@ -75,7 +75,7 @@ export class ReportsAdminComponent implements OnInit {
     switch (this.itemReports) {
       case 1:
         this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
-        this.statusEmpresa = '1'
+        this.statusEmpresa = `${'1'}`
         this.xAPI.funcion = "IPOSTEL_R_OPP_Report";
         this.xAPI.parametros = this.statusEmpresa
         this.xAPI.valores = ''

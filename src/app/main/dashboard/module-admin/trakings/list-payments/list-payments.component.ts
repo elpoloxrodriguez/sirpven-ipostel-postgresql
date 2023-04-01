@@ -67,7 +67,7 @@ public idOPP
   public title_modal
   public Mpagar
   public Mpc
-  public NombreBancoEmisor
+  public NombreBancoEmisor = ''
  public FechaPago
 
  public MantenimientoYSeguridad
@@ -223,12 +223,13 @@ public idOPP
   ConciliarPago(modal, data){
     // console.log(data)
     this.title_modal = data.nombre_empresa
-    this.NombreBancoEmisor = '('+ data.bzCodigo +') '+data.bzNombre
+    var banco =  '('+ data.bzCodigo +') '+data.bzNombre
+    this.NombreBancoEmisor = banco ? banco : 'Reporto en Cero (0.00)'
     this.FechaPago = this.utilService.FechaMomentLL(data.fecha_pc)
-    this.ActualizarPago.status_pc = data.status_pc
+    this.ActualizarPago.status_pc = data.status_pc.toString()
     this.ActualizarPago.fecha_pc = data.fecha_pc
-    this.ActualizarPago.id_banco_pc = data.id_banco_pc
-    this.ActualizarPago.referencia_bancaria = data.referencia_bancaria
+    this.ActualizarPago.id_banco_pc = data.id_banco_pc 
+    this.ActualizarPago.referencia_bancaria = data.referencia_bancaria ? data.referencia_bancaria :  'Reporto en Cero (0.00)'
     this.ActualizarPago.monto_pc = data.MontoPC
     this.ActualizarPago.monto_pagar = data.MontoPAGAR
     this.ActualizarPago.dolar_dia = data.dolar_dia

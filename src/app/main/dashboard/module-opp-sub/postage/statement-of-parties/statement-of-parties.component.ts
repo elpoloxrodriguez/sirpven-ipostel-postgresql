@@ -274,6 +274,7 @@ public idFactura
     this.xAPI.parametros = ''
     await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (data) => {
+        // console.log(data)
         data.Cuerpo.map(e => {
           if (this.dia <= e.declaration_button_by_date) {
             this.btnShowDatePayment = true

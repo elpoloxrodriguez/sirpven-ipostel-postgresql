@@ -823,10 +823,10 @@ export class OppComponent implements OnInit {
   }
 
 
-  async DocumentosAdjuntosOPPSUB() {
+   DocumentosAdjuntosOPPSUB() {
     this.xAPI.funcion = "IPOSTEL_R_ArchivoDigital";
     this.xAPI.parametros = `${this.IdOPP}`
-    await this.apiService.Ejecutar(this.xAPI).subscribe(
+     this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           e.vencimiento = this.utilService.FechaMomentLL(e.vencimiento);

@@ -35,6 +35,7 @@ export class AuthRegisterOppComponent implements OnInit {
   public IFormOPP: IPOSTEL_C_OPP = {
     nombre_empresa: '',
     rif: '',
+    role: 0,
     direccion_empresa: '',
     correo_electronico: '',
     empresa_facebook: '',
@@ -255,6 +256,7 @@ export class AuthRegisterOppComponent implements OnInit {
 
   async RegisterPrivatePostOffices() {
     this.IFormOPP.tipo_registro = 1
+    this.IFormOPP.role = 1
     this.IFormOPP.password = this.utilService.md5(this.IFormOPP.password)
     this.IFormOPP.estado_empresa = this.IFormOPP.estado_empresa['estado']
     this.IFormOPP.ciudad_empresa = this.IFormOPP.ciudad_empresa['ciudad']
@@ -267,6 +269,7 @@ export class AuthRegisterOppComponent implements OnInit {
     this.xAPI.valores = JSON.stringify(this.IFormOPP)
     await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (opp) => {
+        console.log(opp)
         this.ErrorRegistro = opp.msj
         if (opp.tipo === 1) {
           this.sectionBlockUI.start('Guardo Registro, Porfavor Espere!!!');
@@ -485,6 +488,7 @@ export class AuthRegisterOppComponent implements OnInit {
   }
 
   async CantidadFlota(event: any) {
+    // console.log(event)
     event.forEach(e => {
       switch (e.id_flota_utilizada) {
         case 0:
@@ -504,49 +508,49 @@ export class AuthRegisterOppComponent implements OnInit {
           this.bicicletas = false
           this.autobuses = false
           break;
-        case '1':
+        case 1:
           this.vehiculo_liviano = true
           break;
-        case '2':
+        case 2:
           this.camionetas = true
           break;
-        case '3':
+        case 3:
           this.camion_350 = true
           break;
-        case '4':
+        case 4:
           this.camion_750 = true
           break;
-        case '5':
+        case 4:
           this.camion_3_ejes = true
           break;
-        case '6':
+        case 6:
           this.camion_4_ejes = true
           break;
-        case '7':
+        case 7:
           this.camion_5_ejes = true
           break;
-        case '8':
+        case 8:
           this.camion_6_ejes = true
           break;
-        case '9':
+        case 9:
           this.buques = true
           break;
-        case '10':
+        case 10:
           this.aviones = true
           break;
-        case '11':
+        case 11:
           this.avionetas = true
           break;
-        case '12':
+        case 12:
           this.containers = true
           break;
-        case '13':
+        case 13:
           this.motos = true
           break;
-        case '14':
+        case 14:
           this.bicicletas = true
           break;
-          case '15':
+          case 15:
             this.autobuses = true
             break;
 

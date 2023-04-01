@@ -1,7 +1,7 @@
 {
-  "name": "@ipostel",
-  "version": "1.0.0",
-  "description": "Sistema de Operadores Postales Privados (IPOSTEL",
+  "name": "sirpven-ipostel",
+  "version": "2.0.0",
+  "description": "Sistema Integrado de Regulación Postal Venezolano (IPOSTEL)",
   "author": {
     "name": "Ing. Andrés Ricardo Rodríguez Durán",
     "url": "https://github.com/elpoloxrodriguez",
@@ -53,6 +53,7 @@
     "@angular/platform-browser": "^14.0.2",
     "@angular/platform-browser-dynamic": "^14.0.2",
     "@angular/router": "^14.0.2",
+    "@angular/service-worker": "^14.3.0",
     "@capacitor/android": "^4.1.0",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/core": "latest",
@@ -78,9 +79,11 @@
     "angular-shepherd": "11.0.0",
     "animate.css": "4.1.1",
     "apexcharts": "^3.35.3",
+    "autoprefixer": "10.4.5",
     "axios": "^0.27.2",
     "bootstrap": "^4.6.1",
     "bs-stepper": "1.7.0",
+    "canvg": "^4.0.1",
     "chart.js": "2.9.4",
     "core-js": "^3.23.1",
     "exceljs": "^4.3.0",
@@ -106,12 +109,13 @@
     "ngx-mask": "12.0.0",
     "ngx-perfect-scrollbar": "10.1.1",
     "ngx-plyr": "4.0.0",
-    "ngx-quill": "14.0.0",
+    "ngx-quill": "^14.0.0",
     "ngx-swiper-wrapper": "10.0.0",
     "ngx-toastr": "^14.3.0",
     "node-waves": "0.7.6",
     "nouislider": "^15.6.0",
     "plyr": "^3.7.2",
+    "postcss-loader": "^7.1.0",
     "puppeteer": "^19.4.1",
     "quill": "1.3.7",
     "rxjs": "^6.6.0",
@@ -123,7 +127,7 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.0.2",
+    "@angular-devkit/build-angular": "^14.2.11",
     "@angular/cli": "^14.0.2",
     "@angular/compiler-cli": "^14.0.2",
     "@angular/language-service": "^14.0.2",
@@ -132,7 +136,7 @@
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "^4.0.3",
     "@types/node": "^18.0.0",
-    "codelyzer": "^6.0.2",
+    "codelyzer": "^0.0.28",
     "jasmine-core": "^4.2.0",
     "karma": "^6.4.0",
     "karma-chrome-launcher": "^3.1.1",
@@ -141,5 +145,8 @@
     "karma-jasmine-html-reporter": "^2.0.0",
     "typescript": "^4.7.4",
     "webpack-bundle-analyzer": "^4.5.0"
+  },
+  "overrides": {
+    "autoprefixer": "10.4.5"
   }
 }

@@ -1029,7 +1029,8 @@
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
-      <form method="post" enctype="multipart/form-data"  (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" id="forma" name="forma">
+      <form method="post" enctype="multipart/form-data"  id="forma" name="forma">
+        <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
       <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
       <div class="row d-flex align-items-end">
         <table class="table table-striped">
@@ -1079,10 +1080,10 @@
         <div class="col-md-12 col-12">
         <div class="form-group">
           <label for="basicInputFile">Ingrese Comprobante de Declaración en Cero (VEF 0,00) de SENIAT <strong><font color="red">(Solo formato PDF)</font></strong></label>
-          <div class="custom-file">
-            <input (change)="fileSelected($event)" class="custom-file-input" name="archivos" type="file"
+          <div >
+            <input (change)="fileSelected($event)" class="form-control" name="archivos" type="file"
               accept=".pdf">
-            <label class="custom-file-label" for="customFile">Solo formato PDF</label>
+            <!-- <label class="custom-file-label" for="customFile">Solo formato PDF</label> -->
           </div>
         </div>
         </div>

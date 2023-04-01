@@ -11,6 +11,7 @@ import { CoreCommonModule } from '@core/common.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { RegisterOppComponent } from './authentication/register-opp/register-opp.component';
 
 
 @NgModule({

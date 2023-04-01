@@ -78,6 +78,8 @@ export class DashboardComponent implements OnInit {
   public dolarx
   public petrox
 
+  public DatosSub_OPP = []
+
 
   constructor(
     private modalService: NgbModal,
@@ -94,10 +96,11 @@ export class DashboardComponent implements OnInit {
    * On init
    */
   async ngOnInit() {
+    this.token = jwt_decode(sessionStorage.getItem('token'));
+    this.EmpresaOppSub(this.token.Usuario[0].id_opp)
     await this.Precio_Dolar_Petro()
     await this.Meses()
     this.fecha_Actual_convert = this.utilService.FechaMomentActual()
-    this.token = jwt_decode(sessionStorage.getItem('token'));
     this.role = this.token.Usuario[0].role
     this.EmpresaRIF(this.token.Usuario[0].id_opp)
     switch (this.token.Usuario[0].tipo_registro) {
@@ -188,6 +191,27 @@ export class DashboardComponent implements OnInit {
       keyboard: false,
       windowClass: 'fondo-modal',
     });
+  }
+
+  EmpresaOppSub(id: any){
+    this.xAPI.funcion = "IPOSTEL_R_EmpresaOppSub";
+    this.xAPI.parametros = `${id}`
+    this.xAPI.valores = ''
+     this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+       if (data.length >= 0) {
+        this.DatosSub_OPP = data.Cuerpo.map(e => {
+          this.DatosSub_OPP.push(e)
+        });
+       } else {
+        this.DatosSub_OPP = []
+       }
+        // console.log(this.DatosSub_OPP)
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
   }
 
   GenerarReporteLiquidacionFPO() {
@@ -335,7 +359,7 @@ export class DashboardComponent implements OnInit {
               // INSERT API
               this.apiService.LoadQR(id).subscribe(
                 (xdata) => {
-                  var sdata = this.DataEmpresa[0]
+                  var sdata = this.DatosSub_OPP
                   this.pdf.AutorizacionInscripcion(sdata[0], xdata.contenido, this.CrearCert.token, this.n_curp)
                   this.sectionBlockUI.stop()
                   this.utilService.alertConfirmMini('success', 'Autorización Descagada Exitosamente')
