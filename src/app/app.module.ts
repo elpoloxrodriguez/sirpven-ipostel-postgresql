@@ -45,7 +45,6 @@ import { ReportsRankingComponent } from './main/dashboard/module-opp-sub/opp-rep
 import { DigitalFileOppModule } from './main/dashboard/module-admin/digital-file-opp/digital-file-opp.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { AsistenteVirtualComponent } from './main/asistente-virtual/asistente-virtual.component';
 //  subir Archivos
 
 

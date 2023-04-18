@@ -180,7 +180,7 @@ export const menu: CoreMenu[] = [
     type: 'collapsible',
     icono: 'tool',
     // hidden: true,
-    role: [3],
+    role: [3,4],
     children: [
       {
         id: 'systemHors',
@@ -210,68 +210,23 @@ export const menu: CoreMenu[] = [
       //   icono: 'circle',
       //   url: 'support/change-password'
       // },
-      // {
-      //   id: 'users-system',
-      //   nombre: 'Usuarios',
-      //   type: 'item',
-      //   icono: 'circle',
-      //   url: 'support/users'
-      // },
-    ]
-  },
-
-  // Soporte
-  {
-    id: 'soporte',
-    nombre: 'Soporte',
-    title: 'Soporte',
-    type: 'collapsible',
-    icono: 'tool',
-    // hidden: true,
-    role: [4],
-    children: [
-      // {
-      //   id: 'modulosmenus',
-      //   nombre: 'Modulos Menus',
-      //   type: 'item',
-      //   icono: 'circle',
-      //   url: 'support/menu-module',
-      // },
-      {
-        id: 'rolesusuarios',
-        nombre: 'Roles de Usuarios',
-        type: 'item',
-        icono: 'circle',
-        url: 'support/role-user'
-      },
-      {
-        id: 'permisosusuarios',
-        nombre: 'Permisos de Usuarios',
-        type: 'item',
-        icono: 'circle',
-        url: 'support/permissions-user'
-      },
-      {
-        id: 'gestiontablas',
-        nombre: 'Gestion Tablas',
-        type: 'item',
-        icono: 'circle',
-        url: 'support/table-management'
-      },
-      {
-        id: 'cambiarcontraseña',
-        nombre: 'Cambiar Contraseña',
-        type: 'item',
-        icono: 'circle',
-        url: 'support/change-password'
-      },
       {
         id: 'users-system',
         nombre: 'Usuarios',
         type: 'item',
         icono: 'circle',
-        url: 'support/users'
+        url: 'settings/system-users'
       },
     ]
+  },
+
+   // Asistente Virtual
+   {
+    id: 'asistente-virtual',
+    nombre: 'Asistente Virtual',
+    role: [3,4], 
+    icono: 'cpu',
+    type: 'item',
+    url: 'virtual-assistant',
   },
 ];

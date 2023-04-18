@@ -12,6 +12,8 @@ import { CoreMenuService } from '@core/components/core-menu/core-menu.service';
 import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
 import { VERSION } from '@angular/core';
+import {Md5} from 'ts-md5/dist/md5';
+
 
 @Component({
   selector: 'app-auth-login-v2',
@@ -173,9 +175,11 @@ export class AuthLoginV2Component implements OnInit {
    login() {
     this.submitted = true;
     this.loading = true;
+    const md5 = new Md5();
+    const password =  md5.appendStr(this.clave).end()
     var Xapi = {
       "funcion": 'IPOSTEL_R_Login',
-      "parametros": this.usuario + ',' + this.clave
+      "parametros": this.usuario + ',' + password
     }
      this.loginService.getLoginExternas(Xapi).subscribe(
       (data) => {

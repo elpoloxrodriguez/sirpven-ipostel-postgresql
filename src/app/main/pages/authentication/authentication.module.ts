@@ -23,7 +23,7 @@ import { AuthRegisterSubcontratorComponent } from './auth-register-subcontrator/
 import { BlockUIModule } from 'ng-block-ui';
 import { FooterComponent } from './footer/footer.component';
 import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
-import { AsistenteVirtualComponent } from 'app/main/asistente-virtual/asistente-virtual.component';
+import { AsistenteVirtualComponent } from 'app/main/asistente-virtual/asistente-virtual/asistente-virtual.component';
 import { RegisterOppComponent } from './register-opp/register-opp.component';
 
 

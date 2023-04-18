@@ -10,13 +10,20 @@ import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
 import { AuthGuard } from 'app/auth/helpers';
 import { Role } from 'app/auth/models';
 import { ConnectionSettingsComponent } from './connection-settings/connection-settings.component'
+import { SystemUsersComponent } from './system-users/system-users.component'
 
 const routes: Routes = [
   {
     path: 'settings/connection-settings',
     component: ConnectionSettingsComponent,
     canActivate: [AuthGuard,AuthGuardGuard],
-    data: { roles: [3] },
+    data: { roles: [3,4] },
+  },
+  {
+    path: 'settings/system-users',
+    component: SystemUsersComponent,
+    canActivate: [AuthGuard,AuthGuardGuard],
+    data: { roles: [3,4] },
   },
 ];
 

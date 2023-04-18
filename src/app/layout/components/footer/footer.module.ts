@@ -5,7 +5,7 @@ import { CoreCommonModule } from '@core/common.module';
 
 import { FooterComponent } from 'app/layout/components/footer/footer.component';
 import { ScrollTopComponent } from 'app/layout/components/footer/scroll-to-top/scroll-top.component';
-import { AsistenteVirtualComponent } from 'app/main/asistente-virtual/asistente-virtual.component';
+import { AsistenteVirtualComponent } from 'app/main/asistente-virtual/asistente-virtual/asistente-virtual.component';
 
 @NgModule({
   declarations: [FooterComponent,ScrollTopComponent],

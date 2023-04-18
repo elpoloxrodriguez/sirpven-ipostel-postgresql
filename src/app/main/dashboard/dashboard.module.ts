@@ -46,6 +46,8 @@ import { FinesPenaltiesComponent } from './module-admin/fines-and-penalties/fine
 import { FinesAndPenaltiesModule } from './module-admin/fines-and-penalties/fines-and-penalties.module';
 import { PostalSolvencyOppComponent } from './module-opp-sub/postal-solvency-opp/postal-solvency-opp/postal-solvency-opp.component';
 import { PostalSolvencyOppModule } from './module-opp-sub/postal-solvency-opp/postal-solvency-opp.module';
+import { PanelAsistenteVirtualComponent } from '../asistente-virtual/panel-asistente-virtual/panel-asistente-virtual.component';
+import { SystemUsersComponent } from './module-admin/settings/system-users/system-users.component';
 
 
 
@@ -65,6 +67,8 @@ import { PostalSolvencyOppModule } from './module-opp-sub/postal-solvency-opp/po
       PostalSolvencyComponent,
       FinesPenaltiesComponent,
       PostalSolvencyOppComponent,
+      PanelAsistenteVirtualComponent,
+      SystemUsersComponent
     ],
   imports: [
     CommonModule,
@@ -93,7 +97,7 @@ import { PostalSolvencyOppModule } from './module-opp-sub/postal-solvency-opp/po
     SettingsModule,
     PostalSolvencyModule,
     FinesAndPenaltiesModule,
-    PostalSolvencyOppModule
+    PostalSolvencyOppModule,
   ],
   exports: [],
   providers: [DatePipe]

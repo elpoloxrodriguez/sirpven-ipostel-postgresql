@@ -11,6 +11,7 @@ import { AuthGuard } from 'app/auth/helpers';
 import { Role } from 'app/auth/models';
 
 import { DashboardComponent } from './principal/dashboard.component'
+import { PanelAsistenteVirtualComponent } from '../asistente-virtual/panel-asistente-virtual/panel-asistente-virtual.component'
 
 
 const routes: Routes = [
@@ -21,6 +22,12 @@ const routes: Routes = [
     canActivate: [AuthGuard,AuthGuardGuard],
     // data: { roles: ['0','1','2','3','4','5','6','7','8','9'] },
   },
+  {
+    path: 'virtual-assistant',
+    component: PanelAsistenteVirtualComponent,
+    canActivate: [AuthGuard,AuthGuardGuard],
+    data: { roles: [3,4] },
+  }
 ]
 
 @NgModule({

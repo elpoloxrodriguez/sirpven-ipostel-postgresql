@@ -398,6 +398,51 @@ export interface IPOSTEL_U_PRECIO_PETRO_DOLAR { // Actualizar montos de petro do
 	id_pd	 :	number
 }
 
+// Registrar Enseñar al CHATBOOT
+export interface CHATBOOT_C_AsistenteVirtual {
+	id: number
+	idio:	string
+	tipo:	string
+	clas:	string
+	preg:	string
+	resp:	string
+	obse:	string
+}
+export interface CHATBOOT_U_AsistenteVirtual {
+	idio	 :	string
+	tipo	 :	string
+	clas	 :	string
+	preg	 :	string
+	resp	 :	string
+	obse	 :	string
+	id	 :	number
+}
+
+export interface IPOSTEL_C_UsuarioAdmin {
+	email	 :	string
+	role	 :	number
+	id_user	 :	number
+	status	 :	number
+	password	 :	string
+	nombres_user	 :	string
+	apellidos_user	 :	string
+	cedula_user	 :	string
+	created_user	 :	number
+	created_date	 :	string
+}
+
+export interface IPOSTEL_U_UsuarioAdmim {
+	email	 :	string
+	role	 :	number
+	status	 :	number
+	nombres_user	 :	string
+	apellidos_user	 :	string
+	cedula_user	 :	string
+	updated_user	 :	number
+	updated_date	 :	string
+	id_user	 :	number
+}
+
 
 @Injectable({
 	providedIn: 'root'
