@@ -45,6 +45,8 @@ export class AuthLoginV2Component implements OnInit {
 
   public sessionTOKEN
 
+  public foto = 'assets/images/background/background.jpeg'
+
   public Nsession : string = '0';
 
   //  QR certifucado
@@ -133,7 +135,7 @@ export class AuthLoginV2Component implements OnInit {
    * On init
    */
   async ngOnInit() {
-    console.log(VERSION.full);
+    // console.log(VERSION.full);
     
     await this.BloqueoSystem()
     let urlQR = this._router.url
