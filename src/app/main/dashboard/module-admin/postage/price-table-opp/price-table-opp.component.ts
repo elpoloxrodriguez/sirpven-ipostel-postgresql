@@ -325,7 +325,7 @@ public SelectidOPP
     }).then((result) => {
       if (result.isConfirmed) {
         this.xAPI.funcion = "IPOSTEL_D_TarifasFranqueo";
-        this.xAPI.parametros = data.id_pef
+        this.xAPI.parametros = `${data.id_pef}`
         this.xAPI.valores = ''
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {

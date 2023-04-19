@@ -237,6 +237,7 @@ export class PaymentsListComponent implements OnInit {
           e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
           e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
           this.List_Pagos_Recaudacion.push(e)  
+          // console.log(e)
           // console.log(this.List_Pagos_Recaudacion)
         });
         let MontoTotalA =  this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
@@ -405,8 +406,9 @@ export class PaymentsListComponent implements OnInit {
   }
 
   async ListaMantenimientoSeguidad() {
+    let n = '1'
     this.xAPI.funcion = "IPOSTEL_R_MantenimientoSeguridad"
-    this.xAPI.parametros = '1'
+    this.xAPI.parametros = `${n}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
@@ -424,19 +426,21 @@ export class PaymentsListComponent implements OnInit {
     // console.log(data)
     this.sectionBlockUI.start('Generando Factura, Porfavor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion"
-    this.xAPI.parametros = data.id_opp+','+data.id_pc
+    this.xAPI.parametros = `${data.id_opp}`+','+`${data.id_pc}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         let datos = data.Cuerpo.map(e => {
+          // console.log(e)
           e.ListaFranqueo = JSON.parse(e.listafranqueo)
           e.ListaFacturas = JSON.parse(e.listafacturas)
-          this.MantenimientoYSeguridad = JSON.parse(e.ListaFacturas[0].mantenimiento)
+          e.MantenimientoSIRPVEN =  JSON.parse(e.ListaFacturas[0].mantenimiento)
+          this.MantenimientoYSeguridad = e.MantenimientoSIRPVEN
           this.sectionBlockUI.stop()
           this.utilService.alertConfirmMini('success', 'Factura Generada Exitosamente!')
           return e
         });
-        // console.log(this.MantenimientoYSeguridad)
+        // console.log(datos)
         this.pdf.GenerarFactura(datos, this.MantenimientoYSeguridad)
       },
       (error) => {

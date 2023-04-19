@@ -297,7 +297,7 @@ public idFactura
       this.InsertarMovilizacionPiezas.id_servicio_franqueo = element.id_servicio_franqueo
       this.InsertarMovilizacionPiezas.id_peso_envio = element.id_peso_envio
       this.InsertarMovilizacionPiezas.tarifa_servicio = element.tarifa_servicio
-      this.InsertarMovilizacionPiezas.porcentaje_tarifa = parseInt(this.montoTASA)
+      this.InsertarMovilizacionPiezas.porcentaje_tarifa = this.montoTASA
       const MontoFPO = this.InsertarMovilizacionPiezas.tarifa_servicio * this.InsertarMovilizacionPiezas.porcentaje_tarifa / 100
       this.InsertarMovilizacionPiezas.monto_fpo = parseFloat(MontoFPO.toFixed(2))
       this.InsertarMovilizacionPiezas.mes = this.fechax
@@ -665,7 +665,7 @@ public idFactura
           (data) => {
             if (data.tipo === 1) {
               this.idFactura = `${data.msj}`
-              // console.log(data)
+              console.log(data)
               this.DeclaracionPiezasLength.map(e => {
                 e.id_factura = data.msj
                 // this.DeclaracionPiezasLength = []

@@ -589,7 +589,7 @@ export class OppComponent implements OnInit {
      this.UDatosGeneralesOPPSUB.tipo_agencia = this.DataEmpresa.tipo_agencia
      this.UDatosGeneralesOPPSUB.sucursales = this.DataEmpresa.sucursales
      this.UDatosGeneralesOPPSUB.subcontrataciones = this.DataEmpresa.subcontrataciones
-     this.UDatosGeneralesOPPSUB.tipologia_empresa =  this.DataEmpresa.tipologia_empresa
+     this.UDatosGeneralesOPPSUB.tipologia_empresa =  parseInt(this.DataEmpresa.tipologia_empresa)
      this.UDatosGeneralesOPPSUB.especificacion_servicio = this.DataEmpresa.especificacion_servicio
      this.UDatosGeneralesOPPSUB.licencia_actividades_economicas_municipales = this.DataEmpresa.licencia_actividades_economicas_municipales
      this.UDatosGeneralesOPPSUB.actividades_economicas_seniat = this.DataEmpresa.actividades_economicas_seniat
@@ -675,7 +675,6 @@ export class OppComponent implements OnInit {
           this.DataEmpresa.tipo_servicio = JSON.parse(e.tipo_servicio)
           this.DataEmpresa.flota_utilizada = JSON.parse(e.flota_utilizada)
           this.xFlotaUtilizada = JSON.parse(e.flota_utilizada)
-          // console.log(e.flota_utilizada)
         });
       },
       (error) => {
@@ -761,6 +760,7 @@ export class OppComponent implements OnInit {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.numControl = this.token.Usuario[0].rif
     this.hashcontrol = btoa("D" + this.numControl) //Cifrar documentos
+    // console.log(atob(this.hashcontrol))
     this.modalService.open(modal, {
       centered: true,
       size: 'lg',

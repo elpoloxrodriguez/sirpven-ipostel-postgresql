@@ -67,7 +67,7 @@ export class PostagePerMonthComponent implements OnInit {
   }
 
   async ConsultarDeclaracion(){
- 
+    
   }
 
 

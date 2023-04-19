@@ -50,7 +50,8 @@ export class PriceTableComponent implements OnInit {
     total_pagar: '',
     mes: '',
     id_servicio_franqueo: 0,
-    user_created: 0
+    user_created: 0,
+    status_pef: 0
   }
 
   public IupdateTarifaFranqueo : IPOSTEL_U_TarifasFranqueo = {
@@ -205,12 +206,12 @@ public NombreTipoFranqueo
       this.montoIVA = 0
     }
     this.idOPP = this.token.Usuario[0].id_opp
+    await this.TasaPostal(parseInt(this.token.Usuario[0].tipologia_empresa), this.idOPP)
     await this.ListaTarifaNacionalAereo()
     await this.fechaF()
     await this.ListaPesoEnvio()
     await this.ListaServicioFranqueo()
     await this.ListaTarifasFranqueoAll()
-    await this.TasaPostal(this.token.Usuario[0].tipologia_empresa, this.idOPP)
     await this.ModalListaServicioFranqueo(1)
   }
 
@@ -243,8 +244,9 @@ public NombreTipoFranqueo
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
-          this.montoTASA = e.tasa_postal
-          this.montoTASAnombre = e.nombre_tasa_postal
+          // console.log(e)
+          this.montoTASA = e.tasa_postal ? e.tasa_postal : 0
+          this.montoTASAnombre = e.nombre_tasa_postal ? e.nombre_tasa_postal : 0
           return e
         });
       },

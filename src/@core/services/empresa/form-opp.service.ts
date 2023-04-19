@@ -108,6 +108,7 @@ export interface IPOSTEL_C_Peso_Envio_Franqueo {
 	id_peso_envio ?: number
 	pmvp: any
 	iva: any
+	status_pef: number
 	tasa_postal: any
 	total_pagar: any
 	mes: string
