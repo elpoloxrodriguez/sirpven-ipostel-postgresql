@@ -34,6 +34,8 @@ export class AuthLoginV2Component implements OnInit {
   public dia = this.fecha.getDay();
   public btnShow = true
 
+  public tipo
+
   //  Public
   public coreConfig: any;
   public loginForm: FormGroup;
@@ -289,11 +291,21 @@ export class AuthLoginV2Component implements OnInit {
     this.xAPI.parametros = `${id}`
      await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (data) => {
-        console.log(data)
+        // console.log(data)
         if (data.Cuerpo.length != 0) {
           this.Qr = ''
           // console.log(data.Cuerpo[0])
           var cert = data.Cuerpo[0]
+          switch (cert.type) {
+            case 1:
+              this.tipo = 'Certificado Unico de Inscripción'
+              break;
+              case 2:
+                this.tipo = 'Autorización Postal'
+                break;
+            default:
+              break;
+          }
           Swal.fire({
             html: `
                   <div class="card card-congratulations">
@@ -313,8 +325,11 @@ export class AuthLoginV2Component implements OnInit {
                         </p>
                       </div>
                       <br>
+                      <p align="left">
+                      ${this.tipo}
+                      </p>
                       <p align="right">
-                      ${this.utilservice.FechaMoment(cert.created_date)}
+                      ${cert.token}
                       </p>
                     </div>
                   </div>
@@ -326,7 +341,7 @@ export class AuthLoginV2Component implements OnInit {
             <br>
             Dirección : Avenida José Ángel Lamas, San Martín, Caracas, edificio Centro Postal Caracas, Distrito Capital
             <br>
-            E-mail: <a href="mailto:tsuarez@ipostel.gob.ve@fona.gob.ve">tsuarez@ipostel.gob.ve</a>
+            E-mail: <a href="mailto:tsuarez@ipostel.gob.ve">tsuarez@ipostel.gob.ve</a>
             <br>
             Telf: <a href="Tel:02124053340">0212-405.33.40</a> / 0412-711.08.00 / fax: 0212-405.33.66
             </small>
@@ -338,8 +353,10 @@ export class AuthLoginV2Component implements OnInit {
             allowOutsideClick: false,
             allowEscapeKey: false,
             allowEnterKey: false,
-            confirmButtonText: 'Cerrar',
-            confirmButtonColor: '#3085d6',
+            showConfirmButton: false,
+            showCloseButton: true,
+            // confirmButtonText: 'Cerrar',
+            // confirmButtonColor: '#3085d6',
           })
          } else {
           this.Qr = ''

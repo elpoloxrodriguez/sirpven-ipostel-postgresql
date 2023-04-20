@@ -110,6 +110,8 @@
                             [data-feather]="'edit'" [class]="'mr-50'"></span> Aprobar Concesión</a>
                             <a (click)="DeleteConcesionPostalPrivada(row)" *ngIf="row.id_curp != null" ngbDropdownItem><span [size]="16"
                               [data-feather]="'trash'" [class]="'mr-50'"></span> Revocar Concesión</a>
+                              <a (click)="GenerarCertificadoInscripcion(row)" *ngIf="row.id_curp != null" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Certificado</a>
                             <a (click)="CambiarStatusOPP(ModalCambiarStatusOPP,row)" ngbDropdownItem><span [size]="16"
                               [data-feather]="'check-square'" [class]="'mr-50'"></span> Cambiar Status</a>
                               <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
@@ -211,6 +213,8 @@
                             [data-feather]="'edit'" [class]="'mr-50'"></span> Aprobar Subcontrstista</a>
                             <a (click)="DeleteConcesionPostalPrivada(row)" *ngIf="row.id_curp != null" ngbDropdownItem><span [size]="16"
                               [data-feather]="'trash'" [class]="'mr-50'"></span> Revocar Subcontrstista</a>
+                              <a (click)="GenerarAutorizacionInscripcion(row)" *ngIf="row.id_curp != null" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Autorización</a>
                           <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
                             [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
                       </div>

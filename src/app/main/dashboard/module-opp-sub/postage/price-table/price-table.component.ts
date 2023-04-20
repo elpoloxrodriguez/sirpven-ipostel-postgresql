@@ -62,7 +62,7 @@ export class PriceTableComponent implements OnInit {
     tasa_postal: '',
     total_pagar: '',
     mes: '',
-    id_servicio_franqueo: '',
+    id_servicio_franqueo: 0,
     user_updated: 0,
     id_pef: undefined,
   }
@@ -455,7 +455,7 @@ public NombreTipoFranqueo
     this.IupdateTarifaFranqueo.status_pef = 0
     this.IupdateTarifaFranqueo.id_peso_envio = data.id_peso_envio
     this.IupdateTarifaFranqueo.mes = data.mes
-    this.IupdateTarifaFranqueo.id_servicio_franqueo = data.id_servicio_franqueo
+    this.IupdateTarifaFranqueo.id_servicio_franqueo = parseInt(data.id_servicio_franqueo)
     this.IupdateTarifaFranqueo.user_updated = this.idOPP
     this.IupdateTarifaFranqueo.id_pef = data.id_pef
 

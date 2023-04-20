@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
-import { IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_DATA_DELEGADOP_ID, IPOSTEL_DATA_EMPRESA_ID, IPOSTEL_DATA_REPRESENTANTE_LEGAL_ID, IPOSTEL_I_OtorgamientoConcesion, IPOSTEL_U_CambiarStatusOPPSUB, IPOSTEL_U_Status_Opp_Sub } from '@core/services/empresa/form-opp.service';
+import { ICrearCertificados, IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_DATA_DELEGADOP_ID, IPOSTEL_DATA_EMPRESA_ID, IPOSTEL_DATA_REPRESENTANTE_LEGAL_ID, IPOSTEL_I_OtorgamientoConcesion, IPOSTEL_U_CambiarStatusOPPSUB, IPOSTEL_U_Status_Opp_Sub } from '@core/services/empresa/form-opp.service';
 import { UtilService } from '@core/services/util/util.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from "jwt-decode";
@@ -9,6 +9,7 @@ import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { FormBuilder } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { PdfService } from '@core/services/pdf/pdf.service';
 
 @Component({
   selector: 'app-private-postal-operator',
@@ -139,6 +140,27 @@ export class PrivatePostalOperatorComponent implements OnInit {
     id_opp: 0
   }
 
+  public fecha = new Date('yyyy-MM-dd HH:mm:ss');
+  public fechax = new Date();
+  public aniox = this.fechax.getFullYear();
+  public anio = this.fecha.getFullYear();
+  public mes = this.fechax.getMonth();
+  public hora
+  public fecha_Actual_convert
+  public hora_Actual_convert
+  public n_curp
+
+  public DatosEmpresa = []
+  public DatosSub_OPP = []
+  
+
+  public CrearCert: ICrearCertificados = {
+    usuario: 0,
+    token: '',
+    type: 0,
+    created_user: 0
+  }
+
   public IdUser
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
@@ -178,6 +200,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router,
     private _formBuilder: FormBuilder,
+    private pdf: PdfService,
 
   ) { }
 
@@ -241,6 +264,132 @@ export class PrivatePostalOperatorComponent implements OnInit {
         });
         this.rowsOPP_SUB = this.List_OPP_SUB;
         this.tempDataOPP_SUB = this.rowsOPP_SUB
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  async EmpresaRIF(id: any) {
+    this.xAPI.funcion = "IPOSTEL_R_empresa_id";
+    this.xAPI.parametros = `${id}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.DatosEmpresa.push(data.Cuerpo);
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  EmpresaOppSub(id: any){
+    this.xAPI.funcion = "IPOSTEL_R_EmpresaOppSub";
+    this.xAPI.parametros = `${id}`
+    this.xAPI.valores = ''
+     this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.forEach(e => {
+          this.DatosSub_OPP.push(e)
+        });
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async GenerarCertificadoInscripcion(data) {
+    // console.log(data)
+    this.EmpresaRIF(data.id_opp)
+    this.CrearCert.usuario = this.token.Usuario[0].id_opp
+    this.CrearCert.token = this.utilService.TokenAleatorio(10),
+      this.CrearCert.type = 1,
+      // 1 CERTIFICADO UNICO OPP
+      // 2 AUTORIZACION UNICA  SUB
+      this.CrearCert.created_user = this.token.Usuario[0].id_opp
+    this.xAPI.funcion = "IPOSTEL_C_Certificados";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = JSON.stringify(this.CrearCert)
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.sectionBlockUI.start('Generando Certificado, Porfavor Espere!!!');
+        this.n_curp = data.msj + '-IP' + this.aniox
+        if (data.tipo === 1) {
+          var id = this.CrearCert.token
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          this.apiService.GenQR(id, ruta).subscribe(
+            (data) => {
+              // INSERT API
+              this.apiService.LoadQR(id).subscribe(
+                (xdata) => {
+                  var sdata = this.DatosEmpresa[0]
+                  // console.log(sdata)
+                  this.pdf.CertificadoInscripcion(sdata[0], xdata.contenido, this.CrearCert.token, this.n_curp)
+                  this.sectionBlockUI.stop()
+                  this.utilService.alertConfirmMini('success', 'Certificado Descagado Exitosamente')
+                },
+                (error) => {
+                  console.log(error)
+                }
+              )
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
+        } else {
+          this.utilService.alertConfirmMini('error', 'Oops! Algo salio mal, intente de nuevo')
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  async GenerarAutorizacionInscripcion(data) {
+    this.EmpresaOppSub(data.id_opp)
+    this.CrearCert.usuario = this.token.Usuario[0].id_opp
+    this.CrearCert.created_user = this.token.Usuario[0].id_opp
+    this.CrearCert.token = this.utilService.TokenAleatorio(10),
+      this.CrearCert.type = 2,
+      // 1 CERTIFICADO UNICO OPP
+      // 2 AUTORIZACION UNICA  SUB
+      this.CrearCert.created_user = this.token.Usuario[0].id_opp
+    this.xAPI.funcion = "IPOSTEL_C_Certificados";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = JSON.stringify(this.CrearCert)
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.sectionBlockUI.start('Generando Autorización, Porfavor Espere!!!');
+        this.n_curp = data.msj + '-IP' + this.aniox
+        if (data.tipo === 1) {
+          var id = this.CrearCert.token
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          this.apiService.GenQR(id, ruta).subscribe(
+            (data) => {
+              // INSERT API
+              this.apiService.LoadQR(id).subscribe(
+                (xdata) => {
+                  var sdata = this.DatosSub_OPP
+                  this.pdf.AutorizacionInscripcion(sdata[0], xdata.contenido, this.CrearCert.token, this.n_curp)
+                  this.sectionBlockUI.stop()
+                  this.utilService.alertConfirmMini('success', 'Autorización Descagada Exitosamente')
+                },
+                (error) => {
+                  console.log(error)
+                }
+              )
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
+        } else {
+          this.utilService.alertConfirmMini('error', 'Oops! Algo salio mal, intente de nuevo')
+        }
       },
       (error) => {
         console.log(error)

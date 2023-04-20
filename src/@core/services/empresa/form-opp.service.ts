@@ -382,7 +382,7 @@ export interface IPOSTEL_U_TarifasFranqueo { // Actualizar tarifa de franqueo
 	tasa_postal	:	string
 	total_pagar	:	string
 	mes	:	string
-	id_servicio_franqueo	:	string
+	id_servicio_franqueo	:	number
 	user_updated	:	number
 	id_pef	:	number
 }

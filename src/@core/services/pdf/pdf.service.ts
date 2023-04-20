@@ -79,9 +79,9 @@ export class PdfService {
     doc.addImage('assets/images/pdf/cintillo.png', "PNG", 5, 5, 200, 15);
     doc.addImage('assets/images/pdf/firma.png', "PNG", 80, 240, 65, 45);
     doc.addImage('assets/images/pdf/sello.png', "PNG", 110, 220, 60, 60);
-    if (data.periodo_contrato_curp <= nueva) {
-      doc.addImage('assets/images/pdf/vencido.png', "PNG", 30, 140, 140, 140);
-    } 
+    // if (data.periodo_contrato_curp <= nueva) {
+    //   doc.addImage('assets/images/pdf/vencido.png', "PNG", 30, 140, 140, 140);
+    // } 
     doc.addImage('assets/images/pdf/marca-agua.png', "PNG", 25, 115, 160, 60);
     doc.addImage(Qr, "PNG", 170, 255, 30, 30);
 
