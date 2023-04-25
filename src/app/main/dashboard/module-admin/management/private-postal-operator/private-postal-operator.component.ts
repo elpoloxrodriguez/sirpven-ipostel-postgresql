@@ -271,6 +271,48 @@ export class PrivatePostalOperatorComponent implements OnInit {
     )
   }
 
+  async EliminarOPP(data: any){
+    this.xAPI.funcion = "IPOSTEL_D_EliminarOPP"
+    this.xAPI.parametros = `${data.id_opp}`
+    this.xAPI.valores = ''
+    Swal.fire({
+      title: 'Esta seguro de eliminar?',
+      text: data.nombre_empresa,
+      icon: 'warning',
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Deseo Eliminarlo',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            // console.log(data)
+            this.sectionBlockUI.start('Eliminando Registro, Porfavor Espere!!!');
+            this.rowsOPP_SUB.push(this.List_OPP_SUB)
+            if (data.tipo === 1) {
+              this.List_OPP_SUB = []
+              this.ListaOPP_SUB()
+              this.modalService.dismissAll('Close')
+              this.sectionBlockUI.stop()
+              this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente!')
+            } else {
+              this.sectionBlockUI.stop();
+              this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+            }
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      }
+    })
+  }
+
   async EmpresaRIF(id: any) {
     this.xAPI.funcion = "IPOSTEL_R_empresa_id";
     this.xAPI.parametros = `${id}`

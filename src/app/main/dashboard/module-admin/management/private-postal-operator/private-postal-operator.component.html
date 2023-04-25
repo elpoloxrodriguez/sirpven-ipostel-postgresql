@@ -116,6 +116,8 @@
                               [data-feather]="'check-square'" [class]="'mr-50'"></span> Cambiar Status</a>
                               <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
                                 [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
+                                <a (click)="EliminarOPP(row)" ngbDropdownItem><span [size]="16"
+                                  [data-feather]="'trash'" [class]="'mr-50'"></span> Eliminar OPP</a>
                       </div>
                     </div>
                   </ng-template>
