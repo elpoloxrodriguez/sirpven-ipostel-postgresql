@@ -233,6 +233,101 @@
           </section>
         </ng-template>
       </li>
+      <li ngbNavItem>
+        <a ngbNavLink (click)="CapturarNav($event)">Combinación</a>
+        <ng-template ngbNavContent>
+          <h4 align="center"><font color="red">Lista de <strong>Operadores Postales Privados</strong> con sus respectivos <strong>Subcontratistas</strong></font></h4>
+          <section class="users-list-wrapper">
+            <div class="card">
+              <div class="row">
+                <div class="col-md-6 col-12">
+                  <div class="d-flex justify-content-between align-items-center m-1">
+                    <label class="d-flex align-items-center">Mostrar
+                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                      Registros</label>
+                  </div>
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValueCOMBINACION"
+                        name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre OPP"
+                        (keyup)="filterUpdateCOMBINACION($event)" (search)="filterUpdateCOMBINACION($event)" /></label>
+                  </div>
+                </div>
+              </div>
+
+              <ngx-datatable [rows]="rowsCOMBINACION" rowHeight="auto" class="bootstrap core-bootstrap"
+                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+                [scrollbarH]="true">
+
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
+                  <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold">{{ nombre_empresa }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="RIF" prop="rif"  [width]="5">
+                  <ng-template let-rif="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ rif }}</span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column name="STATUS" prop="status_empresa"  [width]="5">
+                  <ng-template let-status_empresa="value" ngx-datatable-cell-template>
+                    <div *ngIf="status_empresa == 1" class="badge badge-pill" ngClass="badge-light-success">
+                      Activa
+                    </div>
+                    <div *ngIf="status_empresa == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                      Inactiva
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="CANTIDAD SUBCONTRATISTAS" prop="cantidad" [width]="35">
+                  <ng-template let-cantidad="value" ngx-datatable-cell-template>
+                    <div  *ngIf="cantidad != [null]" class="badge badge-pill" ngClass="badge-light-success">
+                      {{cantidad }}
+                    </div>
+                    <div  *ngIf="cantidad == [null]" class="badge badge-pill" ngClass="badge-light-danger">
+                      0
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
+                  <ng-template ngx-datatable-cell-template let-row="row">
+                    <div ngbDropdown container="body" >
+                      <button ngbDropdownToggle type="button" *ngIf="row.cantidad != null" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
+                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
+                      </button>
+                      <div ngbDropdownMenu>
+                        <a (click)="ModalVerSubContratistas(VerSubContratistas,row)"
+                          ngbDropdownItem><span [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span>
+                          Ver Subcontratistas </a>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+              </ngx-datatable>
+
+
+              <!--/ Invoice List -->
+            </div>
+          </section>
+        </ng-template>
+      </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="mt-1"></div>
 
@@ -707,6 +802,102 @@
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #VerSubContratistas let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Lista de Subcontratistas de<strong>{{ title_modal }}</strong></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+
+      <section class="users-list-wrapper">
+        <div class="card">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="d-flex justify-content-between align-items-center m-1">
+                <label class="d-flex align-items-center">Mostrar
+                  <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                  Registros</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValueListaSubC"
+                    name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre Subcontratista"
+                    (keyup)="filterUpdateListaSubC($event)" (search)="filterUpdateListaSubC($event)" /></label>
+              </div>
+            </div>
+          </div>
+
+          <ngx-datatable [rows]="rowsListaSubC" rowHeight="auto" class="bootstrap core-bootstrap"
+            [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+            [scrollbarH]="true">
+
+            <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
+              <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold">{{ nombre_empresa }} </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="RIF" prop="rif"  [width]="5">
+              <ng-template let-rif="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ rif }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+            <ngx-datatable-column name="STATUS" prop="status_empresa"  [width]="5">
+              <ng-template let-status_empresa="value" ngx-datatable-cell-template>
+                <div *ngIf="status_empresa == 1" class="badge badge-pill" ngClass="badge-light-success">
+                  Activa
+                </div>
+                <div *ngIf="status_empresa == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                  Inactiva
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Concesion" prop="status_curp" [width]="5">
+              <ng-template let-status_curp="value" ngx-datatable-cell-template>
+                <div *ngIf="status_curp == 1" class="badge badge-pill" ngClass="badge-light-success">
+                  Aprobada
+                </div>
+                <div *ngIf="status_curp == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                  En Espera
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+          </ngx-datatable>
+
+
+          <!--/ Invoice List -->
+        </div>
+      </section>
+  <div [ngbNavOutlet]="navCenter" class="mt-2"></div>
+  
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

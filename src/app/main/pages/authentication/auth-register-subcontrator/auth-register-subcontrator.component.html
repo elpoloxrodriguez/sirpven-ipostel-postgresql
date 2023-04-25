@@ -30,8 +30,8 @@
             <div class="col-md-12 col-12">
               <div class="form-group">
                 <label class="form-label" for="email">Seleccione Oficina Postal Privada</label>
-                <ng-select [items]="SelectOpp" bindValue="id_opp" bindLabel="nombre_empresa" placeholder="Seleccione Oficina Postal Privada"
-                  [(ngModel)]="IFormOPP.opp" [multiple] [ngModelOptions]="{standalone: true}" required
+                <ng-select [items]="SelectOpp"  bindValue="id_opp" bindLabel="nombre_empresa" placeholder="Seleccione Oficina Postal Privada"
+                  [(ngModel)]="IFormOPP.opp" [multiple]="true" [ngModelOptions]="{standalone: true}" required
                   #Opp="ngModel"
                   [class.error]="!Opp.valid && formUsersRegister.submitted"  
                   autocomplete="off">

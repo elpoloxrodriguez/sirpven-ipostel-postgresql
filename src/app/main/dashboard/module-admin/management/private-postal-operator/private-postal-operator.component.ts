@@ -165,6 +165,8 @@ export class PrivatePostalOperatorComponent implements OnInit {
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
   public searchValue = '';
+  public searchValueCOMBINACION = ''
+public searchValueListaSubC = ''
 
   public passwordTextType: boolean;
   public passwordTextTypeX: boolean;
@@ -176,6 +178,15 @@ export class PrivatePostalOperatorComponent implements OnInit {
     { id: 3, name: 'Finiquito'},
     { id: 4, name: 'No Movilización de Piezas'},
   ]
+
+  public rowsCOMBINACION
+  public tempDataCOMBINACION = []
+  public List_COMBINACION = []
+
+  public rowsListaSubC
+  public tempDataListaSubC = []
+  public List_ListaSubC = []
+
 
   public IDResetStatus
   public token
@@ -237,6 +248,11 @@ export class PrivatePostalOperatorComponent implements OnInit {
         this.n_opp = '2'
         await this.ListaOPP_SUB()
         break;
+        case 'ngb-nav-2':
+          this.List_COMBINACION = []
+          this.List_ListaSubC = []
+          await this.ListaCOMBINACION()
+          break;
       default:
         break;
     }
@@ -505,6 +521,32 @@ export class PrivatePostalOperatorComponent implements OnInit {
     )
   }
 
+  async ListaCOMBINACION() {
+    this.List_COMBINACION = []
+    this.xAPI.funcion = "IPOSTEL_R_ListaOpp_Sub_Combinada"
+    this.xAPI.parametros = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          e.nombre_empresa = e.nombre_empresa.toUpperCase()
+          this.List_COMBINACION.push(e)
+            this.List_ListaSubC.push(JSON.parse(e.sub))
+          // console.log(JSON.parse(e.sub))
+        });
+        console.log(this.List_ListaSubC)
+        this.rowsListaSubC = this.rowsListaSubC
+        this.tempDataListaSubC = this.rowsListaSubC
+        // 
+        this.rowsCOMBINACION = this.List_COMBINACION
+        this.tempDataCOMBINACION = this.rowsCOMBINACION
+
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
   async Subcontratistas(id: any) {
     this.Subcontratista = []
     this.xAPI.funcion = "IPOSTEL_R_Subcontratista_ID"
@@ -600,6 +642,19 @@ export class PrivatePostalOperatorComponent implements OnInit {
     });
     // Update The Rows
     this.rowsSubcontratistas = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
+  }
+
+  filterUpdateCOMBINACION(event) {
+    // Reset ng-select on search
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
+    const temp = this.tempDataCOMBINACION.filter(function (d) {
+      return d.nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // Update The Rows
+    this.rowsCOMBINACION = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
@@ -734,6 +789,19 @@ export class PrivatePostalOperatorComponent implements OnInit {
     });
   }
 
+  async ModalVerSubContratistas(modal, data) {
+    // console.log(modal);
+    this.title_modal = data.nombre_empresa
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+
   async CambiarStatusOPP(modal, data) {
     // console.log(data.status_empresa);
     this.title_modal = data.nombre_empresa
@@ -799,6 +867,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
       windowClass: 'fondo-modal',
     });
   }
+
   async ResetPassword(){
     this.rowsOPP_SUB.push(this.List_OPP_SUB)
     if (this.ConfirmNewPassword != this.NewPassword) {
