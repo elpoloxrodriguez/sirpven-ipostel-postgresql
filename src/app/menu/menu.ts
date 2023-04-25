@@ -117,7 +117,7 @@ export const menu: CoreMenu[] = [
       icono: 'repeat',
       type: 'item',
       url: 'postal-solvency',
-      role: [3],
+      role: [3,6],
     },
         // Multas y Sanciones
         {
@@ -126,7 +126,7 @@ export const menu: CoreMenu[] = [
           icono: 'trending-down',
           type: 'item',
           url: 'fines-and-penalties/fines-penalties',
-          role: [3],
+          role: [3,6],
         },
   {
     id: 'list-opp',

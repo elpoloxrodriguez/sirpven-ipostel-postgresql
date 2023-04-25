@@ -18,7 +18,7 @@ const routes: Routes = [
     component: FinesPenaltiesComponent,
     // canActivate:[AuthGuardGuard],
     canActivate: [AuthGuard,AuthGuardGuard],
-    data: { roles: [3] },
+    data: { roles: [3,6] },
   },
 ];
 

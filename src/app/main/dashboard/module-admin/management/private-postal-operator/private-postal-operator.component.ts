@@ -204,6 +204,8 @@ public searchValueListaSubC = ''
   public TipoRegistro
 
   public title_modal
+  
+  public valorPosicion
 
   constructor(
     private apiService: ApiService,
@@ -530,10 +532,11 @@ public searchValueListaSubC = ''
         data.Cuerpo.map(e => {
           e.nombre_empresa = e.nombre_empresa.toUpperCase()
           this.List_COMBINACION.push(e)
+
             this.List_ListaSubC.push(JSON.parse(e.sub))
           // console.log(JSON.parse(e.sub))
         });
-        console.log(this.List_ListaSubC)
+        // console.log(this.List_ListaSubC[this.valorPosicion])
         this.rowsListaSubC = this.rowsListaSubC
         this.tempDataListaSubC = this.rowsListaSubC
         // 
