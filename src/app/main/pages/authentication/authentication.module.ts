@@ -37,6 +37,12 @@ const routes: Routes = [
     data: { animation: 'misc' }
   },
   {
+    path: 'login/:id',
+    component: AuthLoginV2Component,
+    // canActivate: [AuthGuard,AuthGuardGuard],
+    data: { animation: 'misc' }
+  },
+  {
     path: 'sirpv-admin',
     component: AuthAdminComponent,
     data: { animation: 'misc' }

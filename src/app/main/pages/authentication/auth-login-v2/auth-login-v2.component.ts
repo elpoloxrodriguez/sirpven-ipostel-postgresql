@@ -77,7 +77,8 @@ export class AuthLoginV2Component implements OnInit {
     private _route: ActivatedRoute,
     private loginService: LoginService,
     private _router: Router,
-    private utilservice: UtilService
+    private utilservice: UtilService,
+    private rutaActiva: ActivatedRoute
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -140,16 +141,23 @@ export class AuthLoginV2Component implements OnInit {
    */
   async ngOnInit() {
     // console.log(VERSION.full);
+    let Ruta = this.rutaActiva.snapshot.params.id
+    if (Ruta != undefined) {
+      this.Qr = Ruta
+      this.Certificado(Ruta)
+    }
+
+    // console.log(this.rutaActiva.snapshot.params.id)
     
     await this.BloqueoSystem()
-    let urlQR = this._router.url
-    if (urlQR  == undefined) {
-      this.Qr = ''
-    } else {
-      this.Qr = urlQR.substring(7, urlQR.length  +1)
-      // this.EmpresaRIF()
-      this.Qr = ''
-    }
+
+    // let urlQR = this._router.url
+    // if (urlQR  == undefined) {
+    //   this.Qr = ''
+    // } else {
+    //   this.Qr = urlQR.substring(7, urlQR.length  +1)
+    //   this.Qr = ''
+    // }
 
     if (sessionStorage.getItem("token") != undefined) {
       this._router.navigate(['/home'])
@@ -359,7 +367,7 @@ export class AuthLoginV2Component implements OnInit {
             // confirmButtonColor: '#3085d6',
           })
          } else {
-          this.Qr = ''
+          // this.Qr = ''
           Swal.fire({
             title: 'Certificado NO Valido!',
             text: 'Lo sentimos, este certificado no es generado por nuestro sistema.',
