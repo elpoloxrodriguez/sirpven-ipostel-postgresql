@@ -1029,11 +1029,12 @@
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
-      <form method="post" enctype="multipart/form-data"  id="forma" name="forma">
-        <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
-      <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
+      <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
+      <!-- <form method="post" enctype="multipart/form-data"  id="forma" name="forma"> -->
+      <form class="form" method="post" enctype="multipart/form-data"  id="forma" name="forma" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater">
       <div class="row d-flex align-items-end">
-        <table class="table table-striped">
+
+        <table #No class="table table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -1062,20 +1063,22 @@
             </tr>
           </tfoot>
         </table>
+        
         <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label for=" itempmvp">Monto</label>
-            <input type="text" class="form-control" autocomplete="off" readonly [value]="montoPagar" placeholder="Monto a Pagar" />
+            <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly [value]="montoPagar" placeholder="Monto a Pagar" />
           </div>
         </div>
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label for=" itempmvp">Fecha</label>
-            <input type="text" class="form-control" readonly [value]="fechaActual" autocomplete="off" [(ngModel)]="fechaActual"
+            <input type="text" name="fechaNO" class="form-control" readonly [value]="fechaActual" autocomplete="off" [(ngModel)]="fechaActual"
               [ngModelOptions]="{standalone: true}"  placeholder="Mes" />
           </div>
         </div>
+        
 
         <div class="col-md-12 col-12">
         <div class="form-group">
@@ -1083,7 +1086,6 @@
           <div >
             <input (change)="fileSelected($event)" class="form-control" name="archivos" type="file"
               accept=".pdf">
-            <!-- <label class="custom-file-label" for="customFile">Solo formato PDF</label> -->
           </div>
         </div>
         </div>

@@ -527,9 +527,9 @@ public idFactura
         var montoPagar = this.MontoCausado
         var montoMant = this.totalBolivares
         var TotalMontoPagar = montoPagar +  this.totalBolivares 
-        console.log(montoPagar)
-        console.log(this.totalBolivares)
-        console.log(TotalMontoPagar)
+        // console.log(montoPagar)
+        // console.log(this.totalBolivares)
+        // console.log(TotalMontoPagar)
         var TotalMontoPagarConvertido = TotalMontoPagar.toFixed(2)
         // this.PrecioMantenimientoXT = TotalMontoPagar 
         // this.PrecioMantenimientoXT = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
@@ -759,10 +759,14 @@ public idFactura
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
+        this. Precio_Dolar_Petro()
+        this.ListaMantenimientoSeguidad()    
         this.token = jwt_decode(sessionStorage.getItem('token'));
         this.numControl = this.token.Usuario[0].rif
         this.hashcontrol = btoa("D" + this.numControl) //Cifrar documentos    
-        this.montoPagar = this.utilService.ConvertirMoneda(0)
+        // this.montoPagar = this.utilService.ConvertirMoneda(0)
+        let mon = this.totalBolivares.toFixed(2)
+        this.montoPagar = this.totalBolivares.toFixed(2)
         this.fechaActual = this.utilService.FechaActual()
         this.modalService.open(modal, {
           centered: true,
@@ -795,7 +799,7 @@ public idFactura
         this.IpagarRecaudacion.status_pc = 0
         this.IpagarRecaudacion.tipo_pago_pc = 1
         this.IpagarRecaudacion.monto_pc = '0'
-        this.IpagarRecaudacion.monto_pagar = '0'
+        this.IpagarRecaudacion.monto_pagar = this.montoPagar
         this.IpagarRecaudacion.dolar_dia = '0'
         this.IpagarRecaudacion.petro_dia = '0'
         this.IpagarRecaudacion.fecha_pc = this.fechaActual
