@@ -204,14 +204,15 @@ public idFactura
     // } else {
     //   await this.ListaDeclaracionMovilizacionPiezas()
     // }
-    await this. Precio_Dolar_Petro()
+    this. Precio_Dolar_Petro()
+    this.ListaMantenimientoSeguidad()
     await this.BloqueoBtnDeclaracion()
     await this.ListaDeclaracionMovilizacionPiezas()
     await this.TasaPostal(this.token.Usuario[0].tipologia_empresa, this.idOPP)
     await this.ListaServicioFranqueo()
     this.ListaDeclaracionMovilizacionPiezasDECLARAR()
     await this.MantenimientoSIRPVEN()
-     this.ListaMantenimientoSeguidad()
+    //  this.ListaMantenimientoSeguidad()
   }
 
   filterUpdate(event) {
@@ -425,13 +426,13 @@ public idFactura
     )
   }
 
-   ListaMantenimientoSeguidad() {
+    ListaMantenimientoSeguidad() {
     this.xAPI.funcion = "IPOSTEL_R_MantenimientoSeguridad"
     this.xAPI.parametros = '1'
     this.xAPI.valores = ''
-     this.apiService.Ejecutar(this.xAPI).subscribe(
+      this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
+         this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
           e.bolivares = e.tasa_petro * this.PetroDia ? this.PetroDia : 0
           var valor = e.tasa_petro * this.PetroDia
           e.bolivaresx = this.utilService.ConvertirMoneda(valor)
@@ -458,11 +459,11 @@ public idFactura
     )
   }
 
-   async Precio_Dolar_Petro() {
+    Precio_Dolar_Petro() {
     this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
     this.xAPI.parametros = ''
     this.xAPI.valores = ''
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           this.DolarDia = e.dolar
@@ -473,7 +474,7 @@ public idFactura
           this.PetroConvertidoBolivares = e.petro_bolivares
           return e
         });
-        // console.log(this.PetroConvertidoBolivares)
+        // console.log(this.PrecioMantenimientoX)
       },
       (error) => {
         console.log(error)
@@ -524,11 +525,13 @@ public idFactura
         this.MontoCausado = SumaMontos
         this.MontoCausadoYMantenimiento = SumaMontos
         var montoPagar = this.MontoCausado
-        var montoMant = this.PrecioMantenimientoX
-        var TotalMontoPagar = montoPagar + parseFloat(montoMant)
+        var montoMant = this.totalBolivares
+        var TotalMontoPagar = montoPagar +  this.totalBolivares 
+        console.log(montoPagar)
+        console.log(this.totalBolivares)
+        console.log(TotalMontoPagar)
         var TotalMontoPagarConvertido = TotalMontoPagar.toFixed(2)
         // this.PrecioMantenimientoXT = TotalMontoPagar 
-        // console.log(this.totalBolivares)
         // this.PrecioMantenimientoXT = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         var ok = parseFloat(SumaMontos) / parseFloat(this.PetroDia)
@@ -727,6 +730,9 @@ public idFactura
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
+        this. Precio_Dolar_Petro()
+        this.ListaMantenimientoSeguidad()
+    
         this.modalService.open(modal, {
           centered: true,
           size: 'xl',
