@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -28,6 +28,8 @@ export class AuthLoginV2Component implements OnInit {
     parametros: '',
     valores : {},
   };
+
+  token: string|undefined;
 
   public fecha = new Date(); 
   public hora = this.fecha.getHours();
@@ -80,6 +82,7 @@ export class AuthLoginV2Component implements OnInit {
     private utilservice: UtilService,
     private rutaActiva: ActivatedRoute
   ) {
+    this.token = undefined;
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
@@ -179,6 +182,21 @@ export class AuthLoginV2Component implements OnInit {
       this.appLogoImage = this.coreConfig.app.appLogoImage
       this.appName = this.coreConfig.app.appName
     });
+  }
+
+
+  public send(form: NgForm): void {
+    // console.log(form.invalid)
+    if (form.invalid) {
+      for (const control of Object.keys(form.controls)) {
+        form.controls[control].markAsTouched();
+      }
+      return;
+    }
+    if (form.invalid != true) {
+      this.login()
+    }
+    console.debug(`Token [${this.token}] generated`);
   }
 
 

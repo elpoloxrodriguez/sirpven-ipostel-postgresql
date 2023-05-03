@@ -14,6 +14,15 @@ import { CardSnippetModule } from '@core/components/card-snippet/card-snippet.mo
 
 
 
+//  subir Environment
+import { environment } from '../../../../environments/environment';
+// Recaptcha V3
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+//  Recaptcha V2
+import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
+
+
+
 import { AuthLoginV2Component } from 'app/main/pages/authentication/auth-login-v2/auth-login-v2.component';
 import { AuthResetPasswordV2Component } from './auth-reset-password-v2/auth-reset-password-v2.component';
 import { AuthForgotPasswordV2Component } from './auth-forgot-password-v2/auth-forgot-password-v2.component';
@@ -71,7 +80,7 @@ const routes: Routes = [
     path: 'forgot-password',
     component: AuthForgotPasswordV2Component,
     data: { animation: 'misc' }
-  }
+  },
 ];
 
 @NgModule({
@@ -84,11 +93,35 @@ const routes: Routes = [
     FooterComponent,
     AsistenteVirtualComponent,
     AuthAdminComponent,
-    RegisterOppComponent
+    RegisterOppComponent,
   ],
-  imports: [CommonModule, RouterModule.forChild(routes), NgbModule, NgSelectModule,
-    FormsModule, ReactiveFormsModule, CoreCommonModule, ContentHeaderModule,
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    NgbModule,
+    NgSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CoreCommonModule,
+    ContentHeaderModule,
     BlockUIModule,
-    CardSnippetModule]
+    CardSnippetModule,
+        //  Recaptcha V3
+        RecaptchaV3Module,
+        //  Recaptcha V2
+        RecaptchaFormsModule,
+        RecaptchaModule,
+  ],
+  providers: [
+    //  Recaptcha V3
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey},
+    // Recaptcha V2
+    { provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.recaptcha.siteKey,
+      } as RecaptchaSettings,
+    },
+    // Fin de Recaptcha
+  ],
 })
 export class AuthenticationModule { }

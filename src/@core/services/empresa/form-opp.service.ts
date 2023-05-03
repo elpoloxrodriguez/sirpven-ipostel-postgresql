@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
 
+
+//  recaptcha
+export interface UserRegistrationModel {
+    UserName: string;
+    UserEmailId: string;
+    password: string;
+    confirmPassword: string;
+}
+
 export interface IPOSTEL_C_OPP {
 	nombre_empresa: string
 	rif: string

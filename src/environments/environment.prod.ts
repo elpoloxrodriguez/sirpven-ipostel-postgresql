@@ -1,5 +1,8 @@
 export const environment = {
   production: true,
+  recaptcha: {
+    siteKey: '6LdwJNwlAAAAAI8-p7XKKCtfJ51goRFyBBbjaAJL', // LOCALHOST Y SIRPVEN V2
+  },
   Url: 'https://sirp.ipostel.gob.ve',
   API: '/v1/api/',
   hmr: false,

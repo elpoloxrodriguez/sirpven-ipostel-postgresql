@@ -45,9 +45,13 @@ import { ReportsRankingComponent } from './main/dashboard/module-opp-sub/opp-rep
 import { DigitalFileOppModule } from './main/dashboard/module-admin/digital-file-opp/digital-file-opp.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+
 //  subir Archivos
 
-
+// Recaptcha V3
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+//  Recaptcha V2
+import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
 
 const appRoutes: Routes = [
   {
@@ -75,6 +79,7 @@ const appRoutes: Routes = [
     DigitalFileOppModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    
     RouterModule.forRoot(appRoutes, {
       scrollPositionRestoration: 'enabled', // Add options right here
       relativeLinkResolution: 'legacy',
@@ -96,6 +101,13 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
+    
+    //  Recaptcha V3
+    RecaptchaV3Module,
+    //  Recaptcha V2
+    RecaptchaFormsModule,
+    RecaptchaModule,
+
 
     // App modules
     LayoutModule,
@@ -113,6 +125,15 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS,useClass: AuthInterceptorService, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    //  Recaptcha V3
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey},
+    // Recaptcha V2
+    { provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.recaptcha.siteKey,
+      } as RecaptchaSettings,
+    },
+    // Fin de Recaptcha
   ],
   bootstrap: [AppComponent]
 })
