@@ -526,7 +526,8 @@ public idFactura
         this.MontoCausadoYMantenimiento = SumaMontos
         var montoPagar = this.MontoCausado
         var montoMant = this.totalBolivares
-        var TotalMontoPagar = montoPagar +  this.totalBolivares 
+        var TotalMontoPagar = montoPagar
+        // var TotalMontoPagar = montoPagar +  this.totalBolivares completo y mantenimiento 
         // console.log(montoPagar)
         // console.log(this.totalBolivares)
         // console.log(TotalMontoPagar)
