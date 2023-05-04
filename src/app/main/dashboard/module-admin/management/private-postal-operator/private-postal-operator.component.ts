@@ -533,12 +533,12 @@ public searchValueListaSubC = ''
           e.nombre_empresa = e.nombre_empresa.toUpperCase()
           this.List_COMBINACION.push(e)
 
-            this.List_ListaSubC.push(JSON.parse(e.sub))
+            // this.List_ListaSubC.push(JSON.parse(e.sub))
           // console.log(JSON.parse(e.sub))
         });
         // console.log(this.List_ListaSubC[this.valorPosicion])
-        this.rowsListaSubC = this.rowsListaSubC
-        this.tempDataListaSubC = this.rowsListaSubC
+        // this.rowsListaSubC = this.rowsListaSubC
+        // this.tempDataListaSubC = this.rowsListaSubC
         // 
         this.rowsCOMBINACION = this.List_COMBINACION
         this.tempDataCOMBINACION = this.rowsCOMBINACION
@@ -793,7 +793,12 @@ public searchValueListaSubC = ''
   }
 
   async ModalVerSubContratistas(modal, data) {
-    // console.log(modal);
+    // console.log(JSON.parse(data.sub));
+    this.rowsListaSubC = []
+    this.rowsListaSubC = JSON.parse(data.sub)
+    this.rowsListaSubC = this.rowsListaSubC
+    this.tempDataListaSubC = this.rowsListaSubC
+
     this.title_modal = data.nombre_empresa
     this.modalService.open(modal, {
       centered: true,

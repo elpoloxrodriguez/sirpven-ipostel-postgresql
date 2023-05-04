@@ -845,14 +845,14 @@
                 <label for="id_peso_envio{{ i }}">Escala de Peso</label>
                 <ng-select [items]="itemsSelectPesoEnvio" [(ngModel)]="item.id_peso_envio"
                   [ngModelOptions]="{standalone: true}" bindLabel="name" bindValue="id" name="itemPesoEnvio{{ i }}"
-                  (ngModelChange)="item.tarifa_servicio = itemsSelectPesoEnvio[i].pmvp ?  itemsSelectPesoEnvio[i].pmvp : 0"
+                  (ngModelChange)="item.tarifa_servicio = itemsSelectPesoEnvio[i].pmvp ? itemsSelectPesoEnvio[i].pmvp : 0"
                   id="itemPesoEnvio{{ i }}" placeholder="Seleccionar Peso de Envio"></ng-select>
               </div>
             </div>
 
             <div class="col-md-2 col-12">
               <div class="form-group">
-                <label for=" itempmvp">Tarifa de Servicio </label>
+                <label for=" itempmvp">Tarifa de Servicio {{ item.tarifa_servicio }}</label>
                 <input type="number" class="form-control"  [(ngModel)]="item.tarifa_servicio" autocomplete="off"
                   [ngModelOptions]="{standalone: true}" name="itempmvp{{ i }}" id="itempmvp{{ i }}"
                   placeholder="Monto PMVP" />
