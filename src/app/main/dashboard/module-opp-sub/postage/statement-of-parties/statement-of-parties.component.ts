@@ -342,7 +342,7 @@ public idFactura
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           this.itemsSelectPesoEnvio = data.Cuerpo.map(e => {
-            e.name = ' (' + this.utilService.ConvertirMoneda(e.pmvp) + ') ' + e.nombre_peso_envio +' - ' + e.descripcion
+            e.name = e.descripcion +' (' + this.utilService.ConvertirMoneda(e.pmvp) + ') ' + e.nombre_peso_envio
             e.id = e.id_peso_envio
             // console.log(e)
             return e

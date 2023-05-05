@@ -179,6 +179,7 @@ public searchValueListaSubC = ''
     { id: 4, name: 'No Movilización de Piezas'},
   ]
 
+
   public rowsCOMBINACION
   public tempDataCOMBINACION = []
   public List_COMBINACION = []
