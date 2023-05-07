@@ -84,12 +84,12 @@ export class DashboardComponent implements OnInit {
 
   public mes_consultar
   // 
-  public EmpresasLiquidadasResult : number = 0 // Numero de empresas que pagaron
-  public EmpresasTotales : number = 0 // Total de empresas registradas
-  public EmpresasReparosResult : number = 0 // Numero de empresas que no pagaron
+  public EmpresasLiquidadasResult = 0 // Numero de empresas que pagaron
+  public EmpresasTotales = 0 // Total de empresas registradas
+  public EmpresasReparosResult = 0 // Numero de empresas que no pagaron
   public recaudacionPorcentajeLiquidado // % de Recaudacion
   public recaudacionPorcentajeReparos // % de Reparos
-  public TotalPiezas : number = 0 // Total de numero de piezas
+  public TotalPiezas = 0 // Total de numero de piezas
   public IngresosTotales // Monto Total Recaudado 
   public EstimadoDolar // % de Estimado en $
   public EstimadoPetro // % de Estimado en Petro
@@ -112,7 +112,26 @@ export class DashboardComponent implements OnInit {
   public OtrosPagosX = []
   public TotalFPO = 0
   public TotalFPOX = []
-// 
+  public TotalPagosFPO
+  public TotalPagosFPOX = []
+  public totalpagosFPO = 0
+
+  public fpo: any = 0
+  public fpoX = []
+  public fpo_OtrosMeses: any = 0
+  public fpo_OtrosMesesX = []
+  public derechosSemestral1: any = 0
+  public derechosSemestral1X = []
+  public derechosSemestral2: any = 0
+  public derechosSemestral2X = []
+  public anualidad: any = 0
+  public anualidadX = []
+  public subcontratistas: any = 0
+  public subcontratistasX = []
+  public pagosNoLiquidados: any = 0
+  public pagosNoLiquidadosX = []
+  // 
+
 
   constructor(
     private modalService: NgbModal,
@@ -150,7 +169,7 @@ export class DashboardComponent implements OnInit {
         // await this.EmpresasLiquidadas(mes1,mes2)
         // await this.EmpresasReparos(mes1,mes2)
         // await this.FPO(mes1,mes2)
-    
+
         // this.EmpresasLiquidadasResult = 0
         // this.EmpresasReparosResult = 22
         // this.EmpresasTotales = 68
@@ -158,11 +177,19 @@ export class DashboardComponent implements OnInit {
         // this.recaudacionPorcentajeLiquidado = this.PorcentajeLiquidado.toFixed(2)
         // this.PorcentajeReparos = (100*this.EmpresasReparosResult) / this.EmpresasTotales
         // this.recaudacionPorcentajeReparos = this.PorcentajeReparos.toFixed(2)
-        
+
         // this.TotalPiezas = 1
-        this.IngresosTotales = this.utilService.ConvertirMoneda(1135562.65)
-        this.EstimadoDolar =  this.utilService.ConvertirMoneda$(1135562.65 / 26)
-        this.EstimadoPetro =  0.00
+        // this.IngresosTotales = this.utilService.ConvertirMoneda(1135562.65)
+        // this.EstimadoDolar =  this.utilService.ConvertirMoneda$(1135562.65 / 26)
+
+        this.EmpresasLiquidadasResult = 0
+        this.EmpresasReparosResult = 0
+        this.IngresosTotales = 0
+        // this.EstimadoDolar =  this.utilService.ConvertirMoneda$(this.dolar)
+        this.TotalPagosFPO = 0
+        this.recaudacionPorcentajeLiquidado = 0
+        this.recaudacionPorcentajeReparos = 0
+        this.EstimadoPetro = 0
         this.ServicioNacional = 0
         this.ServicioIntLlegada = 0
         this.ServicioIntSalida = 0
@@ -256,62 +283,65 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  EmpresaOppSub(id: any){
+  EmpresaOppSub(id: any) {
     this.xAPI.funcion = "IPOSTEL_R_EmpresaOppSub";
     this.xAPI.parametros = `${id}`
     this.xAPI.valores = ''
-     this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-       if (data.length >= 0) {
-        this.DatosSub_OPP = data.Cuerpo.map(e => {
-          this.DatosSub_OPP.push(e)
-        });
-       } else {
-        this.DatosSub_OPP = []
-       }
+        if (data.length >= 0) {
+          this.DatosSub_OPP = data.Cuerpo.map(e => {
+            this.DatosSub_OPP.push(e)
+          });
+        } else {
+          this.DatosSub_OPP = []
+        }
         // console.log(this.DatosSub_OPP)
       },
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async EmpresasLiquidadas(date1: any, date2: any){
+
+
+
+  async EmpresasLiquidadas(date1: any, date2: any) {
     this.xAPI.funcion = "IPOSTEL_R_EmpresasLiquidadas";
-    this.xAPI.parametros = `${date1}`+','+`${date2}`
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.xAPI.parametros = `${date1}` + ',' + `${date2}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.EmpresasLiquidadasResult = data.Cuerpo.length
-        this.PorcentajeLiquidado = (100*this.EmpresasLiquidadasResult) / this.EmpresasTotales
+        this.PorcentajeLiquidado = (100 * this.EmpresasLiquidadasResult) / this.EmpresasTotales
         this.recaudacionPorcentajeLiquidado = this.PorcentajeLiquidado.toFixed(2)
       },
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async EmpresasReparos(date1: any, date2: any){
+  async EmpresasReparos(date1: any, date2: any) {
     this.xAPI.funcion = "IPOSTEL_R_EmpresasReparos";
-    this.xAPI.parametros = `${date1}`+','+`${date2}`
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.xAPI.parametros = `${date1}` + ',' + `${date2}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.EmpresasReparosResult = data.Cuerpo.length
-        this.PorcentajeReparos = (100*this.EmpresasReparosResult) / this.EmpresasTotales
+        this.PorcentajeReparos = (100 * this.EmpresasReparosResult) / this.EmpresasTotales
         this.recaudacionPorcentajeReparos = this.PorcentajeReparos.toFixed(2)
 
       },
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async TotalEmpresas(){
+  async TotalEmpresas() {
     this.xAPI.funcion = "IPOSTEL_R_OPP";
     this.xAPI.parametros = ''
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         // console.log(data.Cuerpo.length)
         this.EmpresasTotales = data.Cuerpo.length
@@ -319,15 +349,93 @@ export class DashboardComponent implements OnInit {
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async FPO(date1: any, date2: any){
-    this.xAPI.funcion = "IPOSTEL_R_FPO";
-    this.xAPI.parametros =  `${date1}`+','+`${date2}`
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+  async FPOIngresos(date1: any, date2: any) {
+    this.xAPI.funcion = "IPOSTEL_R_FPOIngresos";
+    this.xAPI.parametros = `${date1}` + ',' + `${date2}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        console.log(data.Cuerpo)
+        data.Cuerpo.forEach(e => {
+          // FPO MES
+          if (e.tipo_pago_pc === 1 || e.status_pc === 1) {
+            // console.log(e)
+            this.fpoX.push(e)
+            let fpo = this.fpoX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.fpo = this.utilService.ConvertirMoneda(fpo)
+          }
+          // FPO MES
+          // FPO OTROS MES
+          if (e.tipo_pago_pc === 6) {
+            // console.log(e)
+            this.fpo_OtrosMesesX.push(e)
+            let fpoOtrosMeses = this.fpo_OtrosMesesX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.fpo_OtrosMeses = this.utilService.ConvertirMoneda(fpoOtrosMeses)
+          }
+          // FPO OTROS MES
+          // Derecho Semestral 1
+          if (e.tipo_pago_pc === 2) {
+            // console.log(e)
+            this.derechosSemestral1X.push(e)
+            let MontoSemestral1 = this.derechosSemestral1X.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.derechosSemestral1 = this.utilService.ConvertirMoneda(MontoSemestral1)
+          }
+          // Derecho Semestral  1
+          // Derecho Semestral 2
+          if (e.tipo_pago_pc === 3) {
+            // console.log(e)
+            this.derechosSemestral2X.push(e)
+            let MontoSemestral2 = this.derechosSemestral2X.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.derechosSemestral2 = this.utilService.ConvertirMoneda(MontoSemestral2)
+          }
+          // Derecho Semestral  2
+          // Anualidad
+          if (e.tipo_pago_pc === 4) {
+            // console.log(e)
+            this.anualidadX.push(e)
+            let anualidad = this.anualidadX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.anualidad = this.utilService.ConvertirMoneda(anualidad)
+          }
+          // Anualidad
+          // Subcontratistas
+          if (e.tipo_pago_pc === 5) {
+            // console.log(e)
+            this.subcontratistasX.push(e)
+            let subcontratistas = this.subcontratistasX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.subcontratistas = this.utilService.ConvertirMoneda(subcontratistas)
+          }
+          // Subcontratista
+          // Pagoa no liquidados
+          if (e.status_pc === 1) {
+            // console.log(e)
+            this.pagosNoLiquidadosX.push(e)
+            let pagosNoLiquidados = this.pagosNoLiquidadosX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+            this.pagosNoLiquidados = this.utilService.ConvertirMoneda(pagosNoLiquidados)
+          }
+          // Pagoa no liquidados
+        });
+        // console.log(data.Cuerpo)
+        this.TotalPagosFPOX = data.Cuerpo
+        this.totalpagosFPO = this.TotalPagosFPOX.map(item => parseInt(item.monto_pc)).reduce((prev, curr) => prev + curr, 0);
+        this.IngresosTotales = this.totalpagosFPO
+        let monto = this.totalpagosFPO / this.dolarx
+        this.EstimadoDolar = this.utilService.ConvertirMoneda$(monto)
+        this.TotalPagosFPO = this.utilService.ConvertirMoneda(this.totalpagosFPO)
+        this.IngresosTotales = this.utilService.ConvertirMoneda(this.totalpagosFPO)
+
+      },
+      (err) => {
+        console.log(err)
+      }
+    )
+  }
+
+  async FPO(date1: any, date2: any) {
+    this.xAPI.funcion = "IPOSTEL_R_FPO";
+    this.xAPI.parametros = `${date1}` + ',' + `${date2}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
         this.TotalFPO = data.Cuerpo.length
         data.Cuerpo.map(e => {
           if (e.tipo_pago_pc === 1) { // Liquidados	
@@ -344,24 +452,24 @@ export class DashboardComponent implements OnInit {
             this.OtrosPagosX.push(e)
             this.OtrosPagos = this.OtrosPagosX.length
           }
-         
+
         });
       },
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async PiezasMovilizadas(mes: any){
+  async PiezasMovilizadas(mes: any) {
     this.xAPI.funcion = "IPOSTEL_R_PiezasMovilizadas";
     this.xAPI.parametros = `${mes}`
-     await this.apiService.Ejecutar(this.xAPI).subscribe(
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.forEach(e => {
           this.TotalServiciosCompletos.push(e)
-          this.TotalServicios =  this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
-          this.TotalPiezas =  this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.TotalServicios = this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.TotalPiezas = this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
           if (e.id_servicio_franqueo === 1 || e.id_servicio_franqueo === 2) {
             this.TotalPiezasNacionales.push(e)
           }
@@ -371,29 +479,33 @@ export class DashboardComponent implements OnInit {
           if (e.id_servicio_franqueo === 4 || e.id_servicio_franqueo === 6) {
             this.TotalPiezasIntSalida.push(e)
           }
-          this.ServicioNacional =  this.TotalPiezasNacionales.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
-          this.ServicioIntLlegada =  this.TotalPiezasIntLlegada.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
-          this.ServicioIntSalida =  this.TotalPiezasIntSalida.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.ServicioNacional = this.TotalPiezasNacionales.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.ServicioIntLlegada = this.TotalPiezasIntLlegada.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.ServicioIntSalida = this.TotalPiezasIntSalida.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
         });
       },
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
-  async GenerarReporteLiquidacionFPO() {
+
+   GenerarReporteLiquidacionFPO() {
     this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, Porfavor Espere!!!');
-      let mes = this.mes_consultar
-      let mes1 = this.mes_consultar+'-'+'01'
-      let mes2 = this.mes_consultar+'-'+'31'
+    let mes = this.mes_consultar
+    let mes1 = this.mes_consultar + '-' + '01'
+    let mes2 = this.mes_consultar + '-' + '31'
+    setTimeout(() => {
       this.TotalEmpresas()
-      await this.PiezasMovilizadas(mes)
-      await this.EmpresasLiquidadas(mes1,mes2)
-      await this.EmpresasReparos(mes1,mes2)
-      await this.FPO(mes1,mes2)
+      this.EmpresasLiquidadas(mes1, mes2)
+      this.EmpresasReparos(mes1, mes2)
+      this.FPO(mes1, mes2)
+      this.FPOIngresos(mes1, mes2)
+      this.PiezasMovilizadas(mes)
       this.sectionBlockUI.stop()
-      this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
+      // this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
+    }, 2000);
   }
 
   async EmpresaRIF(id: any) {
@@ -418,10 +530,12 @@ export class DashboardComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
+          this.EstimadoDolar = e.dolar
+          this.EstimadoPetro = e.petro_bolivares
           this.I_UpdateMontosPetroDolar.petro = e.petro
           this.I_UpdateMontosPetroDolar.dolar = e.dolar
           this.I_UpdateMontosPetroDolar.petro_bolivares = e.petro_bolivares
-          // this.dolarx = e.dolar
+          this.dolarx = e.dolar
           // this.petrox = e.petro
           // this.bolivaresx = e.petro_bolivares
           this.dolar = this.utilService.ConvertirMoneda(e.dolar)

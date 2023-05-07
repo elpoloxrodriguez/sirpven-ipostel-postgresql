@@ -248,7 +248,7 @@
                 <tr>
                   <td  style="background-color: #3d3d3a;" colspan="2" align="center"><strong><font color="white">Estimación en Divisas {{ dolar  }} | Estimación en Petro {{ petro }} </font></strong></td>
                   <td  style="background-color: #18e25b;"  align="center"><strong>{{EstimadoDolar}}</strong></td>
-                  <td  style="background-color: #18e25b;"  align="center"><strong> P {{EstimadoPetro}}</strong></td>
+                  <td  style="background-color: #18e25b;"  align="center"><strong> P {{EstimadoPetros}}</strong></td>
                   <td  style="background-color: #3d3d3a;" colspan="3" align="center"><strong><font color="white">Incluido los pagos no liquidados</font></strong></td>
                 </tr>
               </tbody>
@@ -273,33 +273,33 @@
                   <tbody>
                     <tr>
                       <td rowspan="3" align="center" style="background-color: #3d88e4;"><font color="white"><strong>FRANQUEO POSTAL OBLIGATORIO</strong></font></td>
-                      <td align="center" style="background-color: #18e25b;">Liquidados</td>
+                      <td align="justify" style="background-color: #18e25b;">Liquidados</td>
                       <td align="center"><strong>{{CantidadLiquidados}}</strong></td>
                       <td rowspan="3" align="center"><strong>{{TotalFPO}}</strong></td>
                     </tr>
                     <tr>
               
-                      <td align="center" style="background-color: #18e25b;">Cartas de no Movilización</td>
+                      <td align="justify" style="background-color: #18e25b;">Cartas de no Movilización</td>
                       <td align="center"><strong>{{CartasNoMovilizacion}}</strong></td>
                       
                     </tr>
                     <tr>
-                      <td align="center" style="background-color: #18e25b;">Otros Pagos</td>
+                      <td align="justify" style="background-color: #18e25b;">Otros Pagos</td>
                       <td align="center"><strong>{{OtrosPagos}}</strong></td>
                      
                     </tr>
                     <tr>
                       <td rowspan="3" align="center" style="background-color: #3d88e4;"><font color="white"><strong>PIEZAS MOVILIZADAS</strong></font></td>
-                      <td align="center" style="background-color: #e8e819;">Piezas Servicio Nacional</td>
+                      <td align="justify" style="background-color: #e8e819;">Piezas Servicio Nacional</td>
                       <td align="center"><strong>{{ServicioNacional}}</strong></td>
                       <td rowspan="3" align="center"><strong>{{TotalServicios}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center" style="background-color: #e8e819;">Piezas Ser. Int. de Llegada</td>
+                      <td align="justify" style="background-color: #e8e819;">Piezas Ser. Int. de Llegada</td>
                       <td align="center"><strong>{{ServicioIntLlegada}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center" style="background-color: #e8e819;">Piezas Ser. Int. de Salida</td>
+                      <td align="justify" style="background-color: #e8e819;">Piezas Ser. Int. de Salida</td>
                       <td align="center"><strong>{{ServicioIntSalida}}</strong></td>
                     </tr>
                     <tr>
@@ -323,42 +323,42 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th style="background-color: #3d3d3a;"><font color="white">DESCRIPCIÓN</font></th>
+                      <th  style="background-color: #3d3d3a;"><font color="white">DESCRIPCIÓN</font></th>
                       <th style="background-color: #3d3d3a;"><font color="white">MONTO</font></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td align="center">F.P.O {{ MesAnio }}</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">F.P.O {{ MesAnio }}</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{fpo}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">F.P.O OTROS MESES</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">F.P.O OTROS MESES</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{fpo_OtrosMeses}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">DERECHOS SEMESTRALES 1</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">DERECHOS SEMESTRALES 1</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{derechosSemestral1}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">DERECHOS SEMESTRALES 2</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">DERECHOS SEMESTRALES 2</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{derechosSemestral2}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">ANUALIDAD</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">ANUALIDAD</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{anualidad}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">SUBCONTRATISTAS</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">SUBCONTRATISTAS</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{subcontratistas}}</strong></td>
                     </tr>
                     <tr>
-                      <td align="center">PAGOS NO LIQUIDADOS</td>
-                      <td align="center" style="background-color: #e8e819;">VEF 0,00</td>
+                      <td align="justify">PAGOS NO LIQUIDADOS</td>
+                      <td align="center" style="background-color: #e8e819;"><strong>{{pagosNoLiquidados}}</strong></td>
                     </tr>
                     <tr>
                       <td align="center"><strong>TOTAL GENERAL</strong></td>
-                      <td align="center" style="background-color: #18e25b;"><strong>VEF 0,00</strong></td>
+                      <td align="center" style="background-color: #18e25b;"><strong>{{TotalPagosFPO}}</strong></td>
                     </tr>
                   </tbody>
                 </table>

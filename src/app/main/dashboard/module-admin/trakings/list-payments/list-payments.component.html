@@ -58,7 +58,7 @@
 
                       <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos"  [width]="60">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <div class="badge badge-pill" ngClass="badge-light-warning">
+                            <div class="badge badge-pill" ngClass="badge-light-primary">
                              <font size="1"> {{row.nombre_tipo_pagos}} </font>
                             </div>
                         </ng-template>
@@ -83,7 +83,7 @@
       
                       <ngx-datatable-column name="STATUS" prop="status_pc" [width]="5">
                         <ng-template let-status_pc="value" ngx-datatable-cell-template>
-                          <div *ngIf="status_pc == 0" class="badge badge-pill" ngClass="badge-light-primary">
+                          <div *ngIf="status_pc == 0" class="badge badge-pill" ngClass="badge-light-warning">
                            En Revisión
                           </div>
                         </ng-template>
