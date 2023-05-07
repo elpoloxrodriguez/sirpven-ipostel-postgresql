@@ -64,6 +64,8 @@ export class DashboardComponent implements OnInit {
   public aniox = this.fechax.getFullYear();
   public anio = this.fecha.getFullYear();
   public mes = this.fechax.getMonth();
+
+
   public hora
   public fecha_Actual_convert
   public hora_Actual_convert
@@ -80,6 +82,37 @@ export class DashboardComponent implements OnInit {
 
   public DatosSub_OPP = []
 
+  public mes_consultar
+  // 
+  public EmpresasLiquidadasResult : number = 0 // Numero de empresas que pagaron
+  public EmpresasTotales : number = 0 // Total de empresas registradas
+  public EmpresasReparosResult : number = 0 // Numero de empresas que no pagaron
+  public recaudacionPorcentajeLiquidado // % de Recaudacion
+  public recaudacionPorcentajeReparos // % de Reparos
+  public TotalPiezas : number = 0 // Total de numero de piezas
+  public IngresosTotales // Monto Total Recaudado 
+  public EstimadoDolar // % de Estimado en $
+  public EstimadoPetro // % de Estimado en Petro
+  public ServicioNacional
+  public TotalPiezasNacionales = []
+  public ServicioIntLlegada
+  public TotalPiezasIntLlegada = []
+  public ServicioIntSalida
+  public TotalPiezasIntSalida = []
+  public TotalServicios
+  public TotalServiciosCompletos = []
+  public PorcentajeLiquidado
+  public PorcentajeReparos
+  public CantidadLiquidados = 0
+  public CantidadLiquidadosX = []
+  public TotalCantidadLiquidados = []
+  public CartasNoMovilizacion = 0
+  public CartasNoMovilizacionX = []
+  public OtrosPagos = 0
+  public OtrosPagosX = []
+  public TotalFPO = 0
+  public TotalFPOX = []
+// 
 
   constructor(
     private modalService: NgbModal,
@@ -108,6 +141,36 @@ export class DashboardComponent implements OnInit {
         this.title = 'Administrador IPOSTEL'
         this.usuario = false
         this.empresa = true
+        // 
+        // let mes = this.mes_consultar
+        // let mes1 = this.mes_consultar+'-'+'01'
+        // let mes2 = this.mes_consultar+'-'+'31'
+        // this.TotalEmpresas()
+        // await this.PiezasMovilizadas(mes)
+        // await this.EmpresasLiquidadas(mes1,mes2)
+        // await this.EmpresasReparos(mes1,mes2)
+        // await this.FPO(mes1,mes2)
+    
+        // this.EmpresasLiquidadasResult = 0
+        // this.EmpresasReparosResult = 22
+        // this.EmpresasTotales = 68
+        // this.PorcentajeLiquidado = (100*this.EmpresasLiquidadasResult) / this.EmpresasTotales
+        // this.recaudacionPorcentajeLiquidado = this.PorcentajeLiquidado.toFixed(2)
+        // this.PorcentajeReparos = (100*this.EmpresasReparosResult) / this.EmpresasTotales
+        // this.recaudacionPorcentajeReparos = this.PorcentajeReparos.toFixed(2)
+        
+        // this.TotalPiezas = 1
+        this.IngresosTotales = this.utilService.ConvertirMoneda(1135562.65)
+        this.EstimadoDolar =  this.utilService.ConvertirMoneda$(1135562.65 / 26)
+        this.EstimadoPetro =  0.00
+        this.ServicioNacional = 0
+        this.ServicioIntLlegada = 0
+        this.ServicioIntSalida = 0
+        this.TotalServicios = 0
+        this.mes_consultar = this.MesAnio
+
+        //
+        // 
         break;
       case 1:
         this.title = 'Operador Postal Privado'
@@ -214,12 +277,123 @@ export class DashboardComponent implements OnInit {
      )
   }
 
-  GenerarReporteLiquidacionFPO() {
+  async EmpresasLiquidadas(date1: any, date2: any){
+    this.xAPI.funcion = "IPOSTEL_R_EmpresasLiquidadas";
+    this.xAPI.parametros = `${date1}`+','+`${date2}`
+     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.EmpresasLiquidadasResult = data.Cuerpo.length
+        this.PorcentajeLiquidado = (100*this.EmpresasLiquidadasResult) / this.EmpresasTotales
+        this.recaudacionPorcentajeLiquidado = this.PorcentajeLiquidado.toFixed(2)
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async EmpresasReparos(date1: any, date2: any){
+    this.xAPI.funcion = "IPOSTEL_R_EmpresasReparos";
+    this.xAPI.parametros = `${date1}`+','+`${date2}`
+     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.EmpresasReparosResult = data.Cuerpo.length
+        this.PorcentajeReparos = (100*this.EmpresasReparosResult) / this.EmpresasTotales
+        this.recaudacionPorcentajeReparos = this.PorcentajeReparos.toFixed(2)
+
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async TotalEmpresas(){
+    this.xAPI.funcion = "IPOSTEL_R_OPP";
+    this.xAPI.parametros = ''
+     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        // console.log(data.Cuerpo.length)
+        this.EmpresasTotales = data.Cuerpo.length
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async FPO(date1: any, date2: any){
+    this.xAPI.funcion = "IPOSTEL_R_FPO";
+    this.xAPI.parametros =  `${date1}`+','+`${date2}`
+     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        console.log(data.Cuerpo)
+        this.TotalFPO = data.Cuerpo.length
+        data.Cuerpo.map(e => {
+          if (e.tipo_pago_pc === 1) { // Liquidados	
+            this.CantidadLiquidadosX.push(e)
+            this.CantidadLiquidados = this.CantidadLiquidadosX.length
+          }
+          if (e.monto_pc == '0' || e.monto_pagar == '0' || e.tipo_pago_pc <= 1) { // Cartas de no Movilización
+            // console.log(e)
+            this.CartasNoMovilizacionX.push(e)
+            this.CartasNoMovilizacion = this.CartasNoMovilizacionX.length
+          }
+          if (e.tipo_pago_pc > 1) { // Otros Pagos
+            // console.log(e)
+            this.OtrosPagosX.push(e)
+            this.OtrosPagos = this.OtrosPagosX.length
+          }
+         
+        });
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async PiezasMovilizadas(mes: any){
+    this.xAPI.funcion = "IPOSTEL_R_PiezasMovilizadas";
+    this.xAPI.parametros = `${mes}`
+     await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.forEach(e => {
+          this.TotalServiciosCompletos.push(e)
+          this.TotalServicios =  this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.TotalPiezas =  this.TotalServiciosCompletos.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          if (e.id_servicio_franqueo === 1 || e.id_servicio_franqueo === 2) {
+            this.TotalPiezasNacionales.push(e)
+          }
+          if (e.id_servicio_franqueo === 3 || e.id_servicio_franqueo === 5) {
+            this.TotalPiezasIntLlegada.push(e)
+          }
+          if (e.id_servicio_franqueo === 4 || e.id_servicio_franqueo === 6) {
+            this.TotalPiezasIntSalida.push(e)
+          }
+          this.ServicioNacional =  this.TotalPiezasNacionales.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.ServicioIntLlegada =  this.TotalPiezasIntLlegada.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+          this.ServicioIntSalida =  this.TotalPiezasIntSalida.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
+        });
+      },
+      (err) => {
+        console.log(err)
+      }
+     )
+  }
+
+  async GenerarReporteLiquidacionFPO() {
     this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, Porfavor Espere!!!');
-    setTimeout(() => {
+      let mes = this.mes_consultar
+      let mes1 = this.mes_consultar+'-'+'01'
+      let mes2 = this.mes_consultar+'-'+'31'
+      this.TotalEmpresas()
+      await this.PiezasMovilizadas(mes)
+      await this.EmpresasLiquidadas(mes1,mes2)
+      await this.EmpresasReparos(mes1,mes2)
+      await this.FPO(mes1,mes2)
       this.sectionBlockUI.stop()
       this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
-    }, 2000);
   }
 
   async EmpresaRIF(id: any) {

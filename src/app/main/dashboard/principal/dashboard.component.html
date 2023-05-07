@@ -237,18 +237,18 @@
               </thead>
               <tbody>
                 <tr>
-                  <td align="center" style="background-color: #0964d4;"><font color="white"> {{ MesAnio }}</font></td>
-                  <td style="background-color: #18e25b;"  align="center">0</td>
-                  <td  align="center">0,00 %</td>
-                  <td  style="background-color: #18e25b;" align="center"><strong>VEF 0,00</strong></td>
-                  <td  align="center" style="background-color: #e8e819;">0,00</td>
-                  <td  align="center" style="background-color: #e8e819;">0</td>
-                  <td  align="center">0,00 %</td>
+                  <td align="center" style="background-color: #0964d4;"><font color="white"> {{ mes_consultar }}</font></td>
+                  <td style="background-color: #18e25b;"  align="center"><strong>{{EmpresasLiquidadasResult}}</strong></td>
+                  <td  align="center"><strong>{{recaudacionPorcentajeLiquidado}} %</strong></td>
+                  <td  style="background-color: #18e25b;" align="center"><strong>{{IngresosTotales}}</strong></td>
+                  <td  align="center" style="background-color: #e8e819;"><strong>{{TotalPiezas}}</strong></td>
+                  <td  align="center" style="background-color: #e8e819;"><strong><font color="red">{{EmpresasReparosResult}}</font></strong></td>
+                  <td  align="center"><strong>{{recaudacionPorcentajeReparos}} %</strong></td>
                 </tr>
                 <tr>
                   <td  style="background-color: #3d3d3a;" colspan="2" align="center"><strong><font color="white">Estimación en Divisas {{ dolar  }} | Estimación en Petro {{ petro }} </font></strong></td>
-                  <td  style="background-color: #18e25b;"  align="center"><strong> $ 0,00</strong></td>
-                  <td  style="background-color: #18e25b;"  align="center"><strong> P 0,00</strong></td>
+                  <td  style="background-color: #18e25b;"  align="center"><strong>{{EstimadoDolar}}</strong></td>
+                  <td  style="background-color: #18e25b;"  align="center"><strong> P {{EstimadoPetro}}</strong></td>
                   <td  style="background-color: #3d3d3a;" colspan="3" align="center"><strong><font color="white">Incluido los pagos no liquidados</font></strong></td>
                 </tr>
               </tbody>
@@ -274,37 +274,38 @@
                     <tr>
                       <td rowspan="3" align="center" style="background-color: #3d88e4;"><font color="white"><strong>FRANQUEO POSTAL OBLIGATORIO</strong></font></td>
                       <td align="center" style="background-color: #18e25b;">Liquidados</td>
-                      <td align="center">0</td>
-                      <td rowspan="3" align="center">0</td>
+                      <td align="center"><strong>{{CantidadLiquidados}}</strong></td>
+                      <td rowspan="3" align="center"><strong>{{TotalFPO}}</strong></td>
                     </tr>
                     <tr>
               
                       <td align="center" style="background-color: #18e25b;">Cartas de no Movilización</td>
-                      <td align="center">0</td>
+                      <td align="center"><strong>{{CartasNoMovilizacion}}</strong></td>
                       
                     </tr>
                     <tr>
                       <td align="center" style="background-color: #18e25b;">Otros Pagos</td>
-                      <td align="center">0</td>
+                      <td align="center"><strong>{{OtrosPagos}}</strong></td>
                      
                     </tr>
                     <tr>
                       <td rowspan="3" align="center" style="background-color: #3d88e4;"><font color="white"><strong>PIEZAS MOVILIZADAS</strong></font></td>
                       <td align="center" style="background-color: #e8e819;">Piezas Servicio Nacional</td>
-                      <td align="center">0</td>
-                      <td rowspan="3" align="center">0</td>
+                      <td align="center"><strong>{{ServicioNacional}}</strong></td>
+                      <td rowspan="3" align="center"><strong>{{TotalServicios}}</strong></td>
                     </tr>
                     <tr>
                       <td align="center" style="background-color: #e8e819;">Piezas Ser. Int. de Llegada</td>
-                      <td align="center">0</td>
+                      <td align="center"><strong>{{ServicioIntLlegada}}</strong></td>
                     </tr>
                     <tr>
                       <td align="center" style="background-color: #e8e819;">Piezas Ser. Int. de Salida</td>
-                      <td align="center">0</td>
+                      <td align="center"><strong>{{ServicioIntSalida}}</strong></td>
                     </tr>
                     <tr>
                       <td colspan="2" align="center">
-                        <input class="form-control" type="month">
+                        <input class="form-control" [(ngModel)]="mes_consultar" autocomplete="off"
+                        [ngModelOptions]="{standalone: true}" type="month">
                       </td>
                       <td colspan="2" align="center">
                         <button type="button" class="btn btn-primary" (click)="GenerarReporteLiquidacionFPO()">Descargar Reporte</button>
