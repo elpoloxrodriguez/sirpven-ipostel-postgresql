@@ -99,11 +99,15 @@
                               [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Detalles</a>
                               <a (click)="CambiarStatusSubcontratista(ModalCambiarStatus,row)" ngbDropdownItem><span
                                 [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> Cambiar Status</a>
+                                <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
+                                  [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
                           </div>
                     </div>
                       <ng-template  #nonStatus>
                             <a (click)="DetallesOPP(ModalDetailsOPP,row)" ngbDropdownItem><span
                               [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Detalles</a>
+                              <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
+                                [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
                             </ng-template>
                     </div>  
                       </ng-template>
@@ -335,6 +339,70 @@
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #ModalCambiarContrasena let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Cambiar Contraseña del Usuario:  <strong> {{ title_modal }} </strong></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <div class="row">
+                
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label class="form-label">Nueva Contraseña</label>
+            <input required  type="text" class="form-control"
+            [(ngModel)]="NewPassword" [ngModelOptions]="{standalone: true}"
+            placeholder="Nueva Contraseña" />
+            <!-- <div class="input-group input-group-merge form-password-toggle">
+              <input [type]="passwordTextType ? 'text' : 'password'" [(ngModel)]="NewPassword"
+                [ngModelOptions]="{standalone: true, required: true}" class="form-control form-control-merge"
+                [ngClass]="{ 'is-invalid error': submitted && f.password.errors }" placeholder="Ingrese Nueva Contraseña"
+                aria-describedby="login-password" tabindex="2" autocomplete="false" />
+              <div class="input-group-append">
+                <span class="input-group-text cursor-pointer"><i class="feather font-small-4" [ngClass]="{
+                    'icon-eye-off': passwordTextType,
+                    'icon-eye': !passwordTextType
+                  }" (click)="togglePasswordTextType()"></i></span>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label class="form-label">Confirme Nueva Contraseña</label>
+            <input required  type="text" class="form-control"
+            [(ngModel)]="ConfirmNewPassword" [ngModelOptions]="{standalone: true}"
+            placeholder="Confirme Nueva Contraseña" />
+            <!-- <div class="input-group input-group-merge form-password-toggle">
+              <input [type]="passwordTextTypeX ? 'text' : 'password'" [(ngModel)]="ConfirmNewPassword"
+                [ngModelOptions]="{standalone: true, required: true}" class="form-control form-control-merge"
+                [ngClass]="{ 'is-invalid error': submitted && f.password.errors }" placeholder="Ingrese Confirmación Nueva Contraseña"
+                aria-describedby="login-password" tabindex="2" autocomplete="false" />
+              <div class="input-group-append">
+                <span class="input-group-text cursor-pointer"><i class="feather font-small-4" [ngClass]="{
+                    'icon-eye-off': passwordTextTypeX,
+                    'icon-eye': !passwordTextTypeX
+                  }" (click)="togglePasswordTextTypeX()"></i></span>
+              </div> 
+            </div>-->
+          </div>
+        </div>
+        
+        </div>
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button class="btn bg-gradient-success text-white" (click)="ResetPassword()">
+      <span class="fa fa-key"></span> Cambiar Contraseña del Usuario</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

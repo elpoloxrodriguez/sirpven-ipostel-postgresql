@@ -491,21 +491,19 @@ export class DashboardComponent implements OnInit {
   }
 
 
-   GenerarReporteLiquidacionFPO() {
+   async GenerarReporteLiquidacionFPO() {
     this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, Porfavor Espere!!!');
     let mes = this.mes_consultar
     let mes1 = this.mes_consultar + '-' + '01'
     let mes2 = this.mes_consultar + '-' + '31'
-    setTimeout(() => {
-      this.TotalEmpresas()
-      this.EmpresasLiquidadas(mes1, mes2)
-      this.EmpresasReparos(mes1, mes2)
-      this.FPO(mes1, mes2)
-      this.FPOIngresos(mes1, mes2)
-      this.PiezasMovilizadas(mes)
-      this.sectionBlockUI.stop()
+      await this.TotalEmpresas()
+      await this.EmpresasLiquidadas(mes1, mes2)
+      await this.EmpresasReparos(mes1, mes2)
+      await this.FPO(mes1, mes2)
+      await this.FPOIngresos(mes1, mes2)
+      await this.PiezasMovilizadas(mes)
+      await this.sectionBlockUI.stop()
       // this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
-    }, 2000);
   }
 
   async EmpresaRIF(id: any) {

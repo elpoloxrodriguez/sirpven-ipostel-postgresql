@@ -175,6 +175,11 @@ export class SubcontractorComponent implements OnInit {
   public IdOPP
   public CargarSub
 
+  public title_modal
+  public idOPPSelected
+  public ConfirmNewPassword
+  public NewPassword
+
   public SelectStatusSubcontratista = [
     { id: 0, name: 'En Espera'},
     { id: 1, name: 'Aprobado'},
@@ -426,6 +431,47 @@ async filterUpdateSubcontratistas(event) {
         keyboard: false,
         windowClass: 'fondo-modal',
       });
+    }
+
+    async CambiarContrasena(modal, data) {
+      this.title_modal = data.nombre_empresa
+      this.idOPPSelected = data.id_opp
+      this.modalService.open(modal, {
+        centered: true,
+        size: 'lg',
+        backdrop: false,
+        keyboard: false,
+        windowClass: 'fondo-modal',
+      });
+    }
+
+    async ResetPassword(){
+      // this.rowsOPP_SUB.push(this.List_OPP_SUB)
+      if (this.ConfirmNewPassword != this.NewPassword) {
+        this.utilService.alertConfirmMini('error','<font color="red">Oops Lo sentimos!</font> <br> Las Contraseñas deben ser iguales!, Verifique e intente de nuevo')
+        // this.List_OPP_SUB = []
+        // this.ListaOPP_SUB()
+      } else {
+        const pwd = this.NewPassword
+        this.xAPI.funcion = 'IPOSTEL_U_CambiarPasswordOPPSUB'
+        this.xAPI.parametros = `${this.idOPPSelected}`+','+this.utilService.md5(pwd)
+        this.xAPI.valores = ''
+        await this.apiService.EjecutarDev(this.xAPI).subscribe(
+          (data) => {
+            if (data.tipo == 1) {
+            // this.List_OPP_SUB = []
+            // this.ListaOPP_SUB()
+            this.modalService.dismissAll('Close')
+            this.utilService.alertConfirmMini('success','Felicidades<br>La Contraseña fue actualizada satisfactoriamente!')
+          } else {
+            this.utilService.alertConfirmMini('error','<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+          }
+        },
+        (error) => {
+          console.error(error)
+        }
+      )
+      }
     }
 
 
