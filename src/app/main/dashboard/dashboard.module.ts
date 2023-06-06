@@ -68,7 +68,7 @@ import { SystemUsersComponent } from './module-admin/settings/system-users/syste
       FinesPenaltiesComponent,
       PostalSolvencyOppComponent,
       PanelAsistenteVirtualComponent,
-      SystemUsersComponent
+      SystemUsersComponent,
     ],
   imports: [
     CommonModule,

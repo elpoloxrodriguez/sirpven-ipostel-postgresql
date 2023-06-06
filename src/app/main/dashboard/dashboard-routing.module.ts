@@ -20,7 +20,7 @@ const routes: Routes = [
     component: DashboardComponent,
     // canActivate:[AuthGuardGuard],
     canActivate: [AuthGuard,AuthGuardGuard],
-    // data: { roles: ['0','1','2','3','4','5','6','7','8','9'] },
+    data: { roles: [1,2,3,4,5,6,7,8,9] },
   },
   {
     path: 'virtual-assistant',

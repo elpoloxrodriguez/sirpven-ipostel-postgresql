@@ -8,6 +8,7 @@ export const menu: CoreMenu[] = [
     id: 'dashboard/home',
     nombre: 'Principal',
     icono: 'home',
+    // role: [1, 2],
     type: 'item',
     url: 'home',
   },

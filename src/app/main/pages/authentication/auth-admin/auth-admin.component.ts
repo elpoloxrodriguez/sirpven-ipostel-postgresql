@@ -105,7 +105,7 @@ export class AuthAdminComponent implements OnInit {
       return;
     }
     if (sessionStorage.getItem("token") != undefined) {
-      this._router.navigate(['/']);
+      this._router.navigate(['/dashboard']);
     }
 
     // Login
@@ -134,7 +134,7 @@ export class AuthAdminComponent implements OnInit {
     }
 
     if (sessionStorage.getItem("token") != undefined) {
-      this._router.navigate(['/home'])
+      this._router.navigate(['/dashboard'])
       return
    }
     this.loginForm = this._formBuilder.group({
@@ -170,7 +170,7 @@ export class AuthAdminComponent implements OnInit {
           this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
           // console.log(this.infoUsuario.Usuario[0])
           this.utilservice.alertConfirmMini('success', `Bienvenido al SIRP-IPOSTEL`);
-          this._router.navigate(['home'])
+          this._router.navigate(['/dashboard'])
             .then(() => {
               window.location.reload();
             });

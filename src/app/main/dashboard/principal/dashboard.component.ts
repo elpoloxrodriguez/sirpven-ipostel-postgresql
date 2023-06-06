@@ -149,39 +149,15 @@ export class DashboardComponent implements OnInit {
    */
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
-    this.EmpresaOppSub(this.token.Usuario[0].id_opp)
     await this.Precio_Dolar_Petro()
     await this.Meses()
     this.fecha_Actual_convert = this.utilService.FechaMomentActual()
     this.role = this.token.Usuario[0].role
-    this.EmpresaRIF(this.token.Usuario[0].id_opp)
     switch (this.token.Usuario[0].tipo_registro) {
       case undefined:
         this.title = 'Administrador IPOSTEL'
         this.usuario = false
         this.empresa = true
-        // 
-        // let mes = this.mes_consultar
-        // let mes1 = this.mes_consultar+'-'+'01'
-        // let mes2 = this.mes_consultar+'-'+'31'
-        // this.TotalEmpresas()
-        // await this.PiezasMovilizadas(mes)
-        // await this.EmpresasLiquidadas(mes1,mes2)
-        // await this.EmpresasReparos(mes1,mes2)
-        // await this.FPO(mes1,mes2)
-
-        // this.EmpresasLiquidadasResult = 0
-        // this.EmpresasReparosResult = 22
-        // this.EmpresasTotales = 68
-        // this.PorcentajeLiquidado = (100*this.EmpresasLiquidadasResult) / this.EmpresasTotales
-        // this.recaudacionPorcentajeLiquidado = this.PorcentajeLiquidado.toFixed(2)
-        // this.PorcentajeReparos = (100*this.EmpresasReparosResult) / this.EmpresasTotales
-        // this.recaudacionPorcentajeReparos = this.PorcentajeReparos.toFixed(2)
-
-        // this.TotalPiezas = 1
-        // this.IngresosTotales = this.utilService.ConvertirMoneda(1135562.65)
-        // this.EstimadoDolar =  this.utilService.ConvertirMoneda$(1135562.65 / 26)
-
         this.EmpresasLiquidadasResult = 0
         this.EmpresasReparosResult = 0
         this.IngresosTotales = 0
@@ -195,11 +171,12 @@ export class DashboardComponent implements OnInit {
         this.ServicioIntSalida = 0
         this.TotalServicios = 0
         this.mes_consultar = this.MesAnio
-
         //
         // 
         break;
       case 1:
+        this.EmpresaOppSub(this.token.Usuario[0].id_opp)
+        this.EmpresaRIF(this.token.Usuario[0].id_opp)
         this.title = 'Operador Postal Privado'
         this.empresaSUB = false
         this.empresaOPP = true
@@ -207,6 +184,8 @@ export class DashboardComponent implements OnInit {
         this.empresa = false
         break;
       case 2:
+        this.EmpresaOppSub(this.token.Usuario[0].id_opp)
+        this.EmpresaRIF(this.token.Usuario[0].id_opp)    
         this.title = 'Sub Contratista'
         this.empresaSUB = true
         this.empresaOPP = false
@@ -303,8 +282,6 @@ export class DashboardComponent implements OnInit {
       }
     )
   }
-
-
 
 
   async EmpresasLiquidadas(date1: any, date2: any) {
