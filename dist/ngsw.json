@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1686012013902,
+  "timestamp": 1687358068036,
   "index": "./index.html",
   "assetGroups": [
     {
@@ -57,6 +57,7 @@
         "./ar.c5c8135d1656a8c4.svg",
         "./as.3540a6b7d8d57947.svg",
         "./as.9fab1252a1b365ac.svg",
+        "./assets/.htaccess",
         "./assets/fonts/feather/fonts/feather.eot",
         "./assets/fonts/feather/fonts/feather.svg",
         "./assets/fonts/feather/fonts/feather.ttf",
@@ -1258,6 +1259,7 @@
     "./ar.c5c8135d1656a8c4.svg": "d97627694efb6b44c45df0ecaaaf4b9d7a66c4d3",
     "./as.3540a6b7d8d57947.svg": "1b86d22738cbafe84cdb88fac2eba50b51a0ee46",
     "./as.9fab1252a1b365ac.svg": "aad68c1793bf3fab0a29f674c51ebc3c42ae4d02",
+    "./assets/.htaccess": "22d56ab78efcec1164818db14bc3fdc7057e9713",
     "./assets/fonts/feather/fonts/feather.eot": "a4b7950838a591b820a82b591e8505af485ab351",
     "./assets/fonts/feather/fonts/feather.svg": "a281829bffe16f4fe9badb7acbf7e0309f98494e",
     "./assets/fonts/feather/fonts/feather.ttf": "2bde853cbb769aab80b18f3544a7e7c1f2cbd31b",
