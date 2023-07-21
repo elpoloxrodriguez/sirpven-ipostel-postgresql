@@ -48,6 +48,10 @@ import { PostalSolvencyOppComponent } from './module-opp-sub/postal-solvency-opp
 import { PostalSolvencyOppModule } from './module-opp-sub/postal-solvency-opp/postal-solvency-opp.module';
 import { PanelAsistenteVirtualComponent } from '../asistente-virtual/panel-asistente-virtual/panel-asistente-virtual.component';
 import { SystemUsersComponent } from './module-admin/settings/system-users/system-users.component';
+import { PhilatelyModule } from './philately/philately.module';
+import { DupvenRoutingModule } from './dupven/dupven-routing.module';
+import { DupvenAdminComponent } from './dupven/dupven-admin/dupven-admin.component';
+import { DupvenOppComponent } from './dupven/dupven-opp/dupven-opp.component';
 
 
 
@@ -69,6 +73,8 @@ import { SystemUsersComponent } from './module-admin/settings/system-users/syste
       PostalSolvencyOppComponent,
       PanelAsistenteVirtualComponent,
       SystemUsersComponent,
+      DupvenAdminComponent,
+      DupvenOppComponent
     ],
   imports: [
     CommonModule,
@@ -98,6 +104,8 @@ import { SystemUsersComponent } from './module-admin/settings/system-users/syste
     PostalSolvencyModule,
     FinesAndPenaltiesModule,
     PostalSolvencyOppModule,
+    PhilatelyModule,
+    DupvenRoutingModule
   ],
   exports: [],
   providers: [DatePipe]

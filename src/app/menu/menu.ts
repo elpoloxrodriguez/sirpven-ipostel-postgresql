@@ -12,6 +12,42 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'home',
   },
+    // Filatelia ANDMI
+  {
+    id: 'philately-admin',
+    nombre: 'Filatelia',
+    icono: 'package',
+    role: [3],
+    type: 'item',
+    url: 'philately-admin',
+  },
+    // Filatelia OPP
+      {
+        id: 'philately-opp',
+        nombre: 'Filatelia',
+        icono: 'package',
+        role: [1],
+        type: 'item',
+        url: 'philately-opp',
+      },
+    //  DUPVEN ADMIN
+  {
+    id: 'dupven',
+    nombre: 'DUPVEN',
+    icono: 'credit-card',
+    type: 'item',
+    role: [3,6],
+    url: 'dupven/admin',
+  },
+   //  DUPVEN OPP
+    {
+    id: 'takings',
+    nombre: 'DUPVEN',
+    icono: 'credit-card',
+    type: 'item',
+    role: [1],
+    url: 'dupven/opp',
+  },
   // Empresa
   {
     id: 'EmpresaOPP',
