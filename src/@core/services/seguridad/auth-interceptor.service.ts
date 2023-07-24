@@ -34,7 +34,7 @@ export class AuthInterceptorService implements HttpInterceptor {
 
         console.log(err)
 
-        if (err.status === 401) {
+        if (err.status == 401) {
           console.error('Evaluacion de Token:', err.error.msj)
           this.cerrar(err.error.msj)
         }

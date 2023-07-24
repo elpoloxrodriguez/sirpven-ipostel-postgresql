@@ -5,7 +5,7 @@
   
             <div class="card">
               <div class="row">
-                <div class="col-md-6 col-12">
+                <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
                     <label class="d-flex align-items-center"
                       >Mostrar
@@ -17,6 +17,12 @@
                       </select>
                       Registros</label
                     >
+                  </div>
+                </div>
+                <div class="col-md-3 col-12">
+                  <div class="d-flex justify-content-between align-items-center m-1">
+                    <button type="button" class="btn btn-primary" (click)="FilateliaModalAdd(ModalAddFilatelia)"  rippleEffect>
+                      Generar Filatelia </button>
                   </div>
                 </div>
                 <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
@@ -84,3 +90,74 @@
 
     </div>
 </div>
+
+<ng-template #ModalAddFilatelia let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160"> Generar Filatelia</h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <div class="row">
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Numero Correlativo</label>
+            <input required  type="text" value="00000000" class="form-control" readonly
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Numero Correlativo" />
+          </div>
+        </div>
+                
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Tipo de Estampilla</label>
+            <ng-select [items]="SelectTipoEstampilla" bindValue="id" 
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Tipo Estampilla" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Valor de Estampilla</label>
+            <ng-select [items]="SelectValorEstampilla" bindValue="id" 
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Valor Estampilla" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Operador Postal Privado</label>
+            <ng-select [items]="SelectOPP" bindValue="id" 
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Operador Postal Privado" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Observación</label>
+            <textarea class="form-control" 
+            [ngModelOptions]="{standalone: true, required: true}"  id="basicTextarea" placeholder="Observación" required autocomplete="off" rows="3" placeholder="Observación"></textarea>
+          </div>
+        </div>
+
+        
+        </div>
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button class="btn bg-gradient-success text-white" (click)="GenerarConcesionPostalPrivada()">
+      <span class="fa fa-plus"></span> Generar Filatelia</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
