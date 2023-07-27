@@ -1,5 +1,19 @@
 import { Injectable } from '@angular/core';
 
+// Filatelia 
+export interface FilateliaCrear {
+	TipoEstampilla: undefined,
+    ValorEstampilla: undefined,
+	CostoEstampilla: undefined,
+	TipoReceptorEstampilla
+	ReceptorEstampilla: undefined,
+	ObservacionEstampilla: string
+}
+
+export interface QrContenido {
+	
+}
+
 
 //  recaptcha
 export interface UserRegistrationModel {

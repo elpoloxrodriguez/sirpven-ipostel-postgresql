@@ -10,12 +10,26 @@ import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
 import { AuthGuard } from 'app/auth/helpers';
 import { PhilatelyAdminComponent } from './philately-admin/philately-admin.component'
 import { PhilatelyOppComponent } from './philately-opp/philately-opp.component'
+import { PhilatelyReceiverComponent } from './philately-receiver/philately-receiver.component'
+import { PhilatelyInventoryComponent } from './philately-inventory/philately-inventory.component'
 
 
 const routes: Routes = [
   {
-    path: 'philately-admin',
+    path: 'philately/philately-receiver',
+    component: PhilatelyReceiverComponent,
+    canActivate: [AuthGuard,AuthGuardGuard],
+    data: { roles: [3] },
+  },
+  {
+    path: 'philately/sale-of-philately',
     component: PhilatelyAdminComponent,
+    canActivate: [AuthGuard,AuthGuardGuard],
+    data: { roles: [3] },
+  },
+  {
+    path: 'philately/philately-inventory',
+    component: PhilatelyInventoryComponent,
     canActivate: [AuthGuard,AuthGuardGuard],
     data: { roles: [3] },
   },

@@ -12,14 +12,37 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'home',
   },
-    // Filatelia ANDMI
+    // Filatelia ADMIN
   {
     id: 'philately-admin',
     nombre: 'Filatelia',
-    icono: 'package',
+    title: 'Filatelia',
     role: [3],
-    type: 'item',
-    url: 'philately-admin',
+    type: 'collapsible',
+    icono: 'package',
+    children: [
+      {
+        id: 'philately-receiver',
+        nombre: 'Receptores',
+        type: 'item',
+        icono: 'circle',
+        url: 'philately/philately-receiver'
+      },
+      {
+        id: 'sale-of-philately',
+        nombre: 'Ventas',
+        type: 'item',
+        icono: 'circle',
+        url: 'philately/sale-of-philately'
+      },
+      {
+        id: 'philately-inventory',
+        nombre: 'Inventario',
+        type: 'item',
+        icono: 'circle',
+        url: 'philately/philately-inventory'
+      }
+    ]
   },
     // Filatelia OPP
       {

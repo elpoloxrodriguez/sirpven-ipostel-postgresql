@@ -22,7 +22,7 @@
                 <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
                     <button type="button" class="btn btn-primary" (click)="FilateliaModalAdd(ModalAddFilatelia)"  rippleEffect>
-                      Generar Filatelia </button>
+                      Generar Tiraje </button>
                   </div>
                 </div>
                 <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
@@ -92,15 +92,100 @@
 </div>
 
 <ng-template #ModalAddFilatelia let-modal>
+  <form class="form" (ngSubmit)="Generar()" #formUsersRegister="ngForm">      
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160"> Generar Filatelia</h5>
+    <h5 class="modal-title" id="myModalLabel160"> Generar Tiraje de Filatelia</h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
-      <div class="row">
+        
+        <div class="row">
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Tipo de Estampilla</label>
+            <ng-select [items]="SelectTipoEstampilla" bindValue="id"
+            #TipoEstampilla="ngModel"
+            [class.error]="!TipoEstampilla.valid && formUsersRegister.submitted"
+            [(ngModel)]="xFilatelida.TipoEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Tipo Estampilla" required autocomplete="off">
+          </ng-select>
+          <span *ngIf="formUsersRegister.submitted && TipoEstampilla.invalid" class="invalid-form">
+            <small class="form-text text-danger" *ngIf="TipoEstampilla.errors.required"
+              >Tipo de Estampilla es requerido!</small
+            >
+          </span>
+          </div>
+        </div>
 
         <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Valor de Estampilla</label>
+            <ng-select [items]="SelectValorEstampilla" bindValue="id"
+            #ValorEstampilla="ngModel"
+            [class.error]="!ValorEstampilla.valid && formUsersRegister.submitted"
+            [(ngModel)]="xFilatelida.ValorEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Valor Estampilla" required autocomplete="off">
+          </ng-select>
+          <span *ngIf="formUsersRegister.submitted && ValorEstampilla.invalid" class="invalid-form">
+            <small class="form-text text-danger" *ngIf="ValorEstampilla.errors.required"
+              >Valor de Estampilla es requerido!</small
+            >
+          </span>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Tipo de Receptor</label>
+            <ng-select [items]="SelectTipoReceptorEstampilla" bindValue="id" 
+            #TipoReceptor="ngModel" (ngModelChange)="SelectTipoReceptor($event)"
+            [class.error]="!TipoReceptor.valid && formUsersRegister.submitted"
+            [(ngModel)]="xFilatelida.TipoReceptorEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Tipo de Receptor" required autocomplete="off">
+          </ng-select>
+          <span *ngIf="formUsersRegister.submitted && TipoReceptor.invalid" class="invalid-form">
+            <small class="form-text text-danger" *ngIf="TipoReceptor.errors.required"
+              >Tipo de Receptor es requerido!</small
+            >
+          </span>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12" *ngIf="showOPP === true">
+          <div class="form-group">
+            <label class="form-label">Seleccione Operador Postal Privado</label>
+            <ng-select [items]="SelectOPP" bindValue="id" [(ngModel)]="xFilatelida.ReceptorEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Operador Postal Privado" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12" *ngIf="showCOL === true">
+          <div class="form-group">
+            <label class="form-label">Seleccione Coleccionista</label>
+            <ng-select [items]="SelectReceptores" bindValue="id" [(ngModel)]="xFilatelida.ReceptorEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Coleccionista Receptor" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-12" *ngIf="showOPT === true">
+          <div class="form-group">
+            <label class="form-label">Seleccione Oficina Postal Telegrafico</label>
+            <ng-select [items]="SelectReceptores" bindValue="id" [(ngModel)]="xFilatelida.ReceptorEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}" 
+            bindLabel="name" placeholder="Seleccione Operador Postal Telegrafico" required autocomplete="off">
+          </ng-select>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
           <div class="form-group">
             <label class="form-label">Numero Correlativo</label>
             <input required  type="text" value="00000000" class="form-control" readonly
@@ -108,56 +193,44 @@
             placeholder="Numero Correlativo" />
           </div>
         </div>
-                
-        <div class="col-md-12 col-12">
-          <div class="form-group">
-            <label class="form-label">Seleccione Tipo de Estampilla</label>
-            <ng-select [items]="SelectTipoEstampilla" bindValue="id" 
-            [ngModelOptions]="{standalone: true, required: true}" 
-            bindLabel="name" placeholder="Seleccione Tipo Estampilla" required autocomplete="off">
-          </ng-select>
-          </div>
-        </div>
 
-        <div class="col-md-12 col-12">
+        <div class="col-md-6 col-12">
           <div class="form-group">
-            <label class="form-label">Seleccione Valor de Estampilla</label>
-            <ng-select [items]="SelectValorEstampilla" bindValue="id" 
-            [ngModelOptions]="{standalone: true, required: true}" 
-            bindLabel="name" placeholder="Seleccione Valor Estampilla" required autocomplete="off">
-          </ng-select>
-          </div>
-        </div>
-
-        <div class="col-md-12 col-12">
-          <div class="form-group">
-            <label class="form-label">Seleccione Operador Postal Privado</label>
-            <ng-select [items]="SelectOPP" bindValue="id" 
-            [ngModelOptions]="{standalone: true, required: true}" 
-            bindLabel="name" placeholder="Seleccione Operador Postal Privado" required autocomplete="off">
-          </ng-select>
+            <label class="form-label">Costo Total</label>
+            <input required  type="number" class="form-control" 
+            #CostoReceptor="ngModel"
+            [class.error]="!CostoReceptor.valid && formUsersRegister.submitted"
+            [(ngModel)]="xFilatelida.CostoEstampilla"
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Ingrese Costo" />
+            <span *ngIf="formUsersRegister.submitted && CostoReceptor.invalid" class="invalid-form">
+              <small class="form-text text-danger" *ngIf="CostoReceptor.errors.required"
+                >Costo es requerido!</small
+              >
+            </span>
           </div>
         </div>
 
         <div class="col-md-12 col-12">
           <div class="form-group">
             <label class="form-label">Observación</label>
-            <textarea class="form-control" 
-            [ngModelOptions]="{standalone: true, required: true}"  id="basicTextarea" placeholder="Observación" required autocomplete="off" rows="3" placeholder="Observación"></textarea>
+            <textarea class="form-control" [(ngModel)]="xFilatelida.ObservacionEstampilla"
+            [ngModelOptions]="{standalone: true, required: true}"  id="basicTextarea" placeholder="Observación" required autocomplete="off" rows="3"></textarea>
           </div>
         </div>
 
         
-        </div>
+      </div>
       <!-- Header Ends -->
     </div>
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
-    <button class="btn bg-gradient-success text-white" (click)="GenerarConcesionPostalPrivada()">
-      <span class="fa fa-plus"></span> Generar Filatelia</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
-      Cerrar
-    </button>
-  </div>
+    <button class="btn bg-gradient-success text-white" type="submit" [disabled]="!formUsersRegister.form.valid">
+      <span class="fa fa-plus"></span> Generar Tiraje</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+        Cerrar
+      </button>
+    </div>
+  </form>
 </ng-template>
