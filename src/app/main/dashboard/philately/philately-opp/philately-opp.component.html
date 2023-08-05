@@ -27,7 +27,7 @@
                         name="searchValue"
                         type="search"
                         class="form-control ml-25"
-                        placeholder="Nombre Empresa"
+                        placeholder="Codigo Tiraje"
                         (keyup)="filterUpdate($event)"
                         (search)="filterUpdate($event)"
                     /></label>
@@ -35,7 +35,7 @@
                 </div>
               </div>
               <ngx-datatable
-                [rows]="rowsEmpresas"
+                [rows]="rowsTirajes"
                 rowHeight="auto"
                 class="bootstrap core-bootstrap"
                 [limit]="selectedOption"
@@ -46,29 +46,47 @@
               >
         
         
-                <ngx-datatable-column name="RIF" prop="rif" [width]="10">
-                  <ng-template let-rif="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="TIRAJE" prop="tiraje" [width]="10">
+                  <ng-template let-tiraje="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold">{{ rif }} </span>
+                      <span class="font-weight-bold"> <strong>{{ tiraje }}</strong> </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
         
-                <ngx-datatable-column name="Nombre" prop="nombre_empresa" [width]="100">
-                  <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="TIPO" prop="xtipo" [width]="100">
+                  <ng-template let-xtipo="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold"> {{ nombre_empresa }} </span>
+                      <span class="font-weight-bold"> {{ xtipo }} </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
           
-                <ngx-datatable-column name="Documentos" prop="cantidaddocumentos" [width]="10">
-                  <ng-template let-cantidaddocumentos="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="VALOR" prop="valor" [width]="10">
+                  <ng-template let-valor="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold"> {{ cantidaddocumentos }} </span>
+                      <span class="font-weight-bold"> {{ valor }} </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
+
+
+                <ngx-datatable-column name="COSTO" prop="costo" [width]="10">
+                  <ng-template let-costo="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ costo }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="CANTIDAD" prop="cantidadQR" [width]="10">
+                  <ng-template let-cantidadQR="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ cantidadQR }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+          
         
                 <ngx-datatable-column name="Acción" [width]="5" [sortable]="false">
                   <ng-template ngx-datatable-cell-template let-row="row">

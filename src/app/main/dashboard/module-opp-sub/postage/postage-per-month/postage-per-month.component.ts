@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { GlobalConfig, ToastrService } from 'ngx-toastr';
 
 
 @Component({

@@ -2,13 +2,32 @@ import { Injectable } from '@angular/core';
 
 // Filatelia 
 export interface FilateliaCrear {
-	TipoEstampilla: undefined,
+	TipoEstampilla: any,
     ValorEstampilla: undefined,
-	CostoEstampilla: undefined,
+	CostoEstampilla: number,
 	TipoReceptorEstampilla
 	ReceptorEstampilla: undefined,
-	ObservacionEstampilla: string
+	ObservacionEstampilla: string,
+	TokenTiraje: string,
+	status: number,
+	Qr: string
 }
+
+
+export interface GuardarQRs {
+	tipo: number,
+	valor: number,
+	tipoReceptor: number,
+	receptor: number
+	costo: number,
+	correlativo: number,
+	observacion: string,
+	tiraje: string,
+	QR: any,
+	userCreated: number,
+	dateCreated: string
+}
+
 
 export interface QrContenido {
 	

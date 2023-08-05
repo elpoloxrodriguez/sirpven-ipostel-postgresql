@@ -66,6 +66,12 @@ export class AuthLoginV2Component implements OnInit {
   // Private
   private _unsubscribeAll: Subject<any>;
 
+  public TipoVerificacion = [
+    {id:1, name: 'Certificado'},
+    {id:2, name: 'Filatelia'}
+  ]
+  public TipoSeleccion
+
   /**
    * Constructor
    *
@@ -200,6 +206,28 @@ export class AuthLoginV2Component implements OnInit {
   }
 
 
+  ValidarSeleccion(event,Qr){
+    if (Qr !== undefined) {
+      switch (event) {
+        case 1:
+          this.Certificado(Qr)
+          break;
+          case 2:
+            this.Philately(Qr)
+          break;
+      
+        default:
+          break;
+      }
+    } else {
+      Swal.fire({
+        title: 'Oops Lo Sentimos!',
+        text: 'El Campo Codigo QR es obligatorio',
+        icon: 'warning',
+      })
+    }
+  }
+
    login() {
     this.submitted = true;
     this.loading = true;
@@ -320,6 +348,7 @@ export class AuthLoginV2Component implements OnInit {
         // console.log(data)
         if (data.Cuerpo.length != 0) {
           this.Qr = ''
+          this.TipoSeleccion = undefined
           // console.log(data.Cuerpo[0])
           var cert = data.Cuerpo[0]
           switch (cert.type) {
@@ -400,6 +429,20 @@ export class AuthLoginV2Component implements OnInit {
         console.log(error)
       }
      )
+  }
+
+  async Philately(id: string){
+          Swal.fire({
+            title: 'Filatelia!',
+            text: 'QR Valido',
+            icon: 'success',
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+          })
+          this.Qr = ''
+          this.TipoSeleccion = undefined
+
   }
 
   /**

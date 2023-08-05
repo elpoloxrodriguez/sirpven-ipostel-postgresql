@@ -9,7 +9,7 @@ import { UtilService } from '@core/services/util/util.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { PdfService } from '@core/services/pdf/pdf.service';
 import { FilateliaService } from '@core/services/pdf/filatelia.service';
-import { FilateliaCrear, QrContenido } from '@core/services/empresa/form-opp.service';
+import { FilateliaCrear, GuardarQRs, QrContenido } from '@core/services/empresa/form-opp.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -32,10 +32,27 @@ export class PhilatelyAdminComponent implements OnInit {
   public xFilatelida: FilateliaCrear = {
     TipoEstampilla: undefined,
     ValorEstampilla: undefined,
-    CostoEstampilla: undefined,
+    CostoEstampilla: 0,
     ReceptorEstampilla: undefined,
     ObservacionEstampilla: undefined,
-    TipoReceptorEstampilla: undefined
+    TipoReceptorEstampilla: undefined,
+    TokenTiraje: '',
+    status: 0,
+    Qr: ''
+  }
+
+  public ListaTiraje: GuardarQRs = {
+    tipo: 0,
+    valor: 0,
+    tipoReceptor: 0,
+    receptor: 0,
+    costo: 0,
+    correlativo: 0,
+    observacion: '',
+    tiraje: '',
+    QR: [],
+    userCreated: 0,
+    dateCreated: ''
   }
 
   // Decorator
@@ -45,11 +62,21 @@ export class PhilatelyAdminComponent implements OnInit {
 
 
   public searchValue = '';
+  public searchValueViewTiraje = ''
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
   public temp = [];
   public rowsEmpresas;
   private tempDataEmpresas = [];
+
+  public rowsTiraje = []
+  public tempDataTiraje = []
+
+  public rowsViewTirajeQR = []
+  public tempDataViewTirajeQR = []
+
+  public titleModalTiraje
+
 
   public SelectTipoEstampilla = [
     { id: 1, name: 'A1' },
@@ -72,6 +99,7 @@ export class PhilatelyAdminComponent implements OnInit {
     { id: 3, name: '20 Bs' },
     { id: 4, name: '50 Bs' },
     { id: 5, name: '100 Bs' },
+    { id: 6, name: '500 Bs' },
   ]
 
   public SelectOPP
@@ -79,17 +107,32 @@ export class PhilatelyAdminComponent implements OnInit {
 
   public resultado
 
+  public TotalTirajesQR = 0
+  public valorQR = 0
+
+  public tokenUser
+  public idUser
+
   public Qr = []
   public token
   public CantidadQr
 
+  public CantidadQrtiraje = []
+
+  public TokenTiraje: string
+
   public CantidadQrTipoEstampilla
 
   public i = 0
-  public arregloQR: any[] = []
+  public arregloQR = []
 
-  public miArreglo: any[] = []
+  public miArreglo = []
 
+  public ListaTirajesQR = []
+
+  public VerTirajeQR = []
+
+  public BtnShowTiraje = false
 
   public showOPP = false
   public showCOL = false
@@ -108,7 +151,10 @@ export class PhilatelyAdminComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.ChequearCantidadQR()
+    this.tokenUser = jwt_decode(sessionStorage.getItem('token'));
+    this.idUser = this.tokenUser.Usuario[0].id_user
+    this.ListaTirajes()
+    this.TokenTiraje = this.utilService.TokenAleatorio(10);
     this.ListaOpp()
     this.ListaReceptores()
     // this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
@@ -120,39 +166,109 @@ export class PhilatelyAdminComponent implements OnInit {
     // Reset ng-select on search
     const val = event.target.value.toLowerCase();
     // Filter Our Data
-    const temp = this.tempDataEmpresas.filter(function (d) {
-      return d.nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+    const temp = this.tempDataTiraje.filter(function (d) {
+      return d.tiraje.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // Update The Rows
-    this.rowsEmpresas = temp;
+    this.rowsTiraje = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
 
+  filterUpdateTirajeQR(event) {
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
+    const temp = this.tempDataViewTirajeQR.filter(function (d) {
+      return d[1].toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // Update The Rows
+    this.rowsViewTirajeQR = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
+
+  }
+
+
+  ListaTirajes() {
+    this.xAPI.funcion = "IPOSTEL_Lista_TirajeQR";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = ''
+    this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        if (data == null) return
+        data.map(e => {
+          // console.log(e)
+          e.costo = this.utilService.ConvertirMoneda(e.costo)
+          e.cantidadQR = e.QR.length
+          this.CantidadQrtiraje.push(e.cantidadQR)
+          e.tipo = e.tipo
+          switch (e.tipo) {
+            case 1:
+              e.xtipo = 'A1'
+              break;
+            case 2:
+              e.xtipo = 'A'
+              break;
+            case 3:
+              e.xtipo = 'B'
+              break;
+            case 4:
+              e.xtipo = 'C'
+              break;
+            case 5:
+              e.xtipo = 'D'
+              break;
+
+            default:
+              break;
+          }
+          e.valor = e.valor.name
+          switch (e.tipoReceptor) {
+            case 1:
+              e.xtipoReceptor = 'Operador Postal Privado'
+              break;
+            case 2:
+              e.xtipoReceptor = 'Oficina Postal Privada'
+              break;
+            case 3:
+              e.xtipoReceptor = 'Coleccionista'
+              break;
+
+            default:
+              break;
+          }
+          this.ListaTirajesQR.push(e)
+        });
+        this.rowsTiraje = this.ListaTirajesQR
+        this.tempDataTiraje = this.rowsTiraje
+        this.TotalTirajesQR = this.CantidadQrtiraje.reduce((total, numero) => total + numero, 0);
+        this.ChequearCantidadQR(this.TotalTirajesQR)
+
+      },
+      (err) => {
+        console.log(err)
+      }
+    )
+  }
 
   async miFuncionRecursiva(contador: number) {
-    this.sectionBlockUI.start('Generando Qr, Porfavor Espere!!!');
-    if (this.xFilatelida.TipoEstampilla === 1) {
-      this.CantidadQrTipoEstampilla = 126
-    } else {
-      this.CantidadQrTipoEstampilla = 63
-    }
-    if (contador === this.CantidadQrTipoEstampilla) {
-      return this.miArreglo;
-    }
-    this.miArreglo =  await this.miFuncionRecursiva(contador + 1);
-    // console.log(contador)
-    // this.miArreglo.push(contador);
-    var token: string = Math.random().toString(36).substring(2, 10);
-    let ruta: string = btoa('https://sirp.ipostel.gob.ve');
-     this.apiService.GenQR(token, ruta).subscribe(
-       (data) => {
-        if (data.tipo === 1) {          
+    var token: string = this.utilService.TokenAleatorio(8);
+    let ruta: string = btoa('https://sirp.ipostel.gob.ve/#/philately/');
+    this.apiService.GenQR(token, ruta).subscribe(
+      (data) => {
+        if (data.tipo == 1) {
           this.miArreglo.push(token);
-            this.ObtenerQR(token)
-            this.utilService.alertConfirmMini('success', 'QR Generados Existosamente')
-            this.sectionBlockUI.stop()
-            this.modalService.dismissAll('Close')    
+
+          contador += 1
+
+          this.xFilatelida.TokenTiraje = this.TokenTiraje
+          this.xFilatelida.Qr = token
+
+          if (contador == this.CantidadQrTipoEstampilla) {
+            this.imprimirQR()
+          } else {
+            this.miFuncionRecursiva(contador)
+          }
 
         } else {
           this.utilService.alertConfirmMini('error', 'Oops!!! algo salio mal, intente de nuevo')
@@ -164,53 +280,74 @@ export class PhilatelyAdminComponent implements OnInit {
     return this.miArreglo;
   }
 
-  async Generar() {
-    let resultado = this.miFuncionRecursiva(0);
-    // this.ObtenerQR(resultado)
-    // this.filatelia.Qr(this.miArreglo)
-    // console.log(resultado)
-
-    // this.sectionBlockUI.start('Generando Qr, Porfavor Espere!!!');
-    // if (this.xFilatelida.TipoEstampilla === 1) {
-    //   this.CantidadQrTipoEstampilla = 126
-    // } else {
-    //   this.CantidadQrTipoEstampilla = 63
-    // }
-
-    // var token: string = Math.random().toString(36).substring(2, 10);
-    // let ruta: string = btoa('https://sirp.ipostel.gob.ve');
-    // await this.apiService.GenQR(token, ruta).subscribe(
-    //    (data) => {
-    //     if (data.tipo === 1) {          
-    //       if (this.i < this.CantidadQrTipoEstampilla) {
-    //         this.Generar()
-    //         this.i++
-    //         this.ObtenerQR(token)
-    //         this.utilService.alertConfirmMini('success', 'QR Generados Existosamente')
-    //         this.sectionBlockUI.stop()
-    //         this.modalService.dismissAll('Close')    
-    //       }
-    //     } else {
-    //       this.utilService.alertConfirmMini('error', 'Oops!!! algo salio mal, intente de nuevo')
-    //       this.sectionBlockUI.stop()
-    //     }
-    //   }
-    // )
+  async imprimirQR() {
+    this.modalService.dismissAll('Close');
+    this.filatelia.GenerarCabecera('', this.xFilatelida.TipoEstampilla, this.TokenTiraje)
+    this.ObtenerQR(0)
   }
 
-    async ObtenerQR(token) {
-       await this.apiService.LoadQR(token).subscribe(
-       (data) => {
-        if (data.tipo === 1) {
-          this.arregloQR.push(data.contenido)
-          this.utilService.alertConfirmMini('success', 'Tiraje QR Generados Existosamente')
-          this.sectionBlockUI.stop()
-          this.modalService.dismissAll('Close')
-          this.filatelia.GenerarFilatelia(this.arregloQR, this.xFilatelida.TipoEstampilla)
-          this.router.navigate(['philately/sale-of-philately']).then(() => {window.location.reload()});
+  async Generar() {
+    this.sectionBlockUI.start('Generando Tiraje Qr, Porfavor Espere!!!');
+    if (this.xFilatelida.TipoEstampilla == 1) {
+      this.CantidadQrTipoEstampilla = 127
+    } else {
+      this.CantidadQrTipoEstampilla = 64
+    }
+    this.miFuncionRecursiva(1);
+  }
+
+  async ObtenerQR(contador: number) {
+    let token = this.miArreglo[contador]
+    // console.log(token)
+    this.apiService.LoadQR(token).subscribe(
+      (data) => {
+        if (data.tipo == 1) {
+          if (contador == this.CantidadQrTipoEstampilla - 2) {
+            this.filatelia.GenerarFilatelia(data.contenido, this.xFilatelida.TipoEstampilla, this.TokenTiraje, contador, '');
+            this.filatelia.GenerarPie(this.TokenTiraje);
+            // Guardar Tiraje
+            this.ListaTiraje.QR = this.miArreglo;
+            this.ListaTiraje.costo = this.xFilatelida.CostoEstampilla;
+            this.ListaTiraje.correlativo = 999
+            this.ListaTiraje.receptor = this.xFilatelida.ReceptorEstampilla
+            this.ListaTiraje.observacion = this.xFilatelida.ObservacionEstampilla
+            this.ListaTiraje.tiraje = this.TokenTiraje
+            this.ListaTiraje.tipo = this.xFilatelida.TipoEstampilla
+            this.ListaTiraje.valor = this.xFilatelida.ValorEstampilla
+            this.ListaTiraje.tipoReceptor = this.xFilatelida.TipoReceptorEstampilla
+            this.ListaTiraje.userCreated = this.idUser
+            this.ListaTiraje.dateCreated = this.utilService.FechaActual()
+
+            var obj = {
+              "coleccion": "tirajes",
+              "objeto": this.ListaTiraje,
+              "donde": "{\"tiraje\": \" ${this.ListaTiraje.tiraje}\"}",
+              "driver": "MGDBA",
+              "upset": true
+            }
+
+            this.apiService.ExecColeccion(obj).subscribe(
+              (data) => {
+                this.utilService.alertConfirmMini('success', 'Tiraje QR Generados Existosamente');
+                this.sectionBlockUI.stop();
+                this.router.navigate(['philately/sale-of-philately']).then(() => {
+                  window.location.reload();
+                })
+              }, (error) => {
+                console.log(error)
+                this.utilService.alertConfirmMini('error', 'Oops!!! algo salio mal, intente de nuevo');
+                this.sectionBlockUI.stop();
+              }
+            )
+            // Guardar Tiraje
+
+          } else {
+            this.filatelia.GenerarFilatelia(data.contenido, this.xFilatelida.TipoEstampilla, this.TokenTiraje, contador, this.miArreglo[contador]);
+            this.ObtenerQR(contador + 1);
+          }
         } else {
-          this.utilService.alertConfirmMini('error', 'Oops!!! algo salio mal, intente de nuevo')
-          this.sectionBlockUI.stop()
+          this.utilService.alertConfirmMini('error', 'Oops!!! algo salio mal, intente de nuevo');
+          this.sectionBlockUI.stop();
         }
       }
     )
@@ -242,14 +379,42 @@ export class PhilatelyAdminComponent implements OnInit {
     }
   }
 
-  async ChequearCantidadQR() {
-    this.utilService.alertMessageAutoCloseTimer(5000, 'Alerta', 'Estimado Usuario la cantidad de QR Generados, esta llegando a su limite, le sugerimos recargar')
+  ChequearCantidadQR(total: number) {
+    if (total >= 6000) {
+      this.utilService.alertMessageAutoCloseTimer(5000, 'Alerta', `Estimado Usuario la cantidad de QR Generados, esta llegando a su limite (${this.TotalTirajesQR}/ 9.999), le sugerimos recargar`)
+    }
+    if (total >= 9999) {
+      this.BtnShowTiraje = true
+    } else {
+      this.BtnShowTiraje = false
+    }
   }
+
 
   FilateliaModalAdd(modal) {
     this.modalService.open(modal, {
       centered: true,
       size: 'lg',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  ModalVerTiraje(modal, data) {
+    this.titleModalTiraje = data.tiraje
+    const array = Object.entries(data.QR);
+
+    array.map(e => {
+      // console.log(e)
+      this.VerTirajeQR.push(e)
+    });
+    this.rowsViewTirajeQR = this.VerTirajeQR
+    this.tempDataViewTirajeQR = this.rowsViewTirajeQR
+
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
       backdrop: false,
       keyboard: false,
       windowClass: 'fondo-modal',

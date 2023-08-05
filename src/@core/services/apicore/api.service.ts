@@ -59,6 +59,7 @@ export interface IPOSTEL_I_ArchivoDigital {
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
   //Dirección Get para servicios en la página WEB
   URL = environment.API;
@@ -92,6 +93,16 @@ export class ApiService {
   Listar(): Observable<any> {
     var url = this.URL + 'listar';
     return this.http.get<any>(url, this.httpOptions);
+  }
+
+  /**
+   * Ejecutar la coleccion
+   * @param xObjeto Objeto Coleccion
+   * @returns 
+   */
+  ExecColeccion(xObjeto): Observable<any> {
+    var url = "/v1/api/mcoleccion" + this.hash;
+    return this.http.post<any>(url, xObjeto, this.httpOptions);
   }
 
   //Ejecutar Api generales

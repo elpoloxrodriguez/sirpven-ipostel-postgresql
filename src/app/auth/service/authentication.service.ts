@@ -8,7 +8,6 @@ import jwt_decode from "jwt-decode";
 
 import { environment } from 'environments/environment';
 import { User, Role } from 'app/auth/models';
-import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,11 +26,9 @@ export class AuthenticationService {
   /**
    *
    * @param {HttpClient} _http
-   * @param {ToastrService} _toastrService
    */
   constructor(
     private _http: HttpClient,
-    private _toastrService: ToastrService,
     private loginService: LoginService,
     ) {
 
@@ -84,15 +81,15 @@ export class AuthenticationService {
             localStorage.setItem('currentUser', JSON.stringify(user));
 
             // Display welcome toast!
-            setTimeout(() => {
-              this._toastrService.success(
-                'You have successfully logged in as an ' +
-                  user.role +
-                  ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
-                '👋 Welcome, ' + user.firstName + '!',
-                { toastClass: 'toast ngx-toastr', closeButton: true }
-              );
-            }, 2500);
+            // setTimeout(() => {
+            //   this._toastrService.success(
+            //     'You have successfully logged in as an ' +
+            //       user.role +
+            //       ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
+            //     '👋 Welcome, ' + user.firstName + '!',
+            //     { toastClass: 'toast ngx-toastr', closeButton: true }
+            //   );
+            // }, 2500);
 
             // notify
             this.currentUserSubject.next(user);

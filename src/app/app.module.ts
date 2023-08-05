@@ -9,7 +9,6 @@ import 'hammerjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { ToastrModule } from 'ngx-toastr'; // For auth after login toast
 
 import { CoreModule } from '@core/core.module';
 import { CoreCommonModule } from '@core/common.module';
@@ -89,7 +88,6 @@ const appRoutes: Routes = [
     BlockUIModule.forRoot(),
     //NgBootstrap
     NgbModule,
-    ToastrModule.forRoot({}),
 
     // Core modules
     CoreModule.forRoot(coreConfig),

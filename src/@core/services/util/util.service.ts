@@ -138,7 +138,7 @@ export class UtilService {
       allowEnterKey: false,
       timerProgressBar: true,
       didOpen: () => {
-        Swal.showLoading()
+        // Swal.showLoading()
         const b = Swal.getHtmlContainer().querySelector('b')
         timerInterval = setInterval(() => {
           // b.textContent = Swal.getTimerLeft()

@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-primary" (click)="FilateliaModalAdd(ModalAddFilatelia)"  rippleEffect>
+                    <button type="button" *ngIf="BtnShowTiraje == false" class="btn btn-primary" (click)="FilateliaModalAdd(ModalAddFilatelia)"  rippleEffect>
                       Generar Tiraje </button>
                   </div>
                 </div>
@@ -33,7 +33,7 @@
                         name="searchValue"
                         type="search"
                         class="form-control ml-25"
-                        placeholder="Nombre Empresa"
+                        placeholder="Numero Tiraje"
                         (keyup)="filterUpdate($event)"
                         (search)="filterUpdate($event)"
                     /></label>
@@ -41,7 +41,7 @@
                 </div>
               </div>
               <ngx-datatable
-                [rows]="rowsEmpresas"
+                [rows]="rowsTiraje"
                 rowHeight="auto"
                 class="bootstrap core-bootstrap"
                 [limit]="selectedOption"
@@ -52,34 +52,69 @@
               >
         
         
-                <ngx-datatable-column name="RIF" prop="rif" [width]="10">
-                  <ng-template let-rif="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="TIRAJE" prop="tiraje" [width]="10">
+                  <ng-template let-tiraje="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold">{{ rif }} </span>
+                      <span class="font-weight-bold"> <strong>{{ tiraje }}</strong> </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
         
-                <ngx-datatable-column name="Nombre" prop="nombre_empresa" [width]="100">
-                  <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Receptor" prop="xtipoReceptor" [width]="50">
+                  <ng-template let-xtipoReceptor="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold"> {{ nombre_empresa }} </span>
+                      <span class="font-weight-bold"> {{ xtipoReceptor }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="TIPO" prop="xtipo" [width]="10">
+                  <ng-template let-xtipo="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ xtipo }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Valor" prop="valor" [width]="10">
+                  <ng-template let-valor="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ valor }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="COSTO" prop="costo" [width]="10">
+                  <ng-template let-costo="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ costo }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="CANTIDAD" prop="cantidadQR" [width]="10">
+                  <ng-template let-cantidadQR="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ cantidadQR }} </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
           
-                <ngx-datatable-column name="Documentos" prop="cantidaddocumentos" [width]="10">
-                  <ng-template let-cantidaddocumentos="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold"> {{ cantidaddocumentos }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
+
         
-                <ngx-datatable-column name="Acción" [width]="5" [sortable]="false">
+                <ngx-datatable-column name="Accion"  [width]="5" [sortable]="false">
                   <ng-template ngx-datatable-cell-template let-row="row">
-                    <button type="button" class="btn btn-sm btn-primary"  (click)="ModalDetails(DetailsModal,row,listaDocumentosAdjuntosEmpresa(row))" rippleEffect>
-                      <span [data-feather]="'eye'" [class]="'mr-25'"></span></button>
+                    <div ngbDropdown container="body">
+                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect >
+                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
+                      </button>
+                      <div ngbDropdownMenu>
+                        <a (click)="ModalVerTiraje(ModalViewTiraje, row)" ngbDropdownItem><span [size]="16"
+                          [data-feather]="'eye'" [class]="'mr-50'"></span>Ver Tiraje</a>
+                        <a  ngbDropdownItem><span [size]="16"
+                            [data-feather]="'trash'" [class]="'mr-50'"></span>Eliminar</a>
+                      </div>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
           
@@ -104,7 +139,7 @@
         <div class="col-md-12 col-12">
           <div class="form-group">
             <label class="form-label">Seleccione Tipo de Estampilla</label>
-            <ng-select [items]="SelectTipoEstampilla" bindValue="id"
+            <ng-select [items]="SelectTipoEstampilla" bindValue="id" 
             #TipoEstampilla="ngModel"
             [class.error]="!TipoEstampilla.valid && formUsersRegister.submitted"
             [(ngModel)]="xFilatelida.TipoEstampilla"
@@ -122,7 +157,7 @@
         <div class="col-md-12 col-12">
           <div class="form-group">
             <label class="form-label">Seleccione Valor de Estampilla</label>
-            <ng-select [items]="SelectValorEstampilla" bindValue="id"
+            <ng-select [items]="SelectValorEstampilla"
             #ValorEstampilla="ngModel"
             [class.error]="!ValorEstampilla.valid && formUsersRegister.submitted"
             [(ngModel)]="xFilatelida.ValorEstampilla"
@@ -188,7 +223,8 @@
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label class="form-label">Numero Correlativo</label>
-            <input required  type="text" value="00000000" class="form-control" readonly
+            <input required  type="text"  class="form-control" readonly
+            [(ngModel)]="TotalTirajesQR"
             [ngModelOptions]="{standalone: true}"
             placeholder="Numero Correlativo" />
           </div>
@@ -233,4 +269,90 @@
       </button>
     </div>
   </form>
+</ng-template>
+
+
+
+
+<ng-template #ModalViewTiraje let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160"> Lista de QR de Tiraje <font color="red"><strong>{{titleModalTiraje}}</strong></font></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+        
+  
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="d-flex justify-content-between align-items-center m-1">
+                <label class="d-flex align-items-center"
+                  >Mostrar
+                  <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                  Registros</label
+                >
+              </div>
+            </div>
+
+            <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <label class="d-flex align-items-center ml-1 ml-md-0"
+                  >Buscar:<input
+                    [(ngModel)]="searchValueViewTiraje"
+                    name="searchValue"
+                    type="search"
+                    class="form-control ml-25"
+                    placeholder="Numero QR"
+                    (keyup)="filterUpdateTirajeQR($event)"
+                    (search)="filterUpdateTirajeQR($event)"
+                /></label>
+              </div>
+            </div>
+          </div>
+
+
+          <ngx-datatable
+            [rows]="rowsViewTirajeQR"
+            rowHeight="auto"
+            class="bootstrap core-bootstrap"
+            [limit]="selectedOption"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [scrollbarH]="true"
+          >
+            <ngx-datatable-column name="Filatelia QR" prop="row" [width]="10">
+              <ng-template let-row="row" ngx-datatable-cell-template >
+                <div>
+                  <span class="font-weight-bold"> <strong> {{ row[1] }}</strong> </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Status QR" prop="row" [width]="10">
+              <ng-template let-row="row" ngx-datatable-cell-template >
+                <div>
+                  <span class="font-weight-bold"> <strong> {{ row[0] }}</strong> </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+    
+    
+    
+          </ngx-datatable>
+
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+        Cerrar
+      </button>
+    </div>
 </ng-template>

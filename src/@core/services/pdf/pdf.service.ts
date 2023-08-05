@@ -18,6 +18,7 @@ export class PdfService {
     parametros: '',
     valores: {},
   };
+  
 
   public TotalPagarFactura
   public rowsFacturas = []

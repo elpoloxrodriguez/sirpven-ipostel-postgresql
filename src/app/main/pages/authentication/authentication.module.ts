@@ -46,7 +46,13 @@ const routes: Routes = [
     data: { animation: 'misc' }
   },
   {
-    path: 'login/:id',
+    path: 'certificate/:id',
+    component: AuthLoginV2Component,
+    // canActivate: [AuthGuard,AuthGuardGuard],
+    data: { animation: 'misc' }
+  },
+  {
+    path: 'philately/:id',
     component: AuthLoginV2Component,
     // canActivate: [AuthGuard,AuthGuardGuard],
     data: { animation: 'misc' }
