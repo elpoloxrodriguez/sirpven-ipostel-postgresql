@@ -148,7 +148,7 @@ public SelectidOPP
     // console.log('Activate Event', event.row);
   }
 
-  ItemSeleccionados(){
+  async ItemSeleccionadosRechazados(){
     this.sectionBlockUI.start('Rechazando Tarifas, Porfavor Espere!!!');
     let parametros = '0'
     this.ListaSeleccionada.map(e => {
@@ -158,8 +158,12 @@ public SelectidOPP
    this.xAPI.funcion = "IPOSTEL_U_TarifasRechazo"
    this.xAPI.parametros = 'id_pef##'+ parametros
    this.xAPI.valores = ''
-   this.apiService.Ejecutar(this.xAPI).subscribe(
+   await this.apiService.Ejecutar(this.xAPI).subscribe(
     (data) => {
+      this.selected = []
+      this.TarifasFranqueoAll = []
+      this.RowsLengthConciliacion = []
+      this.ListaTarifasFranqueoAll(this.SelectidOPP)
       this.sectionBlockUI.stop()
       this.utilService.alertConfirmMini('success', 'Tarifa Rechazada Exitosamente')
     },
@@ -167,7 +171,31 @@ public SelectidOPP
       console.log(error)
     }
    )
-  //  console.log(parametros)
+  }
+
+  async ItemSeleccionadosAprobados(){
+    this.sectionBlockUI.start('Aprobando Tarifas, Porfavor Espere!!!');
+    let parametros = '1'
+    this.ListaSeleccionada.map(e => {
+      parametros += ','+e.id_pef
+      this.BashElem.push(e.id_pef)
+   });
+   this.xAPI.funcion = "IPOSTEL_U_TarifasAprobar"
+   this.xAPI.parametros = 'id_pef##'+ parametros
+   this.xAPI.valores = ''
+   await this.apiService.Ejecutar(this.xAPI).subscribe(
+    (data) => {
+      this.selected = []
+      this.TarifasFranqueoAll = []
+      this.RowsLengthConciliacion = []
+      this.ListaTarifasFranqueoAll(this.SelectidOPP)
+      this.sectionBlockUI.stop()
+      this.utilService.alertConfirmMini('success', 'Tarifa Aprobadas Exitosamente')
+    },
+    (error) => {
+      console.log(error)
+    }
+   )
   }
 
   async AprobarSelectTableTarifas(){
