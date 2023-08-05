@@ -80,6 +80,7 @@ export class PriceTableOppComponent implements OnInit {
   public rowsTarifaFranqueoAll
   public tempDataTarifasFranqueoAll = []
 
+  public BashElem = []
 
   public montoIVA = 16
   public montoTASA
@@ -141,10 +142,32 @@ public SelectidOPP
       const element = selected[i];
       this.ListaSeleccionada.push(element)
     }
-    // console.log(this.ListaSeleccionada)
+    // console.log(this.BashElem)
   }
   onActivate(event) {
     // console.log('Activate Event', event.row);
+  }
+
+  ItemSeleccionados(){
+    this.sectionBlockUI.start('Rechazando Tarifas, Porfavor Espere!!!');
+    let parametros = '0'
+    this.ListaSeleccionada.map(e => {
+      parametros += ','+e.id_pef
+      this.BashElem.push(e.id_pef)
+   });
+   this.xAPI.funcion = "IPOSTEL_U_TarifasRechazo"
+   this.xAPI.parametros = 'id_pef##'+ parametros
+   this.xAPI.valores = ''
+   this.apiService.Ejecutar(this.xAPI).subscribe(
+    (data) => {
+      this.sectionBlockUI.stop()
+      this.utilService.alertConfirmMini('success', 'Tarifa Rechazada Exitosamente')
+    },
+    (error) => {
+      console.log(error)
+    }
+   )
+  //  console.log(parametros)
   }
 
   async AprobarSelectTableTarifas(){
@@ -234,7 +257,7 @@ public SelectidOPP
   async ListaTarifasFranqueoAll(IDOPP) {
     this.TarifasFranqueoAll = []
     if (this.SelectidOPP != null) {
-      this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo"
+    this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo"
     this.xAPI.parametros = `${IDOPP}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
@@ -351,9 +374,9 @@ public SelectidOPP
     this.selectedPlan = this.selectServicioFranqueo[0];
     this.selectedStatus = this.itemsSelectPesoEnvio[0];
     this.selectedStatusAutorizado = this.itemsSelectStatus[0];
-    const val = event.target.value.toLowerCase();
+    const val = event.target.value != null ? event.target.value.toLowerCase() : '';
     const temp = this.tempData.filter(function (d) {
-      return d.status_pef.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.status_pef.toLowerCase().indexOf(val) != -1 || !val;
     });
     this.rows = temp;
     this.table.offset = 0;
