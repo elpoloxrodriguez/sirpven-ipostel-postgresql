@@ -202,7 +202,7 @@ export class AuthLoginV2Component implements OnInit {
     if (form.invalid != true) {
       this.login()
     }
-    console.debug(`Token [${this.token}] generated`);
+    // console.debug(`Token [${this.token}] generated`);
   }
 
 
