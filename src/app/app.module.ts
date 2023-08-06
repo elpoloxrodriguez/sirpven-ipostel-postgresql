@@ -86,7 +86,7 @@ const appRoutes: Routes = [
     }),
     TranslateModule.forRoot(),
     BlockUIModule.forRoot(),
-    //NgBootstrap
+    // NgBootstrap,
     NgbModule,
 
     // Core modules

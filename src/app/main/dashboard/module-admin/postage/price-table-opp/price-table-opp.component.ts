@@ -142,7 +142,7 @@ public SelectidOPP
       const element = selected[i];
       this.ListaSeleccionada.push(element)
     }
-    // console.log(this.BashElem)
+    console.log(selected)
   }
   onActivate(event) {
     // console.log('Activate Event', event.row);
@@ -160,7 +160,7 @@ public SelectidOPP
    this.xAPI.valores = ''
    await this.apiService.Ejecutar(this.xAPI).subscribe(
     (data) => {
-      this.selected = []
+      this.selected = ['']
       this.TarifasFranqueoAll = []
       this.RowsLengthConciliacion = []
       this.ListaTarifasFranqueoAll(this.SelectidOPP)
@@ -185,7 +185,7 @@ public SelectidOPP
    this.xAPI.valores = ''
    await this.apiService.Ejecutar(this.xAPI).subscribe(
     (data) => {
-      this.selected = []
+      this.selected = ['']
       this.TarifasFranqueoAll = []
       this.RowsLengthConciliacion = []
       this.ListaTarifasFranqueoAll(this.SelectidOPP)
@@ -283,6 +283,7 @@ public SelectidOPP
       }
 
   async ListaTarifasFranqueoAll(IDOPP) {
+    this.sectionBlockUI.start('Cargando Tarifas, Porfavor Espere!!!');
     this.TarifasFranqueoAll = []
     if (this.SelectidOPP != null) {
     this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo"
@@ -291,11 +292,17 @@ public SelectidOPP
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
+          if (e.status_pef == 1) {
+            e.status = 'Autorizado' 
+          } else {
+            e.status = 'No Autorizado' 
+          }
           e.pmvpx = this.utilService.ConvertirMoneda(e.pmvp);
           e.ivax = this.utilService.ConvertirMoneda(e.iva);
           e.tasa_postalx = this.utilService.ConvertirMoneda(e.tasa_postal);
           e.total_pagarx = this.utilService.ConvertirMoneda(e.total_pagar);
           this.TarifasFranqueoAll.push(e)
+          this.sectionBlockUI.stop()
         });
         // console.log(this.TarifasFranqueoAll)
         this.rows = this.TarifasFranqueoAll
@@ -397,21 +404,23 @@ public SelectidOPP
     })
   }
 
+
   filterUpdate(event) {
-    this.selectedRole = this.selectedMes[0];
-    this.selectedPlan = this.selectServicioFranqueo[0];
-    this.selectedStatus = this.itemsSelectPesoEnvio[0];
-    this.selectedStatusAutorizado = this.itemsSelectStatus[0];
-    const val = event.target.value != null ? event.target.value.toLowerCase() : '';
+    // Reset ng-select on search
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
     const temp = this.tempData.filter(function (d) {
-      return d.status_pef.toLowerCase().indexOf(val) != -1 || !val;
+      return d.status.toLowerCase().indexOf(val) !== -1 || !val;
     });
+    // Update The Rows
     this.rows = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
   
 
   filterByFecha(event) {
+    // console.log(event)
     const filter = event ? event : '';
     this.previousRoleFilter = filter;
     this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter, this.previousStatusAutorizadoFilter);
@@ -433,15 +442,15 @@ public SelectidOPP
   }
 
   filterByStatus(event) {
-    const filter = event ? event.id : '';
+    const filter = event ? event.name : '';
     this.previousStatusAutorizadoFilter = filter;
     this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, this.previousStatusFilter,  filter);
     this.rows = this.temp;
   }
 
   filterRows(roleFilter, planFilter, statusFilter, statusAutorizadoFilter): any[] {
+    // console.log(statusAutorizadoFilter)
     this.searchValue = '';
-    roleFilter = roleFilter.toLowerCase();
     planFilter = planFilter.toLowerCase();
     statusFilter = statusFilter.toLowerCase();
     statusAutorizadoFilter = statusAutorizadoFilter.toLowerCase();
@@ -449,7 +458,7 @@ public SelectidOPP
       const isPartialNameMatch = row.mes.indexOf(roleFilter) !== -1 || !roleFilter;
       const isPartialGenderMatch = row.nombre_servicios_franqueo.toLowerCase().toString().indexOf(planFilter) !== -1 || !planFilter;
       const isPartialStatusMatch = row.nombre_peso_envio.toLowerCase().toString().indexOf(statusFilter) !== -1 || !statusFilter;
-      const isPartialStatusAutorizadoMatch = row.status_pef.toString().indexOf(statusAutorizadoFilter) !== -1 || !statusAutorizadoFilter;
+      const isPartialStatusAutorizadoMatch = row.status.toLowerCase().toString().indexOf(statusAutorizadoFilter) !== -1 || !statusAutorizadoFilter;
       return isPartialNameMatch && isPartialGenderMatch && isPartialStatusMatch && isPartialStatusAutorizadoMatch;
     });
   }

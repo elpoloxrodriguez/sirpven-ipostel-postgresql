@@ -53,6 +53,17 @@
             </div>
 
             <div class="card">
+
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="text-center">
+                    <button type="button" *ngIf="selected.length >= 1" class="btn btn-success mx-3"  (click)="ItemSeleccionadosAprobados($event)"  rippleEffect>
+                      Autorizar Tarifas Seleccionadas <small>({{ selected.length }})</small></button>
+                      
+                    <button type="button" *ngIf="selected.length >= 1" class="btn btn-danger mx-3"  (click)="ItemSeleccionadosRechazados($event)"  rippleEffect>
+                      Rechazar Tarifas Seleccionadas <small>({{ selected.length }})</small></button>
+                  </div>
+                </div>
+
               <div class="row">
                 <div class="col-md-6 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
@@ -66,46 +77,21 @@
                       Registros</label>
                   </div>
                 </div>
-                <!-- <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" *ngIf="selected.length >= 1" class="btn btn-success"  (click)="SelectTableTarifas($event)"  rippleEffect>
-                      Aprobar Tarifas Seleccionadas <small>({{ selected.length }})</small></button>
-                  </div>
-                </div> -->
-                  <div class="col-md-3 col-12 d-flex justify-content-start justify-content-md-end">
+
+                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
                   <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">
-                    <button type="button" *ngIf="selected.length >= 1" class="btn btn-success"  (click)="ItemSeleccionadosAprobados($event)"  rippleEffect>
-                      Autorizar Tarifas Seleccionadas <small>({{ selected.length }})</small></button>
-                      </label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">
-                    <button type="button" *ngIf="selected.length >= 1" class="btn btn-danger"  (click)="ItemSeleccionadosRechazados($event)"  rippleEffect>
-                      Rechazar Tarifas Seleccionadas<small>({{ selected.length }})</small></button>
-                      </label>
+                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
+                        name="searchValue" type="search" class="form-control ml-25" placeholder="Buscar Status"
+                        (keyup)="filterUpdate($event)" (search)="filterUpdate($event)" /></label>
                   </div>
                 </div>
                 
-                <!-- <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdate($event)" (search)="filterUpdate($event)" /></label>
-                  </div>
-                </div> -->
               </div>
-
-              <!-- <ngx-datatable [rows]="rows" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true"> -->
 
                 
                 <ngx-datatable [rows]="rows" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
-                [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption" (activate)="onActivate($event)"
+                [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption"
                 (select)="onSelect($event)">
 
                 <ngx-datatable-column *ngIf="RowsLengthConciliacion >= 1" [width]="50" [sortable]="false"
