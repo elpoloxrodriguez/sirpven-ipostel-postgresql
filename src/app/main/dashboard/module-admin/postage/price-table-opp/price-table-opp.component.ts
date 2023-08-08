@@ -97,10 +97,10 @@ public SelectidOPP
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
   public temp = [];
-  public previousRoleFilter = '';
-  public previousPlanFilter = '';
-  public previousStatusFilter = '';
-  public previousStatusAutorizadoFilter = '';
+  public tempFecha = '';
+  public tempServicio = '';
+  public tempPeso = '';
+  public tempStatus = '';
   public selectedRole = [];
   public selectedPlan = [];
   public selectedStatus = [];
@@ -422,44 +422,46 @@ public SelectidOPP
   filterByFecha(event) {
     // console.log(event)
     const filter = event ? event : '';
-    this.previousRoleFilter = filter;
-    this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter, this.previousStatusAutorizadoFilter);
+    this.tempFecha = filter;
+    this.temp = this.filterRows(filter, this.tempServicio, this.tempPeso, this.tempStatus);
     this.rows = this.temp;
   }
 
   filterByServicio(event) {
-    const filter = event ? event.nombre_servicios_franqueo : '';
-    this.previousPlanFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, filter, this.previousStatusFilter, this.previousStatusAutorizadoFilter);
+    // console.log(event.name)
+    const filter = event ? event.name : '';
+    this.tempServicio = filter;
+    this.temp = this.filterRows(this.tempFecha, filter, this.tempPeso, this.tempStatus);
     this.rows = this.temp;
   }
 
   filterByPeso(event) {
-    const filter = event ? event.nombre_peso_envio : '';
-    this.previousStatusFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, filter, this.previousStatusAutorizadoFilter);
+    // console.log(event)
+    const filter = event ? event.name : '';
+    this.tempPeso = filter;
+    this.temp = this.filterRows(this.tempFecha, this.tempServicio, filter, this.tempStatus);
     this.rows = this.temp;
   }
 
   filterByStatus(event) {
+    // console.log(event.name)
     const filter = event ? event.name : '';
-    this.previousStatusAutorizadoFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, this.previousStatusFilter,  filter);
+    this.tempStatus = filter;
+    this.temp = this.filterRows(this.tempFecha, this.tempServicio, this.tempPeso,  filter);
     this.rows = this.temp;
   }
 
-  filterRows(roleFilter, planFilter, statusFilter, statusAutorizadoFilter): any[] {
-    // console.log(statusAutorizadoFilter)
-    this.searchValue = '';
-    planFilter = planFilter.toLowerCase();
-    statusFilter = statusFilter.toLowerCase();
-    statusAutorizadoFilter = statusAutorizadoFilter.toLowerCase();
-    return this.tempData.filter(row => {
-      const isPartialNameMatch = row.mes.indexOf(roleFilter) !== -1 || !roleFilter;
-      const isPartialGenderMatch = row.nombre_servicios_franqueo.toLowerCase().toString().indexOf(planFilter) !== -1 || !planFilter;
-      const isPartialStatusMatch = row.nombre_peso_envio.toLowerCase().toString().indexOf(statusFilter) !== -1 || !statusFilter;
-      const isPartialStatusAutorizadoMatch = row.status.toLowerCase().toString().indexOf(statusAutorizadoFilter) !== -1 || !statusAutorizadoFilter;
-      return isPartialNameMatch && isPartialGenderMatch && isPartialStatusMatch && isPartialStatusAutorizadoMatch;
+  filterRows(fecha: string, servicio: string, peso: string, status: string): any[] {
+    // this.searchValue = '';
+    // servicio = servicio.toLowerCase();
+    peso = peso.toLowerCase();
+    status = status.toLowerCase();
+    return this.tempData.filter(row => {                            
+      let tempFecha = fecha == '' ? true : row.mes.indexOf(fecha) !== -1;
+      let tempServicio = servicio == '' ? true : row.nombre_servicios_franqueo.toLowerCase().toString().indexOf(servicio) !== -1;
+      let tempPeso = peso == '' ? true : row.nombre_peso_envio.toLowerCase().toString().indexOf(peso) !== -1 ;
+      let tempStatus = status == '' ? true : row.status.toLowerCase().toString().indexOf(status) !== -1 ;
+      return tempFecha && tempServicio && tempPeso && tempStatus;
     });
   }
 

@@ -35,7 +35,7 @@
                       <div class="col-12 col-md-3">
                         <fieldset class="form-group">
                           <ng-select [items]="itemsSelectPesoEnvio" [(ngModel)]="selectedPesoEnvio"
-                            name="selectedPesoEnvio" bindLabel="name" placeholder="Seleccionar Peso de Envio"
+                            name="selectedPesoEnvio" bindLabel="name" bindValue="id" placeholder="Seleccionar Peso de Envio"
                             (change)="filterByPeso($event)"></ng-select>
                         </fieldset>
                       </div>
@@ -121,6 +121,23 @@
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
+
+                <ngx-datatable-column name="Mes" prop="mes" [width]="20">
+                  <ng-template let-mes="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold">{{ mes }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Mes" prop="mes" [width]="20">
+                  <ng-template let-mes="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold">{{ mes }} </span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column> -->
+                
 
                 <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="20">
                   <ng-template let-descripcion="value" ngx-datatable-cell-template>
