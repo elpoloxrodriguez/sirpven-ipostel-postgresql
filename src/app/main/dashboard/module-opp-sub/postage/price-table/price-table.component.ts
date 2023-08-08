@@ -180,9 +180,12 @@ public NombreTipoFranqueo
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
   public temp = [];
-  public previousRoleFilter = '';
-  public previousPlanFilter = '';
-  public previousStatusFilter = '';
+
+  public tempFecha = '';
+  public tempServicio = '';
+  public tempPeso = '';
+  public tempStatus = '';
+
   public selectedRole = [];
   public selectedPlan = [];
   public selectedStatus = [];
@@ -190,7 +193,11 @@ public NombreTipoFranqueo
   private tempData = [];
   private _unsubscribeAll: Subject<any>;
 
-
+  public itemsSelectStatus = [
+    { id: '0', name: 'No Autorizado'},
+    { id: '1', name: 'Autorizado'}
+  ]
+  
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -355,12 +362,18 @@ public NombreTipoFranqueo
       (data) => {
         this.TarifasFranqueoAll = []
         data.Cuerpo.map(e => {
+          if (e.status_pef == 1) {
+            e.status = 'Autorizado' 
+          } else {
+            e.status = 'No Autorizado' 
+          }
           e.pmvp = this.utilService.ConvertirMoneda(e.pmvp);
           e.iva = this.utilService.ConvertirMoneda(e.iva);
           e.tasa_postal = this.utilService.ConvertirMoneda(e.tasa_postal);
           e.total_pagar = this.utilService.ConvertirMoneda(e.total_pagar);
           this.TarifasFranqueoAll.push(e)
         });
+        // console.log(this.TarifasFranqueoAll)
         this.rows = this.TarifasFranqueoAll
         this.tempData = this.rows
         // this.rowsTarifaFranqueoAll = this.TarifasFranqueoAll;
@@ -619,19 +632,14 @@ public NombreTipoFranqueo
 
 
 
+
   filterUpdate(event) {
     // Reset ng-select on search
-    this.selectedRole = this.selectedMes[0];
-    this.selectedPlan = this.selectServicioFranqueo[0];
-    this.selectedStatus = this.itemsSelectPesoEnvio[0];
-
     const val = event.target.value.toLowerCase();
-
     // Filter Our Data
     const temp = this.tempData.filter(function (d) {
-      return d.nombre_peso_envio.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.status.toLowerCase().indexOf(val) !== -1 || !val;
     });
-
     // Update The Rows
     this.rows = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
@@ -639,40 +647,48 @@ public NombreTipoFranqueo
   }
 
   filterByFecha(event) {
-    console.log(event)
+    // console.log(event)
     const filter = event ? event : '';
-    this.previousRoleFilter = filter;
-    this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter);
+    this.tempFecha = filter;
+    this.temp = this.filterRows(filter, this.tempServicio, this.tempPeso, this.tempStatus);
     this.rows = this.temp;
   }
 
   filterByServicio(event) {
-    const filter = event ? event.nombre_servicios_franqueo : '';
-    this.previousPlanFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, filter, this.previousStatusFilter);
+    // console.log(event.name)
+    const filter = event ? event.name : '';
+    this.tempServicio = filter;
+    this.temp = this.filterRows(this.tempFecha, filter, this.tempPeso, this.tempStatus);
     this.rows = this.temp;
   }
 
   filterByPeso(event) {
-    const filter = event ? event.nombre_peso_envio : '';
-    this.previousStatusFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, filter);
+    // console.log(event)
+    const filter = event ? event.name : '';
+    this.tempPeso = filter;
+    this.temp = this.filterRows(this.tempFecha, this.tempServicio, filter, this.tempStatus);
     this.rows = this.temp;
   }
 
-  filterRows(roleFilter, planFilter, statusFilter): any[] {
-    // Reset search on select change
-    this.searchValue = '';
+  filterByStatus(event) {
+    // console.log(event.name)
+    const filter = event ? event.name : '';
+    this.tempStatus = filter;
+    this.temp = this.filterRows(this.tempFecha, this.tempServicio, this.tempPeso,  filter);
+    this.rows = this.temp;
+  }
 
-    roleFilter = roleFilter.toLowerCase();
-    planFilter = planFilter.toLowerCase();
-    statusFilter = statusFilter.toLowerCase();
-
-    return this.tempData.filter(row => {
-      const isPartialNameMatch = row.mes.indexOf(roleFilter) !== -1 || !roleFilter;
-      const isPartialGenderMatch = row.nombre_servicios_franqueo.toLowerCase().indexOf(planFilter) !== -1 || !planFilter;
-      const isPartialStatusMatch = row.nombre_peso_envio.toLowerCase().indexOf(statusFilter) !== -1 || !statusFilter;
-      return isPartialNameMatch && isPartialGenderMatch && isPartialStatusMatch;
+  filterRows(fecha: string, servicio: string, peso: string, status: string): any[] {
+    // this.searchValue = '';
+    servicio = servicio.toLowerCase();
+    peso = peso.toLowerCase();
+    status = status.toLowerCase();
+    return this.tempData.filter(row => {                            
+      let tempFecha = fecha == '' ? true : row.mes.indexOf(fecha) !== -1;
+      let tempServicio = servicio == '' ? true : row.nombre_servicios_franqueo.toLowerCase().toString().indexOf(servicio) !== -1;
+      let tempPeso = peso == '' ? true : row.nombre_peso_envio.toLowerCase().toString().indexOf(peso) !== -1 ;
+      let tempStatus = status == '' ? true : row.status.toLowerCase().toString().indexOf(status) !== -1 ;
+      return tempFecha && tempServicio && tempPeso && tempStatus;
     });
   }
 

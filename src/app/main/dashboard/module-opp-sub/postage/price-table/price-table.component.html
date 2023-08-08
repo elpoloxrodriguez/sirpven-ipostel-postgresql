@@ -782,7 +782,7 @@
                 <div class="users-list-filter">
                   <form>
                     <div class="row">
-                      <div class="col-12 col-md-4">
+                      <div class="col-12 col-md-3">
                         <fieldset class="form-group">
                           <input type="month" class="form-control" autocomplete="off" [(ngModel)]="selectedMes"
                             [ngModelOptions]="{standalone: true}" placeholder="Seleccione Fecha"
@@ -790,7 +790,7 @@
                             />
                         </fieldset>
                       </div>
-                      <div class="col-12 col-md-4">
+                      <div class="col-12 col-md-3">
                         <fieldset class="form-group">
                           <ng-select [items]="selectServicioFranqueo" [(ngModel)]="ServicioFranqueo"
                             name="ServicioFranqueo" bindLabel="name" bindValue="id"
@@ -798,11 +798,18 @@
                             (change)="filterByServicio($event)"></ng-select>
                         </fieldset>
                       </div>
-                      <div class="col-12 col-md-4">
+                      <div class="col-12 col-md-3">
                         <fieldset class="form-group">
                           <ng-select [items]="itemsSelectPesoEnvio" [(ngModel)]="selectedPesoEnvio"
-                            name="selectedPesoEnvio" bindLabel="name" placeholder="Seleccionar Peso de Envio"
+                            name="selectedPesoEnvio" bindLabel="name" bindValue="id" placeholder="Seleccionar Peso de Envio"
                             (change)="filterByPeso($event)"></ng-select>
+                        </fieldset>
+                      </div>
+                      <div class="col-12 col-md-3">
+                        <fieldset class="form-group">
+                          <ng-select [items]="itemsSelectStatus" [(ngModel)]="selectedStatus"
+                            name="selectedPesoEnvio" bindLabel="name" bindValue="id" placeholder="Seleccionar Status"
+                            (change)="filterByStatus($event)"></ng-select>
                         </fieldset>
                       </div>
                     </div>
@@ -829,7 +836,7 @@
                 <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
                   <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
                     <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
+                        name="searchValue" type="search" class="form-control ml-25" placeholder="Buscar Status"
                         (keyup)="filterUpdate($event)" (search)="filterUpdate($event)" /></label>
                   </div>
                 </div>
