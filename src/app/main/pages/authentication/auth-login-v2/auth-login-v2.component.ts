@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
@@ -22,6 +22,11 @@ import {Md5} from 'ts-md5/dist/md5';
   encapsulation: ViewEncapsulation.None
 })
 export class AuthLoginV2Component implements OnInit {
+
+  @HostListener('contextmenu', ['$event'])
+  onRightClick(event) {
+    event.preventDefault();
+  }
 
   public xAPI : IAPICore = {
     funcion: '',

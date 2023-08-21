@@ -1,11 +1,14 @@
 <!--button-->
 <div id="chat-circle"  *ngIf="status">
     <!-- <div id="chat-overlay"></div> -->
-    <img class="chat-circle_robot fondo-negro" (click)="chat_box()" src="assets/images/ipostelin.png" title="CHATBOT">
+    <!-- <img class="chat-circle_robot fondo-negro" (click)="chat_box()" src="assets/images/ipostelin.png" title="CHATBOT"> -->
+    <a (click)="chat_box()" class="btn-whatsapp fondo-negro">
+        <img src="assets/images/ipostelin.png" width="50%" height="50%" alt="ChatBoot">
+    </a>
 </div>
 
 <!--chat-bot-->
-<div class="chat-box" *ngIf="MostrarChat" style="position: auto; z-index: 1200;">
+<div class="chat-box" *ngIf="MostrarChat" style="position: auto; z-index: 1;">
     <div class="chat-box-body">
         <!--welcome message-->
         <div class="chat-box-welcome__header" *ngIf="ChatWelcome">
@@ -41,7 +44,7 @@
                         <img class="chat-box-overlay_robot"  width="60px" src="assets/images/ipostelin-d.png">
                     </span>
                     <div class="cm-msg-text">
-                        ¡Hola! Soy <strong>SIRPVEN</strong>, ¿en qué puedo ayudarlo?
+                        <p class="maquina-escribir">¡Hola! Soy <strong>SIRPVEN</strong>, ¿en qué puedo ayudarlo? <span class="cursor">|</span></p>
                     </div>
                 </div>
 
@@ -61,7 +64,7 @@
                             <img class="chat-box-overlay_robot"  width="60px" src="assets/images/ipostelin-d.png">
                         </span>
                         <div class="cm-msg-text">
-                            {{ item.resp }}
+                            <p class="maquina-escribir"> {{ item.resp }}</p>
                         </div>
                     </div>
                 </div>
