@@ -163,7 +163,7 @@ export class AuthLoginV2Component implements OnInit {
 
     // console.log(this.rutaActiva.snapshot.params.id)
     
-    await this.BloqueoSystem()
+    // await this.BloqueoSystem()
 
     // let urlQR = this._router.url
     // if (urlQR  == undefined) {
