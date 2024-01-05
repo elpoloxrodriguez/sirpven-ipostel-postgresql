@@ -189,15 +189,14 @@ export class PhilatelyAdminComponent implements OnInit {
   }
 
 
-  ListaTirajes() {
+  async ListaTirajes() {
     this.xAPI.funcion = "IPOSTEL_Lista_TirajeQR";
     this.xAPI.parametros = ''
     this.xAPI.valores = ''
-    this.apiService.Ejecutar(this.xAPI).subscribe(
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         if (data == null) return
         data.map(e => {
-          // console.log(e)
           e.costo = this.utilService.ConvertirMoneda(e.costo)
           e.cantidadQR = e.QR.length
           this.CantidadQrtiraje.push(e.cantidadQR)
@@ -243,10 +242,10 @@ export class PhilatelyAdminComponent implements OnInit {
         this.tempDataTiraje = this.rowsTiraje
         this.TotalTirajesQR = this.CantidadQrtiraje.reduce((total, numero) => total + numero, 0);
         this.ChequearCantidadQR(this.TotalTirajesQR)
-
       },
       (err) => {
         console.log(err)
+        this.utilService.alertConfirmMini('error', `Oops!!! algo salio mal, ${err} `)
       }
     )
   }

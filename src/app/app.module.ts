@@ -37,11 +37,11 @@ import { ContentHeaderModule } from './layout/components/content-header/content-
 import { BlockUIModule } from 'ng-block-ui';
 import { ChartsModule } from 'ng2-charts';
 import { AuthAdminComponent } from './main/pages/authentication/auth-admin/auth-admin.component';
-import { PriceTableComponent } from './main/dashboard/module-opp-sub/postage/price-table/price-table.component';
-import { StatementOfPartiesComponent } from './main/dashboard/module-opp-sub/postage/statement-of-parties/statement-of-parties.component';
-import { SubcontractorComponent } from './main/dashboard/module-opp-sub/business/subcontractor/subcontractor.component';
-import { ReportsRankingComponent } from './main/dashboard/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
-import { DigitalFileOppModule } from './main/dashboard/module-admin/digital-file-opp/digital-file-opp.module';
+import { PriceTableComponent } from './main/dashboard/sirpven/module-opp-sub/postage/price-table/price-table.component';
+import { StatementOfPartiesComponent } from './main/dashboard/sirpven/module-opp-sub/postage/statement-of-parties/statement-of-parties.component';
+import { SubcontractorComponent } from './main/dashboard/sirpven/module-opp-sub/business/subcontractor/subcontractor.component';
+import { ReportsRankingComponent } from './main/dashboard/sirpven/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
+import { DigitalFileOppModule } from './main/dashboard/sirpven/module-admin/digital-file-opp/digital-file-opp.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
