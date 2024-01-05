@@ -37,7 +37,7 @@
               </div>
 
               <div *ngIf="dat.btn === false">
-                <a >
+                <a [routerLink]="['/postage/movement-of-parts/',dat.mes]">
                   <div class="card shadow-none bg-transparent border-danger" (click)="SeleccionarMes(dat)">
                   <div class="card-body">
                     <h4 class="card-title">{{ dat.name }} - {{ dat.fecha }} 
