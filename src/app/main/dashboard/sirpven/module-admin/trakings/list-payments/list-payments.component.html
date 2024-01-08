@@ -38,7 +38,7 @@
       
                     <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                       [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                      [scrollbarH]="true">
+                      >
       
                       <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
                         <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
@@ -52,6 +52,14 @@
                         <ng-template let-rif="value" ngx-datatable-cell-template>
                           <div>
                             <span class="font-weight-bold"> {{ rif }}</span>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+
+                      <ngx-datatable-column name="Fecha Pago" prop="fecha"  [width]="5">
+                        <ng-template let-fecha="value" ngx-datatable-cell-template>
+                          <div>
+                            <span class="font-weight-bold"> {{ fecha }}</span>
                           </div>
                         </ng-template>
                       </ngx-datatable-column>
@@ -73,7 +81,7 @@
                         </ng-template>
                       </ngx-datatable-column>
 
-                      <ngx-datatable-column name="Monto Cancelado" prop="monto_pc" [width]="5">
+                      <ngx-datatable-column name="Monto Pagado" prop="monto_pc" [width]="5">
                         <ng-template let-monto_pc="value" ngx-datatable-cell-template>
                           <div>
                             <span class="font-weight-bold"> {{ monto_pc  }}</span>

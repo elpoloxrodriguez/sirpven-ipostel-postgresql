@@ -9,7 +9,7 @@ export class SystemPullComponent implements OnInit {
 
   public SelectUpdateSystem = [
     { id: 1, name: 'FRONTEND - SIRPV-IPOSTEL'},
-    { id: 2, name: 'BACKEND-SYSTEM'}
+    { id: 2, name: 'BACKEND - SYSTEM'}
   ]
 
   public log

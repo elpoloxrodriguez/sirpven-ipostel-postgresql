@@ -15,8 +15,8 @@ export const menu: CoreMenu[] = [
     // Filatelia ADMIN
   {
     id: 'philately-admin',
-    nombre: 'Filatelia',
-    title: 'Filatelia',
+    nombre: 'FILATELIA',
+    title: 'FILATELIA',
     role: [3],
     type: 'collapsible',
     icono: 'package',
@@ -44,10 +44,10 @@ export const menu: CoreMenu[] = [
       }
     ]
   },
-    // Filatelia OPP
+    // FILATELIA OPP
       {
         id: 'philately-opp',
-        nombre: 'Filatelia',
+        nombre: 'FILATELIA',
         icono: 'package',
         role: [1],
         type: 'item',

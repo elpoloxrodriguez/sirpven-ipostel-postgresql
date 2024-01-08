@@ -200,21 +200,25 @@ export class PaymentsListComponent implements OnInit {
     switch (event.target.id) {
       case 'ngb-nav-0':
         this.List_Pagos_Recaudacion = []
+        this.rowsPagosConciliacion = []
         this.n_opp = 0
         await this.ListaPagosRecaudacion()
         break;
       case 'ngb-nav-1':
         this.List_Pagos_Recaudacion = []
+        this.rowsPagosConciliacion = []
         this.n_opp = 2
         await this.ListaPagosRecaudacion()
         break;
         case 'ngb-nav-2':
           this.List_Pagos_Recaudacion = []
+          this.rowsPagosConciliacion = []
           this.n_opp = 3
           await this.ListaPagosRecaudacion()
           break;
           case 'ngb-nav-3':
             this.List_Pagos_Recaudacion = []
+            this.rowsPagosConciliacion = []
             this.n_opp = 1
             await this.ListaPagosRecaudacion()
             break;

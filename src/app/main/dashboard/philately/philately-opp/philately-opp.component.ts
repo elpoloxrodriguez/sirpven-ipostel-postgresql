@@ -50,7 +50,7 @@ export class PhilatelyOppComponent implements OnInit {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOPP = this.token.Usuario[0].id_opp
     this.ListaTirajesOPP(this.idOPP)
-    // this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
+    this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
     // this.sectionBlockUI.stop()
   }
 

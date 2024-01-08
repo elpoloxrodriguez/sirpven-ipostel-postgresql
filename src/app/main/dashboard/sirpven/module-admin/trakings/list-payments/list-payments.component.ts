@@ -92,21 +92,25 @@ public idOPP
     switch (event.target.id) {
       case 'ngb-nav-0':
         this.List_Pagos_Recaudacion = []
+        this.rowsPagosConciliacion = []
         this.n_opp = 0
         await this.ListaPagosRecaudacion()
         break;
       case 'ngb-nav-1':
         this.List_Pagos_Recaudacion = []
+        this.rowsPagosConciliacion = []
         this.n_opp = 1
         await this.ListaPagosRecaudacion()
         break;
         case 'ngb-nav-2':
           this.List_Pagos_Recaudacion = []
+          this.rowsPagosConciliacion = []
           this.n_opp = 3
           await this.ListaPagosRecaudacion()
           break;
           case 'ngb-nav-3':
             this.List_Pagos_Recaudacion = []
+            this.rowsPagosConciliacion = []
             this.n_opp = 2
             await this.ListaPagosRecaudacion()
             break;
@@ -117,26 +121,26 @@ public idOPP
 
   async ListaPagosRecaudacion() {
     this.xAPI.funcion = "IPOSTEL_R_Pagos_Conciliacion"
-    this.xAPI.parametros = `${this.n_opp}`
+    this.xAPI.parametros = this.n_opp.toString()
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.List_Pagos_Recaudacion = []
         data.Cuerpo.map(e => {
-          // console.log(e)
-            if (e.monto_pc != '0.00' || e.monto_pagar == '0.00') {
+          if (e.monto_pc != 0.00 || e.monto_pagar == 0.00) {
             e.MontoPAGAR = e.monto_pagar
             e.MontoPC = e.monto_pc
             e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
             e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
+            e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
             this.List_Pagos_Recaudacion.push(e) 
-            } 
+          } 
         });
+        // console.log(this.List_Pagos_Recaudacion)
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion;
         this.tempDataPagosConciliacion = this.rowsPagosConciliacion
         let MontoTotalA =  this.List_Pagos_Recaudacion.map(item => item.MontoPC).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
-        this.MontoTotalAdeudado =  this.utilService.ConvertirMoneda(MontoTotalA)
-
+        this.MontoTotalAdeudado =  this.utilService.ConvertirMoneda(MontoTotalA )
       },
       (error) => {
         console.log(error)

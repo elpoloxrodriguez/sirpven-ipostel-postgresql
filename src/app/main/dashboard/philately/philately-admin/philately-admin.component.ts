@@ -157,7 +157,7 @@ export class PhilatelyAdminComponent implements OnInit {
     this.TokenTiraje = this.utilService.TokenAleatorio(10);
     this.ListaOpp()
     this.ListaReceptores()
-    // this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
+    this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
     // this.sectionBlockUI.stop()
   }
 

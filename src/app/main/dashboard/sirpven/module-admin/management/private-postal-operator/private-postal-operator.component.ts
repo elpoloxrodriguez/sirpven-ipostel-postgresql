@@ -243,11 +243,13 @@ public searchValueListaSubC = ''
     switch (event.target.id) {
       case 'ngb-nav-0':
         this.List_OPP_SUB = []
+        this.rowsOPP_SUB = []
         this.n_opp = '1'
         await this.ListaOPP_SUB()
         break;
       case 'ngb-nav-1':
         this.List_OPP_SUB = []
+        this.rowsOPP_SUB = []
         this.n_opp = '2'
         await this.ListaOPP_SUB()
         break;
@@ -270,13 +272,9 @@ public searchValueListaSubC = ''
         // this.List_OPP_SUB = []
         data.Cuerpo.map(e => {
           if (this.n_opp != '2') {
-            // this.List_OPP_SUB = []
-            // e.telefonos_RepresentateLegal = e.telefono_movil_representante_legal +' | '+ e.telefono_residencial_representante_legal
             this.List_OPP_SUB.push(e)
           } else {
             if (e.status_empresa == 1) {
-              // this.List_OPP_SUB = []
-              // e.telefonos_RepresentateLegal = e.telefono_movil_representante_legal +' | '+ e.telefono_residencial_representante_legal
               this.List_OPP_SUB.push(e)
             }
           }
