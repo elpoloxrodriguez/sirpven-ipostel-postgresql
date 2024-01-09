@@ -235,6 +235,7 @@ export class PaymentsListComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
+          e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
           e.montoReal = e.monto_pagar
           e.monto_pcx = e.monto_pc
           this.MontoRealPagar = e.monto_pagar

@@ -42,7 +42,7 @@
               </div>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" [rowHeight]="58" class="bootstrap core-bootstrap"
-                [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
                 [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption" (activate)="onActivate($event)"
                 (select)="onSelect($event)">
 
@@ -66,7 +66,7 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="auto">
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="200">
                   <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold">{{ nombre_empresa }} </span>
@@ -74,10 +74,18 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="RIF" prop="rif" [width]="5">
+                <ngx-datatable-column name="RIF" prop="rif" [width]="50">
                   <ng-template let-rif="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold"> {{ rif }}</span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Fecha" prop="fecha" [width]="50">
+                  <ng-template let-fecha="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ fecha }}</span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
@@ -168,9 +176,9 @@
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
+                >
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="200">
                   <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold">{{ nombre_empresa }} </span>
@@ -178,10 +186,18 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="RIF" prop="rif" [width]="5">
+                <ngx-datatable-column name="RIF" prop="rif" [width]="50">
                   <ng-template let-rif="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold"> {{ rif }}</span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Fecha" prop="fecha" [width]="50">
+                  <ng-template let-fecha="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ fecha }}</span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
@@ -265,9 +281,9 @@
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
+                >
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="200">
                   <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold">{{ nombre_empresa }} </span>
@@ -275,10 +291,18 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="RIF" prop="rif" [width]="5">
+                <ngx-datatable-column name="RIF" prop="rif" [width]="50">
                   <ng-template let-rif="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold"> {{ rif }}</span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Fecha" prop="fecha" [width]="50">
+                  <ng-template let-fecha="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ fecha }}</span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
@@ -364,9 +388,9 @@
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
+                >
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="200">
                   <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold">{{ nombre_empresa }} </span>
@@ -374,10 +398,18 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="RIF" prop="rif" [width]="5">
+                <ngx-datatable-column name="RIF" prop="rif" [width]="50">
                   <ng-template let-rif="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold"> {{ rif }}</span>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Fecha" prop="fecha" [width]="50">
+                  <ng-template let-fecha="value" ngx-datatable-cell-template>
+                    <div>
+                      <span class="font-weight-bold"> {{ fecha }}</span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>

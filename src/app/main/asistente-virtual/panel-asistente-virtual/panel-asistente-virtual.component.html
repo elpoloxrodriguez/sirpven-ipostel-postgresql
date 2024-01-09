@@ -47,6 +47,15 @@
                   </div>
                 </div>
               </div>
+
+                        <!-- Mensaje de carga debajo de la columna Código -->
+          <ng-container *ngIf="!rowsAsistenteVirtual || rowsAsistenteVirtual.length === 0">
+            <div class="loading-overlay">
+              <div class="spinner-border" role="status"></div>
+              <div class="loading-message">Cargando datos por favor espere!..</div>
+            </div>
+          </ng-container>
+
               <ngx-datatable [rows]="rowsAsistenteVirtual" rowHeight="auto" class="bootstrap core-bootstrap"
               [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
               [scrollbarH]="true">
