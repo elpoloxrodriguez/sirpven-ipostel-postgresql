@@ -12,7 +12,7 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'home',
   },
-    // Filatelia ADMIN
+  // FILATELIA ADMIN
   {
     id: 'philately-admin',
     nombre: 'FILATELIA',
@@ -22,48 +22,61 @@ export const menu: CoreMenu[] = [
     icono: 'package',
     children: [
       {
-        id: 'philately-receiver',
-        nombre: 'Receptores',
-        type: 'item',
-        icono: 'circle',
-        url: 'philately/philately-receiver'
-      },
-      {
         id: 'sale-of-philately',
         nombre: 'Ventas',
         type: 'item',
         icono: 'circle',
         url: 'philately/sale-of-philately'
-      },
-      {
-        id: 'philately-inventory',
-        nombre: 'Inventario',
-        type: 'item',
-        icono: 'circle',
-        url: 'philately/philately-inventory'
       }
     ]
   },
-    // FILATELIA OPP
-      {
-        id: 'philately-opp',
-        nombre: 'FILATELIA',
-        icono: 'package',
-        role: [1],
-        type: 'item',
-        url: 'philately-opp',
-      },
-    //  DUPVEN ADMIN
+  // ENVIARVEN ADMIN
   {
-    id: 'dupven',
-    nombre: 'DUPVEN',
-    icono: 'credit-card',
-    type: 'item',
-    role: [3,6],
-    url: 'dupven/admin',
+    id: 'philately-admin',
+    nombre: 'ENVIARVEN',
+    title: 'ENVIARVEN',
+    role: [3],
+    type: 'collapsible',
+    icono: 'package',
+    children: [
+      {
+        id: 'sale-of-philately',
+        nombre: 'Ventas',
+        type: 'item',
+        icono: 'circle',
+        // url: ''
+      }
+    ]
   },
-   //  DUPVEN OPP
-    {
+  // FILATELIA OPP
+  {
+    id: 'philately-opp',
+    nombre: 'FILATELIA',
+    icono: 'package',
+    role: [1],
+    type: 'item',
+    url: 'philately-opp',
+  },
+  //  DUPVEN ADMIN
+  {
+    id: 'philately-admin',
+    nombre: 'DUPVEN',
+    title: 'DUPVEN',
+    role: [3,6],
+    type: 'collapsible',
+    icono: 'package',
+    children: [
+      {
+        id: 'sale-of-philately',
+        nombre: 'Ventas',
+        type: 'item',
+        icono: 'circle',
+        // url: ''
+      }
+    ]
+  },
+  //  DUPVEN OPP
+  {
     id: 'takings',
     nombre: 'DUPVEN',
     icono: 'credit-card',
@@ -71,6 +84,15 @@ export const menu: CoreMenu[] = [
     role: [1],
     url: 'dupven/opp',
   },
+    // OPERADORES POSTALES PRIVADOS Y SUBCONTRATISTAS
+    {
+      id: 'list-opp',
+      nombre: 'OPP-SUB',
+      icono: 'list',
+      type: 'item',
+      role: [3, 6],
+      url: 'management/private-postal-operator',
+    },
   // Empresa
   {
     id: 'EmpresaOPP',
@@ -123,15 +145,15 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'payments/payments-list',
   },
-   // Solvencia Postal
-      {
-        id: 'postal-solvency-opp',
-        nombre: 'Solvencia Postal',
-        icono: 'repeat',
-        type: 'item',
-        url: 'postal-solvency/postal-solvency-opp-sub',
-        role: [1,2],
-      },
+  // Solvencia Postal
+  {
+    id: 'postal-solvency-opp',
+    nombre: 'Solvencia Postal',
+    icono: 'repeat',
+    type: 'item',
+    url: 'postal-solvency/postal-solvency-opp-sub',
+    role: [1, 2],
+  },
   // Reportes
   {
     id: 'reports',
@@ -144,6 +166,8 @@ export const menu: CoreMenu[] = [
 
 
   // MENU ADMINISTRACION
+
+  
   // Franqueo Postal
   // {
   //   id: 'FanqueoPostal',
@@ -170,31 +194,23 @@ export const menu: CoreMenu[] = [
     url: 'postage/price-table-opp',
     role: [3, 6],
   },
-    // Solvencia Postal
-    {
-      id: 'postal-solvency',
-      nombre: 'Solvencia Postal',
-      icono: 'repeat',
-      type: 'item',
-      url: 'postal-solvency',
-      role: [3,6],
-    },
-        // Multas y Sanciones
-        {
-          id: 'finesandpenalties',
-          nombre: 'Multas y Sanciones',
-          icono: 'trending-down',
-          type: 'item',
-          url: 'fines-and-penalties/fines-penalties',
-          role: [3,6],
-        },
+  // Solvencia Postal
   {
-    id: 'list-opp',
-    nombre: 'OPP-SUB',
-    icono: 'list',
+    id: 'postal-solvency',
+    nombre: 'Solvencia Postal',
+    icono: 'repeat',
     type: 'item',
-    role: [3,6],
-    url: 'management/private-postal-operator',
+    url: 'postal-solvency',
+    role: [3, 6],
+  },
+  // Multas y Sanciones
+  {
+    id: 'finesandpenalties',
+    nombre: 'Multas y Sanciones',
+    icono: 'trending-down',
+    type: 'item',
+    url: 'fines-and-penalties/fines-penalties',
+    role: [3, 6],
   },
   //  REPORTES
   {
@@ -211,7 +227,7 @@ export const menu: CoreMenu[] = [
     nombre: 'Recaudacion',
     icono: 'credit-card',
     type: 'item',
-    role: [3,6],
+    role: [3, 6],
     url: 'takings/list-payments',
   },
   //  ARCHIVO DIGITAL POSTAL
@@ -220,7 +236,7 @@ export const menu: CoreMenu[] = [
     nombre: 'Archivo Digital P',
     icono: 'folder-plus',
     type: 'item',
-    role: [3,4,5,6],
+    role: [3, 4, 5, 6],
     url: 'digital-file-opp/private-postal-operator',
   },
   //  ACTUALIZACION DE SISTEMA
@@ -229,7 +245,7 @@ export const menu: CoreMenu[] = [
     nombre: 'Actualizar SIRPV',
     icono: 'refresh-ccw',
     type: 'item',
-    role: [3,4],
+    role: [3, 4],
     url: 'update-system/system-pull',
   },
   // Soporte
@@ -240,7 +256,7 @@ export const menu: CoreMenu[] = [
     type: 'collapsible',
     icono: 'tool',
     // hidden: true,
-    role: [3,4],
+    role: [3, 4],
     children: [
       {
         id: 'systemHors',
@@ -280,11 +296,11 @@ export const menu: CoreMenu[] = [
     ]
   },
 
-   // Asistente Virtual
-   {
+  // Asistente Virtual
+  {
     id: 'asistente-virtual',
     nombre: 'Asistente Virtual',
-    role: [3,4], 
+    role: [3, 4],
     icono: 'cpu',
     type: 'item',
     url: 'virtual-assistant',

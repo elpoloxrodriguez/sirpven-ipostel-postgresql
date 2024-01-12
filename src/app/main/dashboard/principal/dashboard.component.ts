@@ -624,7 +624,7 @@ export class DashboardComponent implements OnInit {
               this.apiService.LoadQR(id).subscribe(
                 (xdata) => {
                   var sdata = this.DatosSub_OPP
-                  this.pdf.AutorizacionInscripcion(sdata[0], xdata.contenido, this.CrearCert.token, this.n_curp)
+                  this.pdf.AutorizacionInscripcion(data, xdata.contenido, this.CrearCert.token, this.n_curp)
                   this.sectionBlockUI.stop()
                   this.utilService.alertConfirmMini('success', 'Autorización Descagada Exitosamente')
                 },

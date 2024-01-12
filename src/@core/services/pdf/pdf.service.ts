@@ -78,8 +78,8 @@ export class PdfService {
     });
 
     doc.addImage('assets/images/pdf/cintillo.png', "PNG", 5, 5, 200, 15);
-    doc.addImage('assets/images/pdf/firma.png', "PNG", 80, 240, 65, 45);
-    doc.addImage('assets/images/pdf/sello.png', "PNG", 110, 220, 60, 60);
+    // doc.addImage('assets/images/pdf/firma.png', "PNG", 80, 240, 65, 45);
+    // doc.addImage('assets/images/pdf/sello.png', "PNG", 110, 220, 60, 60);
     // if (data.periodo_contrato_curp <= nueva) {
     //   doc.addImage('assets/images/pdf/vencido.png', "PNG", 30, 140, 140, 140);
     // } 
@@ -167,8 +167,8 @@ IPOSTEL bajo el N° ${data.n_archivo_curp} Tomo ${data.tomo_archivo_curp} de Fec
     });
 
     doc.addImage('assets/images/pdf/cintillo.png', "PNG", 5, 5, 200, 15);
-    doc.addImage('assets/images/pdf/firma.png', "PNG", 80, 240, 65, 45);
-    doc.addImage('assets/images/pdf/sello.png', "PNG", 110, 220, 60, 60);
+    // doc.addImage('assets/images/pdf/firma.png', "PNG", 80, 240, 65, 45);
+    // doc.addImage('assets/images/pdf/sello.png', "PNG", 110, 220, 60, 60);
     doc.addImage('assets/images/pdf/marca-agua.png', "PNG", 25, 115, 160, 60);
     doc.addImage(Qr, "PNG", 170, 255, 30, 30);
 
@@ -191,7 +191,7 @@ IPOSTEL bajo el N° ${data.n_archivo_curp} Tomo ${data.tomo_archivo_curp} de Fec
 
     doc.setFont(undefined, "");
     doc.setFontSize(12);
-    doc.text(`    El INSTITUTO POSTAL TELEGRÁFICO DE VENEZUELA, ente adscrito al Ministerio del Poder Popular para Ciencia y Tecnología, creado mediante Ley Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 2.146 Extraordinario, de fecha 28 de enero de 1978, reformada parcialmente según Decreto N° 403, de fecha 21 de Octubre de 1999, Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 5.398 Extraordinario, de fecha 26 de Octubre de 1999; el cual en lo sucesivo se denominará IPOSTEL, representado en este acto por su Presidenta, Msc. OLGA YOMIRA PEREIRA JAIMES, Venezolana, mayor de edad, de este domicilio, titular de la Cédula de Identidad N° V- 14.551.754, designada por Decreto Presidencial de la República Bolivariana de Venezuela N° 3.877 del 21 de Junio de 2019, Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 41.660, de fecha 21 de Junio de 2019, quien actúa en ejercicio de las atribuciones que le confiere el articulo 17 literal “e” de la Ley antes citada y bajo Autorización del Directorio de IPOSTEL, evidenciando la operatividad de las empresas subcontratadas que realizan a nombre de su representada las actividades inherentes a la prestación de los servicios públicos de correo, se procede a AUTORIZAR para la subcontratación de la empresa ${data.nombresub}, sociedad mercantil inscrita en el Registro Mercantil Segundo de la Circunscripción Judicial del Estado Aragua, en fecha ${data.fecha_punto_cuenta_curpopp}, tomo ${data.tomo_archivo_curpopp}; la cual prestara servicios al Operador Postal ${data.nombreopp} identificado con el RIF ${data.rifopp}, Código Postal N° ${data.concesion_postal_curpopp}, de conformidad a lo establecido en el CONTRATO DE CONCESIÓN PARA LA PRESTACION DE LOS SERVICIOS PÚBLICOS DE CORREOS,  “DE LA SUBCONTRATACION PARA LA PRESTACIÓN DEL SERVICIO”, suscrito con IPOSTEL en fecha ${data.fecha_punto_cuenta_curpopp}, debidamente autenticados ante la Notaría Pública Tercera del Municipio Libertador, en la misma fecha, bajo el N° ${data.n_archivo_curpopp}, Tomo ${data.tomo_archivo_curpopp}, Folio ${data.n_contrato_curpopp} hasta ${data.periodo_contrato_curpopp} previa revisión de los documentos consignados, SE RESULEVE AUTORIZAR POR UN PERIODO SUPEDITADO A LA VIGENCIA DE LA CONCESIÓN DEL OPERADOR POSTAL PRIVADO, la operatividad de la sociedad mercantil supra identificada.`,
+    doc.text(`    El INSTITUTO POSTAL TELEGRÁFICO DE VENEZUELA, ente adscrito al Ministerio del Poder Popular para Ciencia y Tecnología, creado mediante Ley Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 2.146 Extraordinario, de fecha 28 de enero de 1978, reformada parcialmente según Decreto N° 403, de fecha 21 de Octubre de 1999, Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 5.398 Extraordinario, de fecha 26 de Octubre de 1999; el cual en lo sucesivo se denominará IPOSTEL, representado en este acto por su Presidenta, Msc. OLGA YOMIRA PEREIRA JAIMES, Venezolana, mayor de edad, de este domicilio, titular de la Cédula de Identidad N° V- 14.551.754, designada por Decreto Presidencial de la República Bolivariana de Venezuela N° 3.877 del 21 de Junio de 2019, Publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 41.660, de fecha 21 de Junio de 2019, quien actúa en ejercicio de las atribuciones que le confiere el articulo 17 literal “e” de la Ley antes citada y bajo Autorización del Directorio de IPOSTEL, evidenciando la operatividad de las empresas subcontratadas que realizan a nombre de su representada las actividades inherentes a la prestación de los servicios públicos de correo, se procede a AUTORIZAR para la subcontratación de la empresa ${data.nombresub}, sociedad mercantil inscrita en el Registro Mercantil Segundo de la Circunscripción Judicial del Estado Aragua, en fecha ${data.fecha_punto_cuenta_curpopp}, tomo ${data.tomo_archivo_curpopp}; la cual prestara servicios al Operador Postal ${data.nombreopp} identificado con el RIF ${data.rifopp}, Código Postal N° ${data.concesion_postal_curpopp}, de conformidad a lo establecido en el CONTRATO DE CONCESIÓN PARA LA PRESTACION DE LOS SERVICIOS PÚBLICOS DE CORREOS,  “DE LA SUBCONTRATACION PARA LA PRESTACIÓN DEL SERVICIO”, suscrito con IPOSTEL en fecha ${data.fecha_punto_cuenta_curpopp}, debidamente autenticados ante la Notaría Pública Tercera del Municipio Libertador, en la misma fecha, bajo el N° ${data.n_archivo_curpopp}, Tomo ${data.tomo_archivo_curpopp}, Folio ${data.n_contrato_curpopp} hasta ${data.periodo_contrato_curpopp} previa revisión de los documentos consignados, SE RESULEVE AUTORIZAR POR UN PERIODO ANUAL A LA VIGENCIA DE LA CONCESIÓN DEL OPERADOR POSTAL PRIVADO, la operatividad de la sociedad mercantil supra identificada.`,
       14,
       65,
       { maxWidth: 185, align: "justify" }
@@ -208,7 +208,7 @@ IPOSTEL bajo el N° ${data.n_archivo_curp} Tomo ${data.tomo_archivo_curp} de Fec
 
     doc.setFont(undefined, "");
     doc.setFontSize(12);
-    doc.text(`    Conforme a lo aprobado por el Directorio del Instituto Postal Telegráfico de Venezuela, según Punto de Cuenta N° ${ data.punto_cuenta_curpopp } en fecha ${ data.fecha_punto_cuenta_curpopp }, el monto a cancelar por la empresa ${ data.nombreopp }, por concepto de obligaciones postales, es el equivalente al cincuenta por ciento (50%) del costo actual de la Concesión Postal, para lo cual deberá cancelar en el lapso que corresponda al Operador Postal Privado a que está supeditado, conforme a lo establecido en la Contrato de Concesión suscrito por su representada.`,
+    doc.text(`    Conforme a lo aprobado el monto a cancelar por la empresa ${ data.nombreopp }, por concepto de obligaciones postales, es el equivalente al cincuenta por ciento (50%) del costo actual de la Concesión Postal, (Derecho Semestral y Anualidad) para lo cual deberá cancelar en el lapso que corresponda al Operador Postal Privado a que está supeditado, conforme a lo establecido en la Contrato de Concesión suscrito por su representada.`,
       14,
       215,
       { maxWidth: 185, align: "justify" }
@@ -224,8 +224,8 @@ IPOSTEL bajo el N° ${data.n_archivo_curp} Tomo ${data.tomo_archivo_curp} de Fec
 
     doc.setFontSize(12);
     doc.setFont(undefined, "bold");
-    doc.text(`    CERTIFICADO VALIDO HASTA: ${data.periodo_contrato_curpsub}`, 14, 255, { align: "justify" });
-
+    // doc.text(`    CERTIFICADO VALIDO HASTA: ${data.periodo_contrato_curpsub}`, 14, 255, { align: "justify" });
+    doc.text(`    CERTIFICADO VALIDO POR UN (01) AÑ0`, 14, 255, { align: "justify" });
 
 
     doc.setFontSize(12);
