@@ -67,11 +67,52 @@ export class FinesPenaltiesComponent implements OnInit {
     }
   }
 
+  GenerarMultasNoPagaron(){
+    if (this.valor1 != null && this.valor2 != null){
+      this.ListaOPPNoPagaron(this.valor1, this.valor2)
+    } else {
+      this.utilService.alertConfirmMini('error', 'Lo sentimos los campos de fecha son requeridos, intente de nuevo')
+    }
+  }
+
+  GenerarMultasSiPagaron(){
+    if (this.valor1 != null && this.valor2 != null){
+      this.ListaOPPSiPagaron(this.valor1, this.valor2)
+    } else {
+      this.utilService.alertConfirmMini('error', 'Lo sentimos los campos de fecha son requeridos, intente de nuevo')
+    }
+  }
+
 
   async ListaOPPNoPagaron(valor1: any, valor2: any) {
-    // console.log(valor1, valor2)
     this.List_OPP_SUB = []
       this.xAPI.funcion = "IPOSTEL_R_ListaOPPNoPagaron";
+      this.xAPI.valores = ''
+      this.xAPI.parametros = `${valor1},${valor2}`
+      this.sectionBlockUI.start('Generando Lista, Porfavor Espere!!!');
+      await this.apiService.Ejecutar(this.xAPI).subscribe(
+        (data) => {
+          data.Cuerpo.map(e => {
+            this.BtnGenerarMultas = true
+            e.nombre_empresa = e.nombre_empresa.toUpperCase();
+           this.List_OPP_SUB.push(e)
+           this.sectionBlockUI.stop()
+          });
+          // console.log(this.List_OPP_SUB)
+          this.totalRows = this.List_OPP_SUB.length
+          this.rowsOPP_SUB = this.List_OPP_SUB
+          this.tempDataOPP_SUB = this.rowsOPP_SUB
+        },
+        (error) => {
+          this.sectionBlockUI.stop()
+          console.log(error)
+        }
+      )
+  }
+
+  async ListaOPPSiPagaron(valor1: any, valor2: any) {
+    this.List_OPP_SUB = []
+      this.xAPI.funcion = "IPOSTEL_R_ListaOPPSiPagaron";
       this.xAPI.valores = ''
       this.xAPI.parametros = `${valor1},${valor2}`
       this.sectionBlockUI.start('Generando Lista, Porfavor Espere!!!');
