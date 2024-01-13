@@ -127,14 +127,14 @@ public idOPP
       (data) => {
         this.List_Pagos_Recaudacion = []
         data.Cuerpo.map(e => {
-          if (e.monto_pc != 0.00 || e.monto_pagar == 0.00) {
+            e.anioC = new Date(e.fecha_pc)
+            e.anio = e.anioC.getFullYear()
             e.MontoPAGAR = e.monto_pagar
             e.MontoPC = e.monto_pc
             e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
             e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
             e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
             this.List_Pagos_Recaudacion.push(e) 
-          } 
         });
         // console.log(this.List_Pagos_Recaudacion)
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion;

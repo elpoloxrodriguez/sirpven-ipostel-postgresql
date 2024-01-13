@@ -51,6 +51,7 @@ import { environment } from '../environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 //  Recaptcha V2
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
+import { PaymentsObligationsComponent } from './main/sirp-ven/module-admin/payments-obligations/payments-obligations/payments-obligations.component';
 
 const appRoutes: Routes = [
   {
@@ -70,6 +71,7 @@ const appRoutes: Routes = [
     PriceTableComponent,
     StatementOfPartiesComponent,
     ReportsRankingComponent,
+    PaymentsObligationsComponent,
                           ],
   imports: [
     BrowserModule,

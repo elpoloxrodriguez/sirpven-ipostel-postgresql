@@ -52,6 +52,7 @@ import { PhilatelyModule } from '../filatelia-qr/philately.module';
 import { DupvenRoutingModule } from '../dup-ven/dupven-routing.module';
 import { DupvenAdminComponent } from '../dup-ven/dupven-admin/dupven-admin.component';
 import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';
+import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obligations/payments-obligations.module';
 
 
 
@@ -105,7 +106,8 @@ import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';
     FinesAndPenaltiesModule,
     PostalSolvencyOppModule,
     PhilatelyModule,
-    DupvenRoutingModule
+    DupvenRoutingModule,
+    PaymentsObligationsModule
   ],
   exports: [],
   providers: [DatePipe]

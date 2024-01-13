@@ -156,7 +156,6 @@ export class PaymentsListComponent implements OnInit {
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           this.DolarPetroDia = data.Cuerpo.map(e => {
-            this.CargarReglasNegocio(e)
             return e
           });
         },
@@ -309,6 +308,7 @@ export class PaymentsListComponent implements OnInit {
   }
 
   async ModalPagar(modal, data) {
+    // console.log(data)
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.numControl = this.token.Usuario[0].rif
     this.hashcontrol = btoa("D" + this.numControl) //Cifrar documentos
@@ -318,6 +318,7 @@ export class PaymentsListComponent implements OnInit {
     this.ShowModificarPago = false
     // console.log(data)
     this.ActualizarPago.status_pc = 0
+    this.ActualizarPago.observacion_pc = data.observacion_pc
     this.ActualizarPago.monto_pagar = data.montoReal
     this.monto_pagarX = data.monto_pagar
     this.monto_pagar_muestra = data.monto_pagar
@@ -537,8 +538,8 @@ export class PaymentsListComponent implements OnInit {
         }
       if (this.TipoRegistro === 2) {
          Swal.fire({
-          title: "Estimado Sub Contratista!",
-          text: "Su Contrato a Caducado, Desea Renovarlo ?",
+          title: "Estimado Subcontratista!",
+          text: "Su Autorización a Caducado, Desea Renovarlo ?",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -583,7 +584,7 @@ export class PaymentsListComponent implements OnInit {
     */
     if (this.formattedDate === '07-05') {
       if (this.TipoRegistro === 2) {
-        this.user = 'Sub Contratista'
+        this.user = 'Subcontratista'
         this.monto = this.pPetro * 1.5
         this.conversion = this.monto * this.pDolar
         } else {
@@ -637,7 +638,7 @@ export class PaymentsListComponent implements OnInit {
     */
     if (this.formattedDate === '12-05') {
       if (this.TipoRegistro === 2) {
-        this.user = 'Sub Contratista'
+        this.user = 'Subcontratista'
         this.monto = this.pPetro * 1.5
         this.conversion = this.monto * this.pDolar
         } else {
@@ -689,9 +690,9 @@ export class PaymentsListComponent implements OnInit {
     por un monto de 1.5 Petros si eres SUBCONTRATISTA, y si eres OPP
     cancelas un monto de 3 petros.
     */
-    if (this.formattedDate === '12-06') {
+    if (this.formattedDate === '12-05') {
       if (this.TipoRegistro === 2) {
-        this.user = 'Sub Contratista'
+        this.user = 'Subcontratista'
         this.monto = this.pPetro * 3
         this.conversion = this.monto * this.pDolar
         } else {

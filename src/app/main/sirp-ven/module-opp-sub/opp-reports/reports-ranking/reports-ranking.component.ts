@@ -90,9 +90,9 @@ export class ReportsRankingComponent implements OnInit {
               display: true
             },
             ticks: {
-              stepSize: 1000000,
+              stepSize: 10000,
               min: 0,
-              max: 30000000,
+              max: 300000,
               fontColor: this.labelColor
             },
             gridLines: {
@@ -125,7 +125,8 @@ export class ReportsRankingComponent implements OnInit {
     labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
     datasets: [
       {
-        data: this.MontoRecaudacionAnioAnterior,
+        // data: this.MontoRecaudacionAnioAnterior,
+        data: [2332,334,8346,13253,36575,33455,23365,6745,555,5646,9787,76585],
         label: `Movimiento de Piezas Año ${ this.añoAn }`,
         borderColor: this.lineChartDanger,
         lineTension: 0.5,
@@ -144,8 +145,8 @@ export class ReportsRankingComponent implements OnInit {
         pointShadowColor: this.tooltipShadow
       },
       {
-        // data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,776585],
-        data: this.MontoRecaudacionAnioActual,
+        data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,6585],
+        // data: this.MontoRecaudacionAnioActual,
         label: `Movimiento de Piezas Año ${this.añoAc}`,
         borderColor: this.lineChartPrimary,
         lineTension: 0.5,
@@ -200,21 +201,22 @@ export class ReportsRankingComponent implements OnInit {
     // await this.DataRecaudacionAnioActual(this.añoAc)
     this.CapacidadGraficos = 3000
 
-    this.sectionBlockUI.start('Generando Graficas, Porfavor Espere!!!');
-    setTimeout(() =>{
-      this.sectionBlockUI.stop()
-    }, 10000)
+    // this.sectionBlockUI.start('Generando Graficas, Porfavor Espere!!!');
+    // setTimeout(() =>{
+    //   this.sectionBlockUI.stop()
+    // }, 1000)
   }
 
 
   async DataRecaudacionAnioAnterior(fecha) {
+    console.log(fecha)
     this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
     this.xAPI.parametros = fecha.toString()
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(AnioAnterior => {
            this.MontoRecaudacionAnioAnterior.push(this.utilService.RevertirConvertirMoneda(AnioAnterior.MontoTotal))
-          //  console.log(AnioAnterior.MontoMayor)
+           console.log(AnioAnterior.MontoMayor)
         })
       },
       (error) => {
@@ -231,7 +233,7 @@ export class ReportsRankingComponent implements OnInit {
       (data) => {
         data.Cuerpo.map(AnioActual => {
           this.MontoRecaudacionAnioActual.push(this.utilService.RevertirConvertirMoneda(AnioActual.MontoTotal))
-          // console.log(AnioActual.MontoMayor)
+          console.log(AnioActual.MontoMayor)
         })
       },
       (error) => {

@@ -301,6 +301,7 @@ public SelectidOPP
           e.ivax = this.utilService.ConvertirMoneda(e.iva);
           e.tasa_postalx = this.utilService.ConvertirMoneda(e.tasa_postal);
           e.total_pagarx = this.utilService.ConvertirMoneda(e.total_pagar);
+          console.log(e)
           this.TarifasFranqueoAll.push(e)
           this.sectionBlockUI.stop()
         });
@@ -342,7 +343,7 @@ public SelectidOPP
       (data) => {
         this.itemsSelectListaOPP = data.Cuerpo.map(e => {
           e.id = e.id_opp
-          e.name = e.nombre_empresa+' | ('+e.rif+')'
+          e.name = `${e.nombre_empresa.toUpperCase()} | ${e.rif}`
           return e
         });
       },
@@ -428,7 +429,7 @@ public SelectidOPP
   }
 
   filterByServicio(event) {
-    // console.log(event.name)
+    // console.log(event)
     const filter = event ? event.name : '';
     this.tempServicio = filter;
     this.temp = this.filterRows(this.tempFecha, filter, this.tempPeso, this.tempStatus);
@@ -453,7 +454,8 @@ public SelectidOPP
 
   filterRows(fecha: string, servicio: string, peso: string, status: string): any[] {
     // this.searchValue = '';
-    // servicio = servicio.toLowerCase();
+    servicio = servicio.toLowerCase();
+    // console.log(servicio)
     peso = peso.toLowerCase();
     status = status.toLowerCase();
     return this.tempData.filter(row => {                            

@@ -62,7 +62,7 @@ export const menu: CoreMenu[] = [
     id: 'philately-admin',
     nombre: 'DUPVEN',
     title: 'DUPVEN',
-    role: [3,6],
+    role: [3, 6],
     type: 'collapsible',
     icono: 'package',
     children: [
@@ -84,15 +84,24 @@ export const menu: CoreMenu[] = [
     role: [1],
     url: 'dupven/opp',
   },
-    // OPERADORES POSTALES PRIVADOS Y SUBCONTRATISTAS
-    {
-      id: 'list-opp',
-      nombre: 'OPP-SUB',
-      icono: 'list',
-      type: 'item',
-      role: [3, 6],
-      url: 'management/private-postal-operator',
-    },
+  // OPERADORES POSTALES PRIVADOS Y SUBCONTRATISTAS
+  {
+    id: 'list-opp',
+    nombre: 'OPP-SUB',
+    icono: 'list',
+    type: 'item',
+    role: [3, 6],
+    url: 'management/private-postal-operator',
+  },
+  // PAGO OBLIGACIONES ADMIN
+  {
+    id: 'payments-obligation',
+    nombre: 'Pagos Obligaciones',
+    icono: 'credit-card',
+    type: 'item',
+    role: [3, 6],
+    url: 'payments-obligations/obligations',
+  },
   // Empresa
   {
     id: 'EmpresaOPP',
@@ -167,25 +176,6 @@ export const menu: CoreMenu[] = [
 
   // MENU ADMINISTRACION
 
-  
-  // Franqueo Postal
-  // {
-  //   id: 'FanqueoPostal',
-  //   nombre: 'Franqueo Postal',
-  //   title: 'Franqueo Postal',
-  //   role: ['3', '6'],
-  //   type: 'collapsible',
-  //   icono: 'file-text',
-  //   children: [
-  //     {
-  //       id: 'TablaPrecios',
-  //       nombre: 'Tabla de Tarifas OPP',
-  //       type: 'item',
-  //       icono: 'circle',
-  //       url: 'postage/price-table-opp'
-  //     },
-  //   ]
-  // },
   {
     id: 'TablaPrecios',
     nombre: 'Franqueo Postal',
@@ -206,7 +196,7 @@ export const menu: CoreMenu[] = [
   // Multas y Sanciones
   {
     id: 'finesandpenalties',
-    nombre: 'Multas y Sanciones',
+    nombre: 'Multas F.P.O',
     icono: 'trending-down',
     type: 'item',
     url: 'fines-and-penalties/fines-penalties',

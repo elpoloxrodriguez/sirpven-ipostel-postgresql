@@ -337,6 +337,7 @@ export interface IPOSTEL_C_PagosDeclaracionOPP_SUB { // INSERTAR PAGO EN RECAUDA
 	status_pc	 :	number
 	tipo_pago_pc	 :	number
 	monto_pc	 :	string
+	observacion_pc ?: string
 	fecha_pc : string
 	monto_pagar	 :	string
 	dolar_dia	 :	string

@@ -72,10 +72,11 @@ export class NavbarNotificationComponent implements OnInit {
      await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
          data.Cuerpo.map(e => {
-          if (e.monto_pc != '0.00' || e.monto_pagar == '0.00') {
+          // if (e.referencia_bancaria !== null) {
+            e.nombre_empresa = e.nombre_empresa.slice(0, 45)
             e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
             this.Notificaciones.push(e)
-          }
+          // }
         });
         // console.log(this.Notificaciones)
       },
