@@ -3,7 +3,7 @@ import { colors } from 'app/colors.const';
 import { UtilService } from '@core/services/util/util.service';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-reports-ranking',
@@ -46,127 +46,11 @@ export class ReportsRankingComponent implements OnInit {
   public FechaDesde = ''
   public FechaHasta = ''
 
+  public token
+  public IdOPP
+
   // line chart
-  public lineChart = {
-    chartType: 'line',
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      backgroundColor: false,
-      hover: {
-        mode: 'label'
-      },
-      tooltips: {
-        // Updated default tooltip UI
-        shadowOffsetX: 1,
-        shadowOffsetY: 1,
-        shadowBlur: 8,
-        shadowColor: this.tooltipShadow,
-        backgroundColor: colors.solid.white,
-        titleFontColor: colors.solid.black,
-        bodyFontColor: colors.solid.black
-      },
-      scales: {
-        xAxes: [
-          {
-            display: true,
-            scaleLabel: {
-              display: true
-            },
-            gridLines: {
-              display: true,
-              color: this.grid_line_color,
-              zeroLineColor: this.grid_line_color
-            },
-            ticks: {
-              fontColor: this.labelColor
-            }
-          }
-        ],
-        yAxes: [
-          {
-            display: true,
-            scaleLabel: {
-              display: true
-            },
-            ticks: {
-              stepSize: 10000,
-              min: 0,
-              max: 300000,
-              fontColor: this.labelColor
-            },
-            gridLines: {
-              display: true,
-              color: this.grid_line_color,
-              zeroLineColor: this.grid_line_color
-            }
-          }
-        ]
-      },
-      layout: {
-        padding: {
-          top: -15,
-          bottom: -25,
-          left: -15
-        }
-      },
-      legend: {
-        position: 'top',
-        align: 'start',
-        labels: {
-          usePointStyle: true,
-          padding: 25,
-          boxWidth: 9
-        }
-      }
-    },
-
-    // labels: this.recaudacion,
-    labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-    datasets: [
-      {
-        // data: this.MontoRecaudacionAnioAnterior,
-        data: [2332,334,8346,13253,36575,33455,23365,6745,555,5646,9787,76585],
-        label: `Movimiento de Piezas Año ${ this.añoAn }`,
-        borderColor: this.lineChartDanger,
-        lineTension: 0.5,
-        pointStyle: 'circle',
-        backgroundColor: this.lineChartDanger,
-        fill: false,
-        pointRadius: 5,
-        pointHoverRadius: 5,
-        pointHoverBorderWidth: 5,
-        pointBorderColor: 'transparent',
-        pointHoverBorderColor: colors.solid.white,
-        pointHoverBackgroundColor: this.lineChartDanger,
-        pointShadowOffsetX: 1,
-        pointShadowOffsetY: 1,
-        pointShadowBlur: 5,
-        pointShadowColor: this.tooltipShadow
-      },
-      {
-        data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,6585],
-        // data: this.MontoRecaudacionAnioActual,
-        label: `Movimiento de Piezas Año ${this.añoAc}`,
-        borderColor: this.lineChartPrimary,
-        lineTension: 0.5,
-        pointStyle: 'circle',
-        backgroundColor: this.lineChartPrimary,
-        fill: false,
-        pointRadius: 5,
-        pointHoverRadius: 5,
-        pointHoverBorderWidth: 5,
-        pointBorderColor: 'transparent',
-        pointHoverBorderColor: colors.solid.white,
-        pointHoverBackgroundColor: this.lineChartPrimary,
-        pointShadowOffsetX: 1,
-        pointShadowOffsetY: 1,
-        pointShadowBlur: 5,
-        pointShadowColor: this.tooltipShadow
-      },
-    ]
-  };
-
+  public lineChart 
 
   //** To add spacing between legends and chart
   public plugins = [
@@ -196,28 +80,153 @@ export class ReportsRankingComponent implements OnInit {
    * On init
    */
   async ngOnInit() {
+    this.token = jwt_decode(sessionStorage.getItem('token'));
+    this.IdOPP = this.token.Usuario[0].id_opp
     // content header
-    // await this.DataRecaudacionAnioAnterior(this.añoAn)
-    // await this.DataRecaudacionAnioActual(this.añoAc)
-    this.CapacidadGraficos = 3000
-
-    // this.sectionBlockUI.start('Generando Graficas, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Generando Graficas, Porfavor Espere!!!');
+    await this.DataRecaudacionAnioAnterior(this.añoAn)
+    await this.DataRecaudacionAnioActual(this.añoAc)
     // setTimeout(() =>{
     //   this.sectionBlockUI.stop()
     // }, 1000)
   }
 
+  GenerarGrafico(monto: number){
+    this.lineChart = {
+      chartType: 'line',
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: false,
+        hover: {
+          mode: 'label'
+        },
+        tooltips: {
+          // Updated default tooltip UI
+          shadowOffsetX: 1,
+          shadowOffsetY: 1,
+          shadowBlur: 8,
+          shadowColor: this.tooltipShadow,
+          backgroundColor: colors.solid.white,
+          titleFontColor: colors.solid.black,
+          bodyFontColor: colors.solid.black
+        },
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              scaleLabel: {
+                display: true
+              },
+              gridLines: {
+                display: true,
+                color: this.grid_line_color,
+                zeroLineColor: this.grid_line_color
+              },
+              ticks: {
+                fontColor: this.labelColor
+              }
+            }
+          ],
+          yAxes: [
+            {
+              display: true,
+              scaleLabel: {
+                display: true
+              },
+              ticks: {
+                stepSize: 10000,
+                min: 0,
+                max: monto,
+                fontColor: this.labelColor
+              },
+              gridLines: {
+                display: true,
+                color: this.grid_line_color,
+                zeroLineColor: this.grid_line_color
+              }
+            }
+          ]
+        },
+        layout: {
+          padding: {
+            top: -15,
+            bottom: -25,
+            left: -15
+          }
+        },
+        legend: {
+          position: 'top',
+          align: 'start',
+          labels: {
+            usePointStyle: true,
+            padding: 25,
+            boxWidth: 9
+          }
+        }
+      },
+  
+      // labels: this.recaudacion,
+      labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+      datasets: [
+        {
+          data: this.MontoRecaudacionAnioAnterior,
+          // data: [30332,24776],
+          label: `Movimiento de Piezas Año ${ this.añoAn }`,
+          borderColor: this.lineChartDanger,
+          lineTension: 0.5,
+          pointStyle: 'circle',
+          backgroundColor: this.lineChartDanger,
+          fill: false,
+          pointRadius: 5,
+          pointHoverRadius: 5,
+          pointHoverBorderWidth: 5,
+          pointBorderColor: 'transparent',
+          pointHoverBorderColor: colors.solid.white,
+          pointHoverBackgroundColor: this.lineChartDanger,
+          pointShadowOffsetX: 1,
+          pointShadowOffsetY: 1,
+          pointShadowBlur: 5,
+          pointShadowColor: this.tooltipShadow
+        },
+        {
+          // data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,6585],
+          data: this.MontoRecaudacionAnioActual,
+          label: `Movimiento de Piezas Año ${this.añoAc}`,
+          borderColor: this.lineChartPrimary,
+          lineTension: 0.5,
+          pointStyle: 'circle',
+          backgroundColor: this.lineChartPrimary,
+          fill: false,
+          pointRadius: 5,
+          pointHoverRadius: 5,
+          pointHoverBorderWidth: 5,
+          pointBorderColor: 'transparent',
+          pointHoverBorderColor: colors.solid.white,
+          pointHoverBackgroundColor: this.lineChartPrimary,
+          pointShadowOffsetX: 1,
+          pointShadowOffsetY: 1,
+          pointShadowBlur: 5,
+          pointShadowColor: this.tooltipShadow
+        },
+      ]
+    };
+  
+  }
 
   async DataRecaudacionAnioAnterior(fecha) {
-    console.log(fecha)
     this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
-    this.xAPI.parametros = fecha.toString()
+    this.xAPI.parametros = `${this.IdOPP},${fecha}%`
+    this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(AnioAnterior => {
-           this.MontoRecaudacionAnioAnterior.push(this.utilService.RevertirConvertirMoneda(AnioAnterior.MontoTotal))
-           console.log(AnioAnterior.MontoMayor)
-        })
+           this.MontoRecaudacionAnioAnterior.push(AnioAnterior.total_piezas)
+          })
+          const maxValue = this.MontoRecaudacionAnioAnterior.reduce((a, b) => Math.max(a, b));
+          this.GenerarGrafico(maxValue)
+          this.sectionBlockUI.stop()
+
       },
       (error) => {
         console.log(error)
@@ -226,21 +235,25 @@ export class ReportsRankingComponent implements OnInit {
   }
 
   async DataRecaudacionAnioActual(fecha) {
-    console.log(fecha)
     this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
-    this.xAPI.parametros = fecha.toString()
+    this.xAPI.parametros = `${this.IdOPP},${fecha}%`
+    this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(AnioActual => {
-          this.MontoRecaudacionAnioActual.push(this.utilService.RevertirConvertirMoneda(AnioActual.MontoTotal))
-          console.log(AnioActual.MontoMayor)
+          this.MontoRecaudacionAnioActual.push(AnioActual.total_piezas)
         })
+        const maxValue = this.MontoRecaudacionAnioActual.reduce((a, b) => Math.max(a, b));
+        this.GenerarGrafico(maxValue)
+        this.sectionBlockUI.stop()
+
       },
       (error) => {
         console.log(error)
       }
     )
   }
+  
 
 }
 

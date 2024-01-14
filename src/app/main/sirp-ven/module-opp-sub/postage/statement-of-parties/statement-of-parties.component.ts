@@ -362,6 +362,7 @@ public idFactura
     switch (event.target.id) {
       case 'ngb-nav-0':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 1
         // await this.ListaServicioFranqueo()
@@ -369,6 +370,7 @@ public idFactura
         break;
       case 'ngb-nav-1':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 2
         // await this.ListaServicioFranqueo()
@@ -376,6 +378,7 @@ public idFactura
         break;
       case 'ngb-nav-2':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 3
        //  await this.ListaServicioFranqueo()
@@ -383,6 +386,7 @@ public idFactura
         break;
       case 'ngb-nav-3':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 4
         // await this.ListaServicioFranqueo()
@@ -390,6 +394,7 @@ public idFactura
         break;
       case 'ngb-nav-4':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 5
        //  await this.ListaServicioFranqueo()
@@ -397,6 +402,7 @@ public idFactura
         break;
       case 'ngb-nav-5':
         this.DeclaracionPiezas = []
+        this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 6
         // await this.ListaServicioFranqueo()

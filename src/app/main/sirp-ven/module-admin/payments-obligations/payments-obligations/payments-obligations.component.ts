@@ -7,6 +7,7 @@ import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_U_PagosDeclaracionOPP_SUB } from '@core/services/empresa/form-opp.service';
 import Swal from 'sweetalert2';
+import e from 'cors';
 
 
 @Component({
@@ -181,6 +182,19 @@ export class PaymentsObligationsComponent implements OnInit {
     });
   }
 
+
+  ModalMultasColectivas(modal) {
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'lg',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+
+
   async ListaIncumplimiento() {
     this.xAPI.funcion = "IPOSTEL_R_Tasa_Incumplimiento";
     await this.apiService.Ejecutar(this.xAPI).subscribe(
@@ -239,16 +253,19 @@ export class PaymentsObligationsComponent implements OnInit {
   }
 
   CapturarIncumplimiento(event:any){
+    // console.log(event)
+    this.observacion = event.descripcion_tasa_incumplimiento
     this.montoPetroIncumplimiento = event.monto
     this.monto = this.pPetro * this.montoPetroIncumplimiento
     this.conversion = this.monto * this.pDolar
     this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
   }
 
-  CapturarObligacion(id: any) {
-
-    switch (id) {
+  CapturarObligacion(obligacion: any) {
+    // console.log(obligacion)
+    switch (obligacion.id) {
       case 2: // Derecho Semestral 1
+      this.observacion = obligacion.nombre_tipo_pagos
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
@@ -260,6 +277,7 @@ export class PaymentsObligationsComponent implements OnInit {
         }
         break;
       case 3: // Derecho Semestral 2
+      this.observacion = obligacion.nombre_tipo_pagos
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
@@ -271,6 +289,7 @@ export class PaymentsObligationsComponent implements OnInit {
         }
         break;
       case 4: //Anualidad
+      this.observacion = obligacion.nombre_tipo_pagos
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro * 6
           this.conversion = this.monto * this.pDolar
@@ -282,6 +301,7 @@ export class PaymentsObligationsComponent implements OnInit {
         }
         break;
       case 5: // Autorizacion de Subcontrato
+      this.observacion = obligacion.nombre_tipo_pagos
         if (this.TipoRegistro === 2) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
@@ -297,6 +317,7 @@ export class PaymentsObligationsComponent implements OnInit {
           // this.conversion = this.monto * this.pDolar
         break;
       case 9: // Renovación
+      this.observacion = obligacion.nombre_tipo_pagos
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
@@ -313,7 +334,7 @@ export class PaymentsObligationsComponent implements OnInit {
 
     // console.log(this.monto, this.conversion, this.pPetro, this.pDolar)
 
-    if (id == 6) {
+    if (obligacion.id == 6) {
       this.showIncumplimiento = true
     } else {
       this.showIncumplimiento = false
@@ -341,9 +362,8 @@ export class PaymentsObligationsComponent implements OnInit {
     this.List_Pagos_Recaudacion = []
     this.IpagarRecaudacion.id_opp = this.oppsub
     this.IpagarRecaudacion.status_pc = 0
-    this.IpagarRecaudacion.tipo_pago_pc = this.obligacion
+    this.IpagarRecaudacion.tipo_pago_pc = this.obligacion.id
     this.IpagarRecaudacion.monto_pc = '0'
-    // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
     this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
     this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
     this.IpagarRecaudacion.observacion_pc = this.observacion
@@ -368,6 +388,46 @@ export class PaymentsObligationsComponent implements OnInit {
     )
 
   }
+
+  async ProcesarOblicacionColectivas(){
+    let array = this.selecOPPSUB
+    for (let i = 0; i < array.length ; i++) {
+      const element = array[i];
+      this.IpagarRecaudacion.id_opp = element.id_opp
+      this.IpagarRecaudacion.status_pc = 0
+      this.IpagarRecaudacion.tipo_pago_pc = this.obligacion.id
+      this.IpagarRecaudacion.monto_pc = '0'
+      this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
+      this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
+      this.IpagarRecaudacion.observacion_pc = this.observacion
+      this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
+      this.IpagarRecaudacion.user_created = this.idOPP
+      await this.ProcesarObligacionesColectiva(this.IpagarRecaudacion)
+    }
+  }
+
+  async ProcesarObligacionesColectiva(obligacionColectiva: any){
+    // console.log(obligacionColectiva)
+    this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = JSON.stringify(obligacionColectiva)
+    this.sectionBlockUI.start('Generando Recibos, Por favor Espere!!!');
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.ListaPagosObligaciones()
+        this.utilService.alertConfirmMini('success', 'Registros Guardados Exitosamente')
+        this.sectionBlockUI.stop()
+        this.LimpiarModal()
+        this.modalService.dismissAll('Cerrar Modal')
+      },
+      (error) => {
+        console.log(error)
+        this.sectionBlockUI.stop()
+      }
+    )
+  }
+
+
 
   LimpiarModal() {
     this.oppsub = undefined

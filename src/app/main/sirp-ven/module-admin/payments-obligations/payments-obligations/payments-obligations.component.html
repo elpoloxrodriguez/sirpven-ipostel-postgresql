@@ -1,4 +1,4 @@
-<div class="card content-wrapper container-xxl p-0">
+<div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
   <div class="card-body">
 
     <div class="col-6 mx-auto">
@@ -7,7 +7,7 @@
           <button type="button" (click)="ModalMultasObligaciones(ModalMultas)" class="btn btn-warning" rippleEffect>
             Obligaciones Individuales</button>
           &nbsp;
-          <button type="button" class="btn btn-danger" rippleEffect>
+          <button type="button" (click)="ModalMultasColectivas(ModalMultasColectiva)" class="btn btn-danger" rippleEffect>
             Obligaciones Colectivas</button>
         </div>
         &nbsp;
@@ -133,7 +133,7 @@
 
 <ng-template #ModalMultas let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones a <strong>Operadores Postales Privados y
+    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Indivisual a <strong>Operadores Postales Privados y
         Subcontratistas</strong> </h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
@@ -171,7 +171,7 @@
             <div class="form-group">
               <label for="obligacion">Seleccion Tipo Obligación</label>
               <ng-select [items]="ListaTipoObligacion" [(ngModel)]="obligacion" [ngModelOptions]="{standalone: true}"
-                (ngModelChange)="CapturarObligacion($event)" bindValue="id" bindLabel="name"
+                (ngModelChange)="CapturarObligacion($event)" bindLabel="name"
                 placeholder="Seleccione Tipo de Obligación" required autocomplete="off">
               </ng-select>
             </div>
@@ -211,6 +211,95 @@
   <!--/ Invoice -->
   <div class="modal-footer">
     <button type="submit" [disabled]="!formUsersRegister.form.valid" (click)="ProcesarOblicacion()" rippleEffect
+      class="btn btn-success mr-1">Procesar Obligación</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #ModalMultasColectiva let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Colectivas a <strong>Operadores Postales Privados y
+        Subcontratistas</strong> </h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
+      <form #formUsersRegister="ngForm" (ngSubmit)="submitForm()" novalidate>
+        <div class="row d-flex align-items-end">
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="tiposubopp">Seleccione Tipo OPP - SUBCONTRATISTA</label>
+              <ng-select [items]="ListaOPPSUB" required [(ngModel)]="tipooppsub" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="ListaOppSub($event)" bindValue="id" bindLabel="name" placeholder="Seleccione Tipo"
+                required autocomplete="off" #NombresEncagado="ngModel"
+                [class.error]="!NombresEncagado.valid && formUsersRegister.submitted">
+              </ng-select>
+              <span *ngIf="formUsersRegister.submitted && NombresEncagado.invalid" class="invalid-form">
+                <small class="form-text text-danger" *ngIf="NombresEncagado.errors.required">Nombres es
+                  requerido!</small>
+              </span>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="oppsub">Seleccion Operador Postal y/o Subcontratista {{selecOPPSUB.length}}</label>
+              <ng-select [items]="selecOPPSUB"  bindLabel="name" [(ngModel)]="oppsub"
+                [ngModelOptions]="{standalone: true}" placeholder="Seleccione OPP y/o SUB" required autocomplete="off">
+              </ng-select>
+            </div>
+          </div> -->
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="obligacion">Seleccion Tipo Obligación</label>
+              <ng-select [items]="ListaTipoObligacion" [(ngModel)]="obligacion" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="CapturarObligacion($event)"  bindLabel="name"
+                placeholder="Seleccione Tipo de Obligación" required autocomplete="off">
+              </ng-select>
+            </div>
+          </div>
+
+
+          <div class="col-md-12 col-12" *ngIf="showIncumplimiento">
+            <div class="form-group">
+              <label for="incumplimiento">Lista de Incumplimientos</label>
+              <ng-select [items]="List_incumplimiento" [(ngModel)]="incumplimiento"
+                [ngModelOptions]="{standalone: true}" (ngModelChange)="CapturarIncumplimiento($event)" bindLabel="name"
+                placeholder="Seleccione Incumplimiento" required autocomplete="off">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="observacion">Observación de Pago</label>
+              <div class="custom-file">
+                <textarea class="form-control" [(ngModel)]="observacion" [ngModelOptions]="{standalone: true}"
+                  id="basicTextarea" rows="3" placeholder="Ingrese Observación de Pago"></textarea>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+      </form>
+
+    </div>
+    <!-- Header Starts -->
+    <!-- </div> -->
+    <!-- Header Ends -->
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button type="submit" [disabled]="!formUsersRegister.form.valid" (click)="ProcesarOblicacionColectivas()" rippleEffect
       class="btn btn-success mr-1">Procesar Obligación</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar

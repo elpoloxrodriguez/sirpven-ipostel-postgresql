@@ -119,7 +119,7 @@ export class FinesPenaltiesComponent implements OnInit {
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           data.Cuerpo.map(e => {
-            this.BtnGenerarMultas = true
+            this.BtnGenerarMultas = false
             e.nombre_empresa = e.nombre_empresa.toUpperCase();
            this.List_OPP_SUB.push(e)
            this.sectionBlockUI.stop()
