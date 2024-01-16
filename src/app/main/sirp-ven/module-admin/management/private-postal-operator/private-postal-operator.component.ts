@@ -10,6 +10,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { FormBuilder } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { PdfService } from '@core/services/pdf/pdf.service';
+import { parse } from 'path';
 
 @Component({
   selector: 'app-private-postal-operator',
@@ -179,6 +180,8 @@ public searchValueListaSubC = ''
     { id: 4, name: 'No Movilización de Piezas'},
   ]
 
+  public cantidadCombinacion : number
+
 
   public rowsCOMBINACION
   public tempDataCOMBINACION = []
@@ -208,6 +211,8 @@ public searchValueListaSubC = ''
   
   public valorPosicion
 
+  public arregloSubcontratistas = []
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -222,6 +227,7 @@ public searchValueListaSubC = ''
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOPP = this.token.Usuario[0].id_opp
     this.IdUser = this.token.Usuario[0].id_user
+    this.TipoRegistro = this.token.Usuario[0].tipo_registro
     // console.log(this.IdUser)
     await this.ListaOPP_SUB()
   }
@@ -269,7 +275,7 @@ public searchValueListaSubC = ''
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        // this.List_OPP_SUB = []
+        this.List_OPP_SUB = []
         data.Cuerpo.map(e => {
           if (this.n_opp != '2') {
             this.List_OPP_SUB.push(e)
@@ -529,19 +535,22 @@ public searchValueListaSubC = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
-          e.nombre_empresa = e.nombre_empresa.toUpperCase()
-          this.List_COMBINACION.push(e)
-
-            // this.List_ListaSubC.push(JSON.parse(e.sub))
+          this.arregloSubcontratistas.push(JSON.parse(e.subcontratistas))
+          this.List_COMBINACION.push(e)  
+          // this.List_ListaSubC.push(JSON.parse(e.sub))
           // console.log(JSON.parse(e.sub))
         });
+        const sumaCantidad = this.List_COMBINACION.reduce((total, item) => total + item.cantidad, 0);
+        // console.log(sumaCantidad); // Esto mostrará la suma de la propiedad "cantidad" en el array          // this.cantidadCombinacion = 
+        this.cantidadCombinacion = sumaCantidad
+        // console.log(this.List_COMBINACION)
         // console.log(this.List_ListaSubC[this.valorPosicion])
         // this.rowsListaSubC = this.rowsListaSubC
         // this.tempDataListaSubC = this.rowsListaSubC
         // 
         this.rowsCOMBINACION = this.List_COMBINACION
         this.tempDataCOMBINACION = this.rowsCOMBINACION
-
+        // console.log(this.cantidadCombinacion)
       },
       (error) => {
         console.log(error)

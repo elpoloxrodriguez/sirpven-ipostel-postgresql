@@ -8,12 +8,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import jwt_decode from "jwt-decode";
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import Swal from 'sweetalert2';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { IPOSTEL_C_MovilizacionPiezas, IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_U_ActualizarMovilizacionPiezas, IPOSTEL_U_MovilizacionPiezasIdFactura } from '@core/services/empresa/form-opp.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { AngularFileUploaderComponent } from 'angular-file-uploader';
-
+import { MobilizationPartsService } from '../mobilization-parts.service';
 
 export const repeaterAnimation = trigger('heightIn', [
   transition(':enter', [
@@ -58,7 +56,7 @@ export class StatementOfPartiesComponent implements OnInit {
     user_created: undefined
   }
 
-  public IidFacturaMovilizacionPiezas : IPOSTEL_U_MovilizacionPiezasIdFactura = {
+  public IidFacturaMovilizacionPiezas: IPOSTEL_U_MovilizacionPiezasIdFactura = {
     id_factura: 0,
     id_movilizacion_piezas: 0
   }
@@ -111,18 +109,20 @@ export class StatementOfPartiesComponent implements OnInit {
 
   public MontoPetro
 
-public PrecioMantenimiento
-public PrecioMantenimientoX
-public PrecioMantenimientoXT
-public PrecioMantenimientoXTF
-public MontoPetroTotalSumaServicio
-public MantenimientoYSeguridad = []
+  public PrecioMantenimiento
+  public PrecioMantenimientoX
+  public PrecioMantenimientoXT
+  public PrecioMantenimientoXTF
+  public MontoPetroTotalSumaServicio
+  public MantenimientoYSeguridad = []
 
-public DolarDia
-public PetroDia
+  public DolarDia
+  public PetroDia
+
+  public cantidadMovilidad : number
 
 
-public MontoCausadoYMantenimiento
+  public MontoCausadoYMantenimiento
 
   public montoPagar
   public fechaActual
@@ -135,7 +135,7 @@ public MontoCausadoYMantenimiento
   public rowsDeclaracionPiezas
   public tempDataDeclaracionPiezas = []
 
-public idFactura
+  public idFactura
 
   public DeclaracionPiezasLength
   public selected = 0
@@ -184,27 +184,20 @@ public idFactura
     private utilService: UtilService,
     private modalService: NgbModal,
     private router: Router,
-    private rutaActiva: ActivatedRoute
+    private rutaActiva: ActivatedRoute,
+    private movilizacionPiezas: MobilizationPartsService
   ) { }
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     // console.log(this.token)
-    if ( this.token.Usuario[0].iva_exento == 1) {
+    if (this.token.Usuario[0].iva_exento == 1) {
       this.montoIVA = 0
     }
     this.idOPP = this.token.Usuario[0].id_opp
-    // this.uri = this.rutaActiva.snapshot.params.id
     this.fechaUri = atob(this.rutaActiva.snapshot.params.id);
-    // console.log(this.mesEncode64 , this.rutaActiva.snapshot.params.id)
-    // console.log(this.mesDecode64)
-    // if (this.mesEncode64 != this.rutaActiva.snapshot.params.id) {
-    //   this.router.navigate(['/postage/postage-per-month'])
-    //   this.utilService.alertConfirmMini('error', 'Oops lo sentimos! <br> No posee movimientos en este mes, porfavor verifique e intente de nuevo!')
-    // } else {
-    //   await this.ListaDeclaracionMovilizacionPiezas()
-    // }
-    this. Precio_Dolar_Petro()
+
+    this.Precio_Dolar_Petro()
     this.ListaMantenimientoSeguidad()
     await this.BloqueoBtnDeclaracion()
     await this.ListaDeclaracionMovilizacionPiezas()
@@ -212,11 +205,19 @@ public idFactura
     await this.ListaServicioFranqueo()
     this.ListaDeclaracionMovilizacionPiezasDECLARAR()
     await this.MantenimientoSIRPVEN()
-    //  this.ListaMantenimientoSeguidad()
   }
 
   filterUpdate(event) {
-
+    // Reset ng-select on search
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
+    const temp = this.tempDataDeclaracionPiezas.filter(function (d) {
+      return d.nombre_peso_envio.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // Update The Rows
+    this.rowsDeclaracionPiezas = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
   }
 
   fileSelected(e) {
@@ -270,7 +271,7 @@ public idFactura
     }
   }
 
-  async BloqueoBtnDeclaracion(){
+  async BloqueoBtnDeclaracion() {
     this.xAPI.funcion = "IPOSTEL_R_Settings_Initials"
     this.xAPI.parametros = ''
     await this.apiService.EjecutarDev(this.xAPI).subscribe(
@@ -280,7 +281,7 @@ public idFactura
           if (this.dia <= e.declaration_button_by_date) {
             this.btnShowDatePayment = true
           } else {
-            this.btnShowDatePayment = false 
+            this.btnShowDatePayment = false
           }
         });
       },
@@ -306,30 +307,52 @@ public idFactura
       const MontoCusado = this.InsertarMovilizacionPiezas.monto_fpo * element.cantidad_piezas
       this.InsertarMovilizacionPiezas.monto_causado = parseFloat(MontoCusado.toFixed(2))
       this.InsertarMovilizacionPiezas.user_created = this.idOPP
-      this.xAPI.funcion = 'IPOSTEL_C_MovilizacionPiezas'
-      this.xAPI.parametros = ''
-      this.xAPI.valores = JSON.stringify(this.InsertarMovilizacionPiezas)
-      await this.apiService.Ejecutar(this.xAPI).subscribe(
-        (data) => {
-          this.sectionBlockUI.start('Guardando Declaración de Piezas, Porfavor Espere!!!');
-          this.rowsDeclaracionPiezas.push(this.DeclaracionPiezas)
-          if (data.tipo === 1) {
-            this.ListaDeclaracionMovilizacionPiezasDECLARAR()
-            this.DeclaracionPiezas = []
-            this.ListaDeclaracionMovilizacionPiezas()
-            this.modalService.dismissAll('Close')
-            this.sectionBlockUI.stop()
-            this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
-          } else {
-            this.ListaDeclaracionMovilizacionPiezasDECLARAR()
-            this.sectionBlockUI.stop();
-            this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
-          }
-        },
-        (error) => {
-          console.error(error)
-        }
-      )
+      this.sectionBlockUI.start('Guardando Piezas, Porfavor Espere!!!');
+      await this.movilizacionPiezas.AgregarMovilizacionPiezas(this.InsertarMovilizacionPiezas)
+        .then((resultado) => {
+          // Manejar el resolve
+          // console.log('Operación exitosa:', resultado);
+          this.DeclaracionPiezas = []
+          this.utilService.alertConfirmMini('success', 'Piezas Registradas Exitosamente!')
+          this.ListaDeclaracionMovilizacionPiezas()
+          this.modalService.dismissAll('Close')
+        })
+        .catch((error) => {
+          // Manejar el reject
+          // console.error('Error en la operación:', error);
+          this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+        })
+        .finally(() => {
+          // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+          // console.log('Procesamiento finalizado');
+          this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+          this.sectionBlockUI.stop()
+        });
+
+      // this.xAPI.funcion = 'IPOSTEL_C_MovilizacionPiezas'
+      // this.xAPI.parametros = ''
+      // this.xAPI.valores = JSON.stringify(this.InsertarMovilizacionPiezas)
+      // await this.apiService.Ejecutar(this.xAPI).subscribe(
+      //   (data) => {
+      //     this.sectionBlockUI.start('Guardando Declaración de Piezas, Porfavor Espere!!!');
+      //     this.rowsDeclaracionPiezas.push(this.DeclaracionPiezas)
+      //     if (data.tipo === 1) {
+      //       this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+      //       this.DeclaracionPiezas = []
+      //       this.ListaDeclaracionMovilizacionPiezas()
+      //       this.modalService.dismissAll('Close')
+      //       this.sectionBlockUI.stop()
+      //       this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
+      //     } else {
+      //       this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+      //       this.sectionBlockUI.stop();
+      //       this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+      //     }
+      //   },
+      //   (error) => {
+      //     console.error(error)
+      //   }
+      // )
     }
   }
 
@@ -338,11 +361,11 @@ public idFactura
     // this.itemsSelectPesoEnvio = []
     if (id != null || this.fechaUri != '') {
       this.xAPI.funcion = "IPOSTEL_R_ListarTablaPesoEnvio_ID"
-      this.xAPI.parametros = id + ',' + this.fechaUri + ',' + 1 + ','+ this.idOPP
+      this.xAPI.parametros = id + ',' + this.fechaUri + ',' + 1 + ',' + this.idOPP
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           this.itemsSelectPesoEnvio = data.Cuerpo.map(e => {
-            e.name = e.descripcion +' (' + this.utilService.ConvertirMoneda(e.pmvp) + ') ' + e.nombre_peso_envio
+            e.name = e.descripcion + ' (' + this.utilService.ConvertirMoneda(e.pmvp) + ') ' + e.nombre_peso_envio
             e.id = e.id_peso_envio
             // console.log(e)
             return e
@@ -381,7 +404,7 @@ public idFactura
         this.rowsDeclaracionPiezas = []
         this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 3
-       //  await this.ListaServicioFranqueo()
+        //  await this.ListaServicioFranqueo()
         await this.ListaDeclaracionMovilizacionPiezas()
         break;
       case 'ngb-nav-3':
@@ -397,7 +420,7 @@ public idFactura
         this.rowsDeclaracionPiezas = []
         // this.itemsSelectTipoServicio = []
         this.ServicioFranqueoID = 5
-       //  await this.ListaServicioFranqueo()
+        //  await this.ListaServicioFranqueo()
         await this.ListaDeclaracionMovilizacionPiezas()
         break;
       case 'ngb-nav-5':
@@ -413,7 +436,7 @@ public idFactura
     }
   }
 
-    async MantenimientoSIRPVEN() {
+  async MantenimientoSIRPVEN() {
     this.xAPI.funcion = "IPOSTEL_R_MantenimientoSIRPVEN";
     this.xAPI.parametros = '7'
     await this.apiService.Ejecutar(this.xAPI).subscribe(
@@ -432,31 +455,31 @@ public idFactura
     )
   }
 
-    ListaMantenimientoSeguidad() {
+  ListaMantenimientoSeguidad() {
     this.xAPI.funcion = "IPOSTEL_R_MantenimientoSeguridad"
     this.xAPI.parametros = '1'
     this.xAPI.valores = ''
-      this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-         this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
+        this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
           e.bolivares = e.tasa_petro * this.PetroDia ? this.PetroDia : 0
           var valor = e.tasa_petro * this.PetroDia
           e.bolivaresx = this.utilService.ConvertirMoneda(valor)
           return e
         });
         // console.log(this.MantenimientoYSeguridad)
-            //Calculamos el TOTAL 
+        //Calculamos el TOTAL 
         this.totalPetros = this.MantenimientoYSeguridad.reduce((
           acc,
           obj,
-        ) => acc + (parseFloat(obj.tasa_petro) ),
-        0);
+        ) => acc + (parseFloat(obj.tasa_petro)),
+          0);
         this.totalBolivares = this.MantenimientoYSeguridad.reduce((
           acc,
           objx,
-        ) => acc + (objx.tasa_petro * parseFloat(this.PetroDia) ),
-        0);
-        this.convertirTotalBolivares =  this.utilService.ConvertirMoneda(this.totalBolivares ? this.totalBolivares : 0)
+        ) => acc + (objx.tasa_petro * parseFloat(this.PetroDia)),
+          0);
+        this.convertirTotalBolivares = this.utilService.ConvertirMoneda(this.totalBolivares ? this.totalBolivares : 0)
         // console.log(this.totalBolivares)
       },
       (error) => {
@@ -465,11 +488,11 @@ public idFactura
     )
   }
 
-    Precio_Dolar_Petro() {
+  Precio_Dolar_Petro() {
     this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
     this.xAPI.parametros = ''
     this.xAPI.valores = ''
-      this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           this.DolarDia = e.dolar
@@ -488,23 +511,39 @@ public idFactura
     )
   }
 
+  transform(fecha: string): string {
+    const partesFecha = fecha.split('-');
+    const year = parseInt(partesFecha[0], 10);
+    const month = parseInt(partesFecha[1], 10) - 1; // Restar 1 porque en JavaScript los meses van de 0 a 11
+    const date = new Date(year, month, 1);
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[date.getMonth()];
+  }
+
   async ListaDeclaracionMovilizacionPiezas() {
     // const date = this.anio + '-' + this.mes
     this.DeclaracionPiezas = []
     const id = this.ServicioFranqueoID
-    this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date_id"
-    this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + id + ',' + 0
+    // this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date_id"
+    // this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + id + ',' + 0
+    this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date"
+    this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + 0
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
-            e.tarifa_servicio = this.utilService.ConvertirMoneda(e.tarifa_servicio);
-            e.monto_fpo = this.utilService.ConvertirMoneda(e.monto_fpo);
-            e.monto_causado = this.utilService.ConvertirMoneda(e.monto_causado);
-            this.DeclaracionPiezas.push(e)
+          e.mes = this.transform(e.mes)
+          e.tarifa_servicio = this.utilService.ConvertirMoneda(e.tarifa_servicio);
+          e.monto_fpo = this.utilService.ConvertirMoneda(e.monto_fpo);
+          e.monto_causado = this.utilService.ConvertirMoneda(e.monto_causado);
+          this.DeclaracionPiezas.push(e)
         });
         // console.log( atob(this.rutaActiva.snapshot.params.id))
         this.rowsDeclaracionPiezas = this.DeclaracionPiezas;
+        this.cantidadMovilidad = this.rowsDeclaracionPiezas.length
         this.tempDataDeclaracionPiezas = this.rowsDeclaracionPiezas
       },
       (error) => {
@@ -513,12 +552,12 @@ public idFactura
     )
   }
 
-   ListaDeclaracionMovilizacionPiezasDECLARAR() {
+  ListaDeclaracionMovilizacionPiezasDECLARAR() {
     this.DeclaracionPiezasLength = []
     this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date_id_Declarar"
     this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + 0
     this.xAPI.valores = ''
-     this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           e.monto_causado = parseFloat(e.monto_causado)
@@ -542,8 +581,8 @@ public idFactura
         // this.PrecioMantenimientoXT = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         var ok = parseFloat(SumaMontos) / parseFloat(this.PetroDia)
-        var val =  ok.toFixed(8)
-        this.MontoPetro = 'P ' + val 
+        var val = ok.toFixed(8)
+        this.MontoPetro = 'P ' + val
         this.MontoCausado = TotalMontoPagarConvertido
         const SumarPiezas = this.DeclaracionPiezasLength.map(item => item.cantidad_piezas).reduce((prev, curr) => prev + curr, 0);
         this.TotalPiezas = SumarPiezas
@@ -595,7 +634,7 @@ public idFactura
       monto_fpo: '', // MONTO DE FPD
       mes: '', // MES DE DECLARACION
       cantidad_piezas: '', // CANTIDAD DE PIEZAS DECLARADAS
-      monto_causado : '', // MONTO TOTAL A PAGAR
+      monto_causado: '', // MONTO TOTAL A PAGAR
       user_created: this.idOPP
     }]);
   }
@@ -618,32 +657,69 @@ public idFactura
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.xAPI.funcion = "IPOSTEL_D_DeclaracionPiezas";
-        this.xAPI.parametros = `${data.id_movilizacion_piezas}`
-        this.xAPI.valores = ''
-        this.apiService.Ejecutar(this.xAPI).subscribe(
-          (data) => {
-            this.rowsDeclaracionPiezas.push(this.DeclaracionPiezas)
-            if (data.tipo === 1) {
-              this.ListaDeclaracionMovilizacionPiezasDECLARAR()
-              this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente')
-              this.DeclaracionPiezas = []
-              this.ListaDeclaracionMovilizacionPiezas()
-            } else {
-              this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
-            }
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
+        this.sectionBlockUI.start('Eliminando Piezas, Porfavor Espere!!!');
+        this.movilizacionPiezas.EliminarMovilizacionPiezas(data.id_movilizacion_piezas)
+          .then((resultado) => {
+            // Manejar el resolve
+            // console.log('Operación exitosa:', resultado);
+            this.DeclaracionPiezas = []
+            this.utilService.alertConfirmMini('success', 'Pieza Eliminada Exitosamente!')
+            this.ListaDeclaracionMovilizacionPiezas()
+            this.modalService.dismissAll('Close')
+          })
+          .catch((error) => {
+            // Manejar el reject
+            // console.error('Error en la operación:', error);
+            this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+          })
+          .finally(() => {
+            // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+            // console.log('Procesamiento finalizado');
+            this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+            this.sectionBlockUI.stop()
+          });
+        // this.xAPI.funcion = "IPOSTEL_D_DeclaracionPiezas";
+        // this.xAPI.parametros = `${data.id_movilizacion_piezas}`
+        // this.xAPI.valores = ''
+        // this.apiService.Ejecutar(this.xAPI).subscribe(
+        //   (data) => {
+        //     this.rowsDeclaracionPiezas.push(this.DeclaracionPiezas)
+        //     if (data.tipo === 1) {
+        //       this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+        //       this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente')
+        //       this.DeclaracionPiezas = []
+        //       this.ListaDeclaracionMovilizacionPiezas()
+        //     } else {
+        //       this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
+        //     }
+        //   },
+        //   (error) => {
+        //     console.log(error)
+        //   }
+        // )
       }
     })
   }
 
+  async MezclarPiezasFactura(data: any) {
+    await this.movilizacionPiezas.UpdateMovilizacionPiezas(data)
+      .then((resultado) => {
+        this.rowsDeclaracionPiezas = []
+        this.modalService.dismissAll('Close')
+        this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
+      })
+      .catch((error) => {
+        this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+      })
+      .finally(() => {
+        this.sectionBlockUI.stop()
+        this.ListaDeclaracionMovilizacionPiezas()
+      })
+  }
+
 
   async RegistrarSIDeclaracionPiezas() {
-    Swal.fire({
+    await Swal.fire({
       title: 'Esta seguro de declarar?',
       html: "Estimado <strong><font color=red>Operador Postal Privado</font></strong> <br> tenga en cuenta que una vez realice la declaración de piezas no podra revertir los cambios!",
       icon: 'warning',
@@ -666,56 +742,84 @@ public idFactura
         this.IpagarRecaudacion.fecha_pc = this.fechaActual
         // this.IpagarRecaudacion.archivo_adjunto = ''
         this.IpagarRecaudacion.user_created = this.idOPP
-        //  
-        this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-        this.xAPI.parametros = ''
-        this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
+
         this.sectionBlockUI.start('Guardando Declaración, Porfavor Espere!!!');
-        this.apiService.Ejecutar(this.xAPI).subscribe(
-          (data) => {
-            if (data.tipo === 1) {
-              this.idFactura = `${data.msj}`
-              console.log(data)
-              this.DeclaracionPiezasLength.map(e => {
-                e.id_factura = data.msj
-                // this.DeclaracionPiezasLength = []
-                this.UpdateMovilizacionPiezasDeclaracion.push(e)
-              });
-              // console.log(this.UpdateMovilizacionPiezasDeclaracion)
-              for (let i = 0; i <  this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
-                const element =  this.UpdateMovilizacionPiezasDeclaracion[i];
-                this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
-                this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas =  element.id_movilizacion_piezas
-                  this.xAPI.funcion = "IPOSTEL_U_MovilizacionPiezasIdFactura";
-                  this.xAPI.parametros =  ''
-                  this.xAPI.valores = JSON.stringify(this.IidFacturaMovilizacionPiezas)
-                  this.apiService.Ejecutar(this.xAPI).subscribe(
-                  (datax) => {
-                    if (datax.tipo === 1) {                                    
-                      this.modalService.dismissAll('Close')
-                      this.sectionBlockUI.stop()
-                      this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
-                      this.router.navigate(['payments/payments-list']).then(() => {window.location.reload()});
-                    } else {
-                      this.sectionBlockUI.stop();
-                      this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> No se agregaron las declaraciones de movilizacion de piezas a la factura Verifique e intente de nuevo')    
-                    }
-                  },
-                  (error) => {
-                    this.sectionBlockUI.stop();
-                    this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')  
-                  }
-                )
-              }
-            } else {
-              this.sectionBlockUI.stop();
-              this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+        this.movilizacionPiezas.DeclararMovilizacionPiezas(this.IpagarRecaudacion)
+
+          .then((resultado) => {
+            this.idFactura = `${resultado}`
+            this.DeclaracionPiezasLength.map(e => {
+              e.id_factura = resultado
+              this.UpdateMovilizacionPiezasDeclaracion.push(e)
+            });
+
+            for (let i = 0; i < this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
+              const element = this.UpdateMovilizacionPiezasDeclaracion[i];
+              this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
+              this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
+              this.MezclarPiezasFactura(this.IidFacturaMovilizacionPiezas)
             }
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
+          })
+          .catch((error) => {
+            // Manejar el reject
+            this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+            this.sectionBlockUI.stop()
+          })
+          .finally(() => {
+            // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+            // this.ListaDeclaracionMovilizacionPiezasDECLARAR()
+            // this.sectionBlockUI.stop()
+          });
+
+
+
+        // this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
+        // this.xAPI.parametros = ''
+        // this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
+        // this.sectionBlockUI.start('Guardando Declaración, Porfavor Espere!!!');
+        // this.apiService.Ejecutar(this.xAPI).subscribe(
+        //   (data) => {
+        //     if (data.tipo === 1) {
+        //       this.idFactura = `${data.msj}`
+        //       console.log(data)
+        //       this.DeclaracionPiezasLength.map(e => {
+        //         e.id_factura = data.msj
+        //         this.UpdateMovilizacionPiezasDeclaracion.push(e)
+        //       });
+        //       for (let i = 0; i < this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
+        //         const element = this.UpdateMovilizacionPiezasDeclaracion[i];
+        //           this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
+        //           this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
+        //         this.xAPI.funcion = "IPOSTEL_U_MovilizacionPiezasIdFactura";
+        //         this.xAPI.parametros = ''
+        //         this.xAPI.valores = JSON.stringify(this.IidFacturaMovilizacionPiezas)
+        //         this.apiService.Ejecutar(this.xAPI).subscribe(
+        //           (datax) => {
+        //             if (datax.tipo === 1) {
+        //               this.modalService.dismissAll('Close')
+        //               this.sectionBlockUI.stop()
+        //               this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
+        //               this.router.navigate(['payments/payments-list']).then(() => { window.location.reload() });
+        //             } else {
+        //               this.sectionBlockUI.stop();
+        //               this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> No se agregaron las declaraciones de movilizacion de piezas a la factura Verifique e intente de nuevo')
+        //             }
+        //           },
+        //           (error) => {
+        //             this.sectionBlockUI.stop();
+        //             this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+        //           }
+        //         )
+        //       }
+        //     } else {
+        //       this.sectionBlockUI.stop();
+        //       this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+        //     }
+        //   },
+        //   (error) => {
+        //     console.log(error)
+        //   }
+        // )
 
       }
     })
@@ -737,9 +841,8 @@ public idFactura
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this. Precio_Dolar_Petro()
+        this.Precio_Dolar_Petro()
         this.ListaMantenimientoSeguidad()
-    
         this.modalService.open(modal, {
           centered: true,
           size: 'xl',
@@ -766,8 +869,8 @@ public idFactura
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this. Precio_Dolar_Petro()
-        this.ListaMantenimientoSeguidad()    
+        this.Precio_Dolar_Petro()
+        this.ListaMantenimientoSeguidad()
         this.token = jwt_decode(sessionStorage.getItem('token'));
         this.numControl = this.token.Usuario[0].rif
         this.hashcontrol = btoa("D" + this.numControl) //Cifrar documentos    
@@ -821,20 +924,20 @@ public idFactura
           (data) => {
             if (data.tipo === 1) {
               try {
-              this.apiService.EnviarArchivos(frm).subscribe(
-                (data) => {
-                  this.modalService.dismissAll('Close')
-                  this.sectionBlockUI.stop()
-                  this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
-                  this.router.navigate(['payments/payments-list']).then(() => { window.location.reload() });    
-                },
-                (err) => {
-                  this.sectionBlockUI.stop();
-                  this.utilService.alertConfirmMini('error', 'Algo salio mal al cargar el archivo! <br> Verifique e intente de nuevo')    
-                })
+                this.apiService.EnviarArchivos(frm).subscribe(
+                  (data) => {
+                    this.modalService.dismissAll('Close')
+                    this.sectionBlockUI.stop()
+                    this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
+                    this.router.navigate(['payments/payments-list']).then(() => { window.location.reload() });
+                  },
+                  (err) => {
+                    this.sectionBlockUI.stop();
+                    this.utilService.alertConfirmMini('error', 'Algo salio mal al cargar el archivo! <br> Verifique e intente de nuevo')
+                  })
               } catch (err) {
                 this.sectionBlockUI.stop();
-                this.utilService.alertConfirmMini('error', 'Algo salio mal al cargar el archivo! <br> Verifique e intente de nuevo')    
+                this.utilService.alertConfirmMini('error', 'Algo salio mal al cargar el archivo! <br> Verifique e intente de nuevo')
               }
             } else {
               this.sectionBlockUI.stop();

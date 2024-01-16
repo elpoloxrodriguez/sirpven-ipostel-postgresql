@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-danger"  rippleEffect>
+                    <button type="button" class="btn btn-danger" rippleEffect>
                       Monto Adeudado <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                   </div>
                 </div>
@@ -91,11 +91,11 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos"  [width]="60">
+                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="badge badge-pill" ngClass="badge-light-warning">
-                       <font size="1"> {{row.nombre_tipo_pagos}} </font>
-                      </div>
+                    <div class="badge badge-pill" ngClass="badge-light-warning">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -117,24 +117,25 @@
                 </ngx-datatable-column>
 
                 <ngx-datatable-column name="STATUS" prop="status_pc" [width]="5">
-                  <ng-template  let-status_pc="value" ngx-datatable-cell-template>
-                    <div  class="badge badge-pill" ngClass="badge-light-warning">
-                     Pendiente
+                  <ng-template let-status_pc="value" ngx-datatable-cell-template>
+                    <div class="badge badge-pill" ngClass="badge-light-warning">
+                      Pendiente
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
 
 
-                <ngx-datatable-column name="Accion"  [width]="5" [sortable]="false">
+                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
                   <ng-template ngx-datatable-cell-template let-row="row">
                     <div ngbDropdown container="body" *ngIf="row.montoReal != '0'">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect >
+                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
                         <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                       </button>
                       <div ngbDropdownMenu>
-                        <a (click)="ModalPagar(ModalPagarDeclaracion,row)" *ngIf="row.montoReal != '0'" ngbDropdownItem><span [size]="16"
-                            [data-feather]="'credit-card'" [class]="'mr-50'"></span>Reportar Pago</a>
-                            <!-- <a  *ngIf="row.montoReal === '0.00'" ngbDropdownItem><span [size]="16"
+                        <a (click)="ModalPagar(ModalPagarDeclaracion,row)" *ngIf="row.montoReal != '0'"
+                          ngbDropdownItem><span [size]="16" [data-feather]="'credit-card'"
+                            [class]="'mr-50'"></span>Reportar Pago</a>
+                        <!-- <a  *ngIf="row.montoReal === '0.00'" ngbDropdownItem><span [size]="16"
                               [data-feather]="'credit-card'" [class]="'mr-50'"></span>Pago Cero (0.00)</a> -->
                       </div>
                     </div>
@@ -203,11 +204,11 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos"  [width]="60">
+                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="badge badge-pill" ngClass="badge-light-primary">
-                       <font size="1"> {{row.nombre_tipo_pagos}} </font>
-                      </div>
+                    <div class="badge badge-pill" ngClass="badge-light-primary">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -237,8 +238,8 @@
                         <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                       </button>
                       <div ngbDropdownMenu>
-                        <a (click)="DescargarFactura(row)" ngbDropdownItem><span [size]="16"
-                            [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Factura</a>
+                        <a (click)="DescargarFactura(row)" ngbDropdownItem><span [size]="16" [data-feather]="'download'"
+                            [class]="'mr-50'"></span> Descargar Factura</a>
                       </div>
                     </div>
                   </ng-template>
@@ -308,11 +309,11 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos"  [width]="60">
+                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="badge badge-pill" ngClass="badge-light-primary">
-                       <font size="1"> {{row.nombre_tipo_pagos}} </font>
-                      </div>
+                    <div class="badge badge-pill" ngClass="badge-light-primary">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -415,11 +416,11 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos"  [width]="60">
+                <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="badge badge-pill" ngClass="badge-light-primary">
-                       <font size="1"> {{row.nombre_tipo_pagos}} </font>
-                      </div>
+                    <div class="badge badge-pill" ngClass="badge-light-primary">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -452,7 +453,7 @@
                           [size]="16" [class]="'mr-50'"></span>
                         Detalles</a> -->
                         <a (click)="ModalPagarModificar(ModalPagarDeclaracion,row)" ngbDropdownItem><span [size]="16"
-                          [data-feather]="'edit'" [class]="'mr-50'"></span> Modificar Pago</a>
+                            [data-feather]="'edit'" [class]="'mr-50'"></span> Modificar Pago</a>
                       </div>
                     </div>
                   </ng-template>
@@ -483,87 +484,93 @@
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
       <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
-        <form method="post" enctype="multipart/form-data" id="forma" name="forma" class="invoice-repeater">
+      <form method="post" enctype="multipart/form-data" id="forma" name="forma" class="invoice-repeater">
         <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
-      <div class="row d-flex align-items-end">
-        <div class="col-md-12 col-12">
-          <div class="form-group">
-            <label for=" itempmvp"><font color="red"><strong>Monto Deuda</strong></font></label>
-            <input type="text" class="form-control" autocomplete="off" readonly [value]="monto_pagarX" placeholder="Monto a Pagar" />
-          </div>
-        </div>
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label for=" itempmvp">Monto a Pagar</label>
-            <input type="text" class="form-control"  autocomplete="off" [(ngModel)]="ActualizarPago.monto_pc"
-              [ngModelOptions]="{standalone: true}"  placeholder="Ingrese Monto a Pagar" />
-          </div>
-        </div>
-
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label for=" itempmvp">Fecha de Pago</label>
-            <input type="date" class="form-control"  autocomplete="off" [(ngModel)]="ActualizarPago.fecha_pc"
-              [ngModelOptions]="{standalone: true}"  placeholder="Mes" />
-          </div>
-        </div>
-
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label for=" itempmvp">Banco Emisor</label>
-            <ng-select [items]="SelectBancos" [(ngModel)]="ActualizarPago.id_banco_pc"
-                    [ngModelOptions]="{standalone: true}" bindValue="id_banco"
-                    bindLabel="nombre"   placeholder="Seleccione Entidad Banco Emisora" required autocomplete="off">
-                  </ng-select>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label for=" itempmvp">N# de Referencia</label>
-            <input type="text" class="form-control"  autocomplete="off" [(ngModel)]="ActualizarPago.referencia_bancaria"
-              [ngModelOptions]="{standalone: true}"  placeholder="Ingrese Numero de Referencia Bancaria" />
-          </div>
-        </div>
-
-        <div class="col-md-12 col-12">
-          <div class="form-group">
-            <label for="basicInputFile">Observación de Pago</label>
-            <div class="custom-file">
-              <textarea class="form-control" readonly  [(ngModel)]="ActualizarPago.observacion_pc"
-              [ngModelOptions]="{standalone: true}" id="basicTextarea" rows="3" placeholder="Ingrese Observación de Pago"></textarea>
+        <div class="row d-flex align-items-end">
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">
+                <font color="red"><strong>Monto Deuda</strong></font>
+              </label>
+              <input type="text" class="form-control" autocomplete="off" readonly [value]="monto_pagarX"
+                placeholder="Monto a Pagar" />
             </div>
           </div>
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Monto a Pagar</label>
+              <input type="text" class="form-control" autocomplete="off" [(ngModel)]="ActualizarPago.monto_pc"
+                [ngModelOptions]="{standalone: true}" placeholder="Ingrese Monto a Pagar" />
+            </div>
           </div>
 
-        <div class="col-md-12 col-12">
-        <div class="form-group">
-          <label for="basicInputFile">Ingrese Comprobante de Pago del Banco Emisor<strong><font color="red">(Solo formato PDF)</font></strong></label>
-          <div class="">
-            <input (change)="fileSelected($event)" class="form-control"name="archivos" type="file" accept=".pdf">
-            <!-- <label class="custom-file-label" for="customFile">Seleccione Documento</label> -->
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Fecha de Pago</label>
+              <input type="date" class="form-control" autocomplete="off" [(ngModel)]="ActualizarPago.fecha_pc"
+                [ngModelOptions]="{standalone: true}" placeholder="Mes" />
+            </div>
           </div>
-        </div>
-        </div>
 
-      </div>
-    </form>
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Banco Emisor</label>
+              <ng-select [items]="SelectBancos" [(ngModel)]="ActualizarPago.id_banco_pc"
+                [ngModelOptions]="{standalone: true}" bindValue="id_banco" bindLabel="nombre"
+                placeholder="Seleccione Entidad Banco Emisora" required autocomplete="off">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">N# de Referencia</label>
+              <input type="text" class="form-control" autocomplete="off"
+                [(ngModel)]="ActualizarPago.referencia_bancaria" [ngModelOptions]="{standalone: true}"
+                placeholder="Ingrese Numero de Referencia Bancaria" />
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="basicInputFile">Observación de Pago</label>
+              <div class="custom-file">
+                <textarea class="form-control" readonly [(ngModel)]="ActualizarPago.observacion_pc"
+                  [ngModelOptions]="{standalone: true}" id="basicTextarea" rows="3"
+                  placeholder="Ingrese Observación de Pago"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="basicInputFile">Ingrese Comprobante de Pago del Banco Emisor<strong>
+                  <font color="red">(Solo formato PDF)</font>
+                </strong></label>
+              <div class="">
+                <input (change)="fileSelected($event)" class="form-control" name="archivos" type="file" accept=".pdf">
+                <!-- <label class="custom-file-label" for="customFile">Seleccione Documento</label> -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
     </div>
-      <!-- Header Starts -->
-      <!-- </div> -->
-      <!-- Header Ends -->
+    <!-- Header Starts -->
+    <!-- </div> -->
+    <!-- Header Ends -->
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-      <button type="submit"  *ngIf="ShowReportarPago == true" (click)="PagarRecaudacion()"
-      rippleEffect class="btn btn-success mr-1">Reportar Pago</button>
-      <button type="submit"  *ngIf="ShowModificarPago == true" (click)="ModificarConciliarPagoRecaudacion()"
-      rippleEffect class="btn btn-success mr-1">ModificarPago</button>
+    <button type="submit"  (click)="PagarRecaudacion()" rippleEffect
+      class="btn btn-success mr-1">Reportar Pago</button>
+    <!-- <button type="submit" *ngIf="ShowModificarPago == true" (click)="ModificarConciliarPagoRecaudacion()" rippleEffect
+      class="btn btn-success mr-1">ModificarPago</button> -->
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>
   </div>
 </ng-template>
-

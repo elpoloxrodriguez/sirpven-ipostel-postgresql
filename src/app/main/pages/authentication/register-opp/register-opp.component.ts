@@ -241,6 +241,58 @@ export class RegisterOppComponent implements OnInit {
   /**
    * On Submit
    */
+
+  
+
+  constructor(
+    private apiService: ApiService,
+    private utilService: UtilService,
+    private _router: Router,
+    private _coreConfigService: CoreConfigService,
+  ) {
+    this._unsubscribeAll = new Subject();
+
+        // Configure the layout
+        this._coreConfigService.config = {
+          layout: {
+            navbar: {
+              hidden: true
+            },
+            menu: {
+              hidden: true
+            },
+            footer: {
+              hidden: true
+            },
+            customizer: false,
+            enableLocalStorage: false
+          }
+        };
+  }
+
+
+  // Lifecycle Hooks
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * On Init
+   */
+   ngOnInit() {
+           this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
+            this.coreConfig = config;
+            this.img = this.coreConfig.layout.skin
+            this.appLogoImage = this.coreConfig.app.appLogoImage
+            this.appName = this.coreConfig.app.appName
+          });
+     this.Select_Estados()
+     this.Select_Tipo_Flota()
+     this.Select_TipoAgencia()
+     this.Select_Tipo_servicio()
+    this.horizontalWizardStepper = new Stepper(document.querySelector('#stepper1'), {});
+    this.bsStepper = document.querySelectorAll('.bs-stepper');
+
+  }
+
   onSubmit() {
     // console.log(this.DatosGeneralesEmpresa)
     this.DatosGeneralesEmpresa.tipo_registro = 1
@@ -306,59 +358,6 @@ export class RegisterOppComponent implements OnInit {
       }
     )
     return false;
-  }
-  
-
-  constructor(
-    private apiService: ApiService,
-    private utilService: UtilService,
-    private _router: Router,
-    private _coreConfigService: CoreConfigService,
-  ) {
-    this._unsubscribeAll = new Subject();
-
-        // Configure the layout
-        this._coreConfigService.config = {
-          layout: {
-            navbar: {
-              hidden: true
-            },
-            menu: {
-              hidden: true
-            },
-            footer: {
-              hidden: true
-            },
-            customizer: false,
-            enableLocalStorage: false
-          }
-        };
-  }
-
-
-  // Lifecycle Hooks
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * On Init
-   */
-   ngOnInit() {
-           // Subscribe to config changes
-           this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-            this.coreConfig = config;
-            // console.log(this.coreConfig)
-            this.img = this.coreConfig.layout.skin
-            this.appLogoImage = this.coreConfig.app.appLogoImage
-            this.appName = this.coreConfig.app.appName
-          });
-
-     this.Select_Estados()
-     this.Select_Tipo_Flota()
-     this.Select_TipoAgencia()
-     this.Select_Tipo_servicio()
-    this.horizontalWizardStepper = new Stepper(document.querySelector('#stepper1'), {});
-    this.bsStepper = document.querySelectorAll('.bs-stepper');
-
   }
 
   async Select_Estados() {
@@ -463,22 +462,8 @@ export class RegisterOppComponent implements OnInit {
       default:
         break;
     }
-    // this.xAPI.funcion = 'IPOSTEL_tipologia_empresa'
-    // this.xAPI.parametros = ''
-    // this.xAPI.valores = ''
-    // this.SelectTipologiaEmpresa = []
-    // await this.apiService.EjecutarDev(this.xAPI).subscribe(
-    //   (data) => {
-    //     this.SelectTipologiaEmpresa = data.Cuerpo.map(e => {
-    //       return e
-    //     })
-    //   },
-    //   (error) => {
-    //     console.error(error)
-    //   }
-    // )
-
   }
+  
   async Select_Tipo_servicio() {
     this.xAPI.funcion = 'IPOSTEL_tipo_servicio'
     this.xAPI.parametros = ''

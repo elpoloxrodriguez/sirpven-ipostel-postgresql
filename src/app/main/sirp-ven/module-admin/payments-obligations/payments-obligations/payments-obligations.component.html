@@ -7,7 +7,8 @@
           <button type="button" (click)="ModalMultasObligaciones(ModalMultas)" class="btn btn-warning" rippleEffect>
             Obligaciones Individuales</button>
           &nbsp;
-          <button type="button" (click)="ModalMultasColectivas(ModalMultasColectiva)" class="btn btn-danger" rippleEffect>
+          <button type="button" (click)="ModalMultasColectivas(ModalMultasColectiva)" class="btn btn-danger"
+            rippleEffect>
             Obligaciones Colectivas</button>
         </div>
         &nbsp;
@@ -48,7 +49,7 @@
           <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
             <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
               <div>
-                <span class="font-weight-bold">{{ nombre_empresa }} </span>
+                <span class="font-weight-bold">{{ nombre_empresa | uppercase }} </span>
               </div>
             </ng-template>
           </ngx-datatable-column>
@@ -133,7 +134,8 @@
 
 <ng-template #ModalMultas let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Indivisual a <strong>Operadores Postales Privados y
+    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Indivisual a <strong>Operadores Postales Privados
+        y
         Subcontratistas</strong> </h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
@@ -222,7 +224,8 @@
 
 <ng-template #ModalMultasColectiva let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Colectivas a <strong>Operadores Postales Privados y
+    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Colectivas a <strong>Operadores Postales Privados
+        y
         Subcontratistas</strong> </h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
@@ -260,7 +263,7 @@
             <div class="form-group">
               <label for="obligacion">Seleccion Tipo Obligación</label>
               <ng-select [items]="ListaTipoObligacion" [(ngModel)]="obligacion" [ngModelOptions]="{standalone: true}"
-                (ngModelChange)="CapturarObligacion($event)"  bindLabel="name"
+                (ngModelChange)="CapturarObligacion($event)" bindLabel="name"
                 placeholder="Seleccione Tipo de Obligación" required autocomplete="off">
               </ng-select>
             </div>
@@ -299,8 +302,8 @@
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
-    <button type="submit" [disabled]="!formUsersRegister.form.valid" (click)="ProcesarOblicacionColectivas()" rippleEffect
-      class="btn btn-success mr-1">Procesar Obligación</button>
+    <button type="submit" [disabled]="!formUsersRegister.form.valid" (click)="ProcesarOblicacionColectivas()"
+      rippleEffect class="btn btn-success mr-1">Procesar Obligación</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

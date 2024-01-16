@@ -627,7 +627,8 @@ export class OppComponent implements OnInit {
   }
 
   async EmpresaOPP(id: any) {
-    this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
+      this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
+    this.xAPI.valores = ''
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {

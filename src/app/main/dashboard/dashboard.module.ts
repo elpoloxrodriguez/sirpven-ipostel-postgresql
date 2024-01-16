@@ -53,6 +53,7 @@ import { DupvenRoutingModule } from '../dup-ven/dupven-routing.module';
 import { DupvenAdminComponent } from '../dup-ven/dupven-admin/dupven-admin.component';
 import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';
 import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obligations/payments-obligations.module';
+import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-offices/branch-offices.module';
 
 
 
@@ -107,7 +108,8 @@ import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obl
     PostalSolvencyOppModule,
     PhilatelyModule,
     DupvenRoutingModule,
-    PaymentsObligationsModule
+    PaymentsObligationsModule,
+    BranchOfficesModule
   ],
   exports: [],
   providers: [DatePipe]

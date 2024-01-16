@@ -137,7 +137,7 @@ export class ReportsRankingComponent implements OnInit {
               ticks: {
                 stepSize: 10000,
                 min: 0,
-                max: monto,
+                max: monto ? monto : 500,
                 fontColor: this.labelColor
               },
               gridLines: {
@@ -170,7 +170,7 @@ export class ReportsRankingComponent implements OnInit {
       labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
       datasets: [
         {
-          data: this.MontoRecaudacionAnioAnterior,
+          data: this.MontoRecaudacionAnioAnterior ? this.MontoRecaudacionAnioAnterior : 0,
           // data: [30332,24776],
           label: `Movimiento de Piezas Año ${ this.añoAn }`,
           borderColor: this.lineChartDanger,
@@ -191,7 +191,7 @@ export class ReportsRankingComponent implements OnInit {
         },
         {
           // data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,6585],
-          data: this.MontoRecaudacionAnioActual,
+          data: this.MontoRecaudacionAnioActual ? this.MontoRecaudacionAnioActual : 0,
           label: `Movimiento de Piezas Año ${this.añoAc}`,
           borderColor: this.lineChartPrimary,
           lineTension: 0.5,
@@ -223,9 +223,14 @@ export class ReportsRankingComponent implements OnInit {
         data.Cuerpo.map(AnioAnterior => {
            this.MontoRecaudacionAnioAnterior.push(AnioAnterior.total_piezas)
           })
-          const maxValue = this.MontoRecaudacionAnioAnterior.reduce((a, b) => Math.max(a, b));
+          if (this.MontoRecaudacionAnioAnterior.length > 0 ) {
+            const maxValue = this.MontoRecaudacionAnioAnterior.reduce((a, b) => Math.max(a, b));
           this.GenerarGrafico(maxValue)
           this.sectionBlockUI.stop()
+          } else {
+            this.GenerarGrafico(0)
+            this.sectionBlockUI.stop()
+          }
 
       },
       (error) => {
@@ -243,9 +248,14 @@ export class ReportsRankingComponent implements OnInit {
         data.Cuerpo.map(AnioActual => {
           this.MontoRecaudacionAnioActual.push(AnioActual.total_piezas)
         })
-        const maxValue = this.MontoRecaudacionAnioActual.reduce((a, b) => Math.max(a, b));
+        if (this.MontoRecaudacionAnioActual.length > 0 ) {
+          const maxValue = this.MontoRecaudacionAnioActual.reduce((a, b) => Math.max(a, b));
         this.GenerarGrafico(maxValue)
         this.sectionBlockUI.stop()
+        } else {
+          this.GenerarGrafico(0)
+          this.sectionBlockUI.stop()
+        }
 
       },
       (error) => {

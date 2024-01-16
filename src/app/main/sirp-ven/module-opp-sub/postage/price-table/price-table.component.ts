@@ -159,7 +159,7 @@ public NombreTipoFranqueo
 
   public selectServicioFranqueo = []
   public itemsSelectPesoEnvio = []
-  public rowsTarifaNacionalAereo
+  public rowsTarifas
   public tempDataTarifasFranqueo = []
   public TarifasFranqueo = []
 
@@ -214,7 +214,7 @@ public NombreTipoFranqueo
     }
     this.idOPP = this.token.Usuario[0].id_opp
     await this.TasaPostal(parseInt(this.token.Usuario[0].tipologia_empresa), this.idOPP)
-    await this.ListaTarifaNacionalAereo()
+    await this.ListaTarifas()
     await this.fechaF()
     await this.ListaPesoEnvio()
     await this.ListaServicioFranqueo()
@@ -270,49 +270,49 @@ public NombreTipoFranqueo
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 1
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       case 'ngb-nav-1':
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 2
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       case 'ngb-nav-2':
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 3
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       case 'ngb-nav-3':
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 4
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       case 'ngb-nav-4':
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 5
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       case 'ngb-nav-5':
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 6
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
       default:
         this.TarifasFranqueo = []
         this.TarifasFranqueoAll = []
         this.ServicioFranqueoID = 1
-        await this.ListaTarifaNacionalAereo()
+        await this.ListaTarifas()
         await this.ModalListaServicioFranqueo(this.ServicioFranqueoID)
         break;
     }
@@ -323,13 +323,15 @@ public NombreTipoFranqueo
     return date
   }
 
-  async ListaTarifaNacionalAereo() {
+  async ListaTarifas() {
     this.TarifasFranqueo = []
     const date = this.anio + '-' + '0'+this.mes
     const id = this.ServicioFranqueoID
     // console.log(id)
-    this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo_date_id"
-    this.xAPI.parametros = this.idOPP + ',' + date + ',' + id
+    // this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo_date_id"
+    // this.xAPI.parametros = this.idOPP + ',' + date + ',' + id
+    this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo_date"
+    this.xAPI.parametros = this.idOPP + ',' + date
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
@@ -345,8 +347,8 @@ public NombreTipoFranqueo
           this.TarifasFranqueo.push(e)
         });
         // console.log(this.TarifasFranqueo)
-        this.rowsTarifaNacionalAereo = this.TarifasFranqueo;
-        this.tempDataTarifasFranqueo = this.rowsTarifaNacionalAereo
+        this.rowsTarifas = this.TarifasFranqueo;
+        this.tempDataTarifasFranqueo = this.rowsTarifas
       },
       (error) => {
         console.log(error)
@@ -515,11 +517,11 @@ public NombreTipoFranqueo
     this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.sectionBlockUI.start('Actualizando Registros, Porfavor Espere!!!');
-        this.rowsTarifaNacionalAereo.push(this.TarifasFranqueo)
+        this.rowsTarifas.push(this.TarifasFranqueo)
         if (data.tipo === 1) {
           this.TarifasFranqueo = []
           this.TarifasFranqueoAll = []
-          this.ListaTarifaNacionalAereo()
+          this.ListaTarifas()
           this.ListaTarifasFranqueoAll()
           this.modalService.dismissAll('Close')
           this.sectionBlockUI.stop()
@@ -560,11 +562,11 @@ public NombreTipoFranqueo
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           this.sectionBlockUI.start('Guardando Registros, Porfavor Espere!!!');
-          this.rowsTarifaNacionalAereo.push(this.TarifasFranqueo)
+          this.rowsTarifas.push(this.TarifasFranqueo)
           if (data.tipo === 1) {
             this.TarifasFranqueo = []
             this.TarifasFranqueoAll = []
-            this.ListaTarifaNacionalAereo()
+            this.ListaTarifas()
             this.ListaTarifasFranqueoAll()
             this.modalService.dismissAll('Close')
             this.sectionBlockUI.stop()
@@ -598,12 +600,12 @@ public NombreTipoFranqueo
         this.xAPI.valores = ''
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
-            this.rowsTarifaNacionalAereo.push(this.TarifasFranqueo)
+            this.rowsTarifas.push(this.TarifasFranqueo)
             if (data.tipo === 1) {
               this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente')
               this.TarifasFranqueo = []
               this.TarifasFranqueoAll = []
-              this.ListaTarifaNacionalAereo()
+              this.ListaTarifas()
               this.ListaTarifasFranqueoAll()  
             } else {
               this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
@@ -625,7 +627,7 @@ public NombreTipoFranqueo
       return d.nombre_peso_envio.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // Update The Rows
-    this.rowsTarifaNacionalAereo = temp;
+    this.rowsTarifas = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }

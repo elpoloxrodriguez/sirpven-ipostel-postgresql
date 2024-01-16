@@ -6,13 +6,11 @@ import { UtilService } from '@core/services/util/util.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from "jwt-decode";
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 import { PdfService } from '@core/services/pdf/pdf.service';
 import { AngularFileUploaderComponent } from 'angular-file-uploader';
 import { DatePipe } from '@angular/common';
-import Swal from 'sweetalert2';
+import { GenerarPagoService } from '@core/services/generar-pago.service';
 
 
 @Component({
@@ -98,10 +96,10 @@ export class PaymentsListComponent implements OnInit {
 
   public MantenimientoYSeguridad = []
 
-  public pDolar : number = 0
-  public pPetro : number = 0
-  public monto : number = 0
-  public conversion : number = 0
+  public pDolar: number = 0
+  public pPetro: number = 0
+  public monto: number = 0
+  public conversion: number = 0
 
 
 
@@ -132,6 +130,7 @@ export class PaymentsListComponent implements OnInit {
     private router: Router,
     private pdf: PdfService,
     private datePipe: DatePipe,
+    private updateConciliacion: GenerarPagoService,
   ) { }
 
   async ngOnInit() {
@@ -145,24 +144,23 @@ export class PaymentsListComponent implements OnInit {
     await this.ListaPagosRecaudacion()
     await this.ListaBancosVzla()
     await this.ListaTiposPagos()
-    // await this.MantenimientoSIRPVEN()
   }
 
 
   async Precio_Dolar_Petro() {
-      this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
-      this.xAPI.parametros = ''
-      this.xAPI.valores = ''
-      await this.apiService.Ejecutar(this.xAPI).subscribe(
-        (data) => {
-          this.DolarPetroDia = data.Cuerpo.map(e => {
-            return e
-          });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+    this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.DolarPetroDia = data.Cuerpo.map(e => {
+          return e
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
 
   async ListaBancosVzla() {
@@ -293,8 +291,8 @@ export class PaymentsListComponent implements OnInit {
           e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
           this.List_Pagos_Recaudacion.push(e)
           // console.log(e)
-          // console.log(this.List_Pagos_Recaudacion)
         });
+        // console.log(this.List_Pagos_Recaudacion)
         let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
         this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA ? MontoTotalA : 0)
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
@@ -398,29 +396,28 @@ export class PaymentsListComponent implements OnInit {
     try {
       await this.apiService.EnviarArchivos(frm).subscribe(
         (data) => {
-          this.xAPI.funcion = "IPOSTEL_U_PagosDeclaracionOPP_SUB"
-          this.xAPI.parametros = ''
-          this.xAPI.valores = JSON.stringify(this.ActualizarPago)
+          // console.log(data)
           if (this.ActualizarPago.monto_pagar === this.ActualizarPago.monto_pc) {
-            this.apiService.Ejecutar(this.xAPI).subscribe(
-              (datax) => {
-                this.rowsPagosConciliacion.push(this.List_Pagos_Recaudacion)
-                if (datax.tipo === 1) {
-                  this.List_Pagos_Recaudacion = []
-                  this.ListaPagosRecaudacion()
-                  this.modalService.dismissAll('Close')
-                  this.sectionBlockUI.stop()
-                  this.utilService.alertConfirmMini('success', 'Reporte de Pago Registrado Exitosamente!')
-                } else {
-                  this.sectionBlockUI.stop();
-                  this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
-                }
-              },
-              (error) => {
-                this.sectionBlockUI.stop();
-                console.log(error)
-              }
-            )
+            this.updateConciliacion.UpdateCreacionRecaudacionIndividual(this.ActualizarPago)
+              .then((resultado) => {
+                // Manejar el resolve
+                // console.log('Operación exitosa:', resultado);
+                this.List_Pagos_Recaudacion = []
+                this.modalService.dismissAll('Cerrar Modal')
+                // this.LimpiarModal()
+                this.utilService.alertConfirmMini('success', 'Pago Reportado Exitosamente')
+              })
+              .catch((error) => {
+                // Manejar el reject
+                // console.error('Error en la operación:', error);
+                this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+              })
+              .finally(() => {
+                // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+                // console.log('Procesamiento finalizado');
+                this.ListaPagosRecaudacion()
+                this.sectionBlockUI.stop()
+              })
           } else {
             this.sectionBlockUI.stop();
             this.utilService.alertConfirmMini('warning', 'El Monto Pagado es Diferente al de la Factura Adeudada, Porfavor verifique e intente nuevamente')
@@ -429,23 +426,8 @@ export class PaymentsListComponent implements OnInit {
       )
     } catch (error) {
       this.sectionBlockUI.stop();
-      console.log(error)
+      this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, al cargar el PDF')
     }
-  }
-
-  MantenimientoSIRPVEN() {
-    this.xAPI.funcion = "IPOSTEL_R_MantenimientoSIRPVEN";
-    this.xAPI.parametros = '7'
-    this.apiService.Ejecutar(this.xAPI).subscribe(
-      (data) => {
-        this.MontoMantenimiento = data.Cuerpo.map(e => {
-          return e
-        });
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
   }
 
 
@@ -519,229 +501,6 @@ export class PaymentsListComponent implements OnInit {
     this.table.offset = 0;
   }
 
-  async CargarReglasNegocio(valor:any) {
-
-    this.pDolar = parseFloat(valor.dolar)
-    this.pPetro = parseFloat(valor.petro)
-    // console.log(this.pPetro, this.pDolar, this.monto, this.conversion)
-    /*
-    El 15 de Enero de cada año se cancela la habilitacion de contrato 
-    para subcontratistas, por un monto de 1 Petros.
-    */
-    if (this.formattedDate === '01-15') {
-      if (this.TipoRegistro === 2) {
-        this.monto = this.pPetro / 2
-        this.conversion = this.monto * this.pDolar
-        } else {
-        this.monto = this.pPetro 
-        this.conversion = this.monto * this.pDolar
-        }
-      if (this.TipoRegistro === 2) {
-         Swal.fire({
-          title: "Estimado Subcontratista!",
-          text: "Su Autorización a Caducado, Desea Renovarlo ?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, Renovar!",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.List_Pagos_Recaudacion = []
-            this.IpagarRecaudacion.id_opp = this.idOPP
-            this.IpagarRecaudacion.status_pc = 0
-            this.IpagarRecaudacion.tipo_pago_pc = 5
-            this.IpagarRecaudacion.monto_pc = '0'
-            this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
-            this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
-            this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
-            this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
-            this.IpagarRecaudacion.user_created = this.idOPP
-            this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-            this.xAPI.parametros = ''
-            this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-            this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
-            this.apiService.Ejecutar(this.xAPI).subscribe(
-              (data) => {
-                this.ListaPagosRecaudacion()
-                this.utilService.alertConfirmMini('success', 'Registro Guardado Exitosamente')
-                this.sectionBlockUI.stop()
-              },
-              (error) => {
-                console.log(error)
-                this.sectionBlockUI.stop()
-              }
-            )
-          }
-        });
-      }
-    }
-    /*
-    El 5 de Julio de cada año se cancela el derecho mensual 1 
-    por un monto de 1.5 Petros si eres SUBCONTRATISTA, y si eres OPP
-    cancelas un monto de 3 petros.
-    */
-    if (this.formattedDate === '07-05') {
-      if (this.TipoRegistro === 2) {
-        this.user = 'Subcontratista'
-        this.monto = this.pPetro * 1.5
-        this.conversion = this.monto * this.pDolar
-        } else {
-        this.user = 'Operador Postal'
-        this.monto = this.pPetro * 3
-        this.conversion = this.monto * this.pDolar
-        }
-         Swal.fire({
-          title: `Estimado ${this.user}!`,
-          text: "Desea Generar Recibo de Pagar Derecho Semestral 1",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, Generar Recibo de Pago!",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.List_Pagos_Recaudacion = []
-            this.IpagarRecaudacion.id_opp = this.idOPP
-            this.IpagarRecaudacion.status_pc = 0
-            this.IpagarRecaudacion.tipo_pago_pc = 2
-            this.IpagarRecaudacion.monto_pc = '0'
-            this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
-            this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
-            this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
-            this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
-            this.IpagarRecaudacion.user_created = this.idOPP
-            this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-            this.xAPI.parametros = ''
-            this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-            this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
-            this.apiService.Ejecutar(this.xAPI).subscribe(
-              (data) => {
-                this.ListaPagosRecaudacion()
-                this.utilService.alertConfirmMini('success', 'Registro Guardado Exitosamente')
-                this.sectionBlockUI.stop()
-              },
-              (error) => {
-                console.log(error)
-                this.sectionBlockUI.stop()
-              }
-            )
-          }
-        });
-    }
-    /*
-    El 5 de Diciembre de cada año se cancela el derecho mensual 1 
-    por un monto de 1.5 Petros si eres SUBCONTRATISTA, y si eres OPP
-    cancelas un monto de 3 petros.
-    */
-    if (this.formattedDate === '12-05') {
-      if (this.TipoRegistro === 2) {
-        this.user = 'Subcontratista'
-        this.monto = this.pPetro * 1.5
-        this.conversion = this.monto * this.pDolar
-        } else {
-        this.user = 'Operador Postal'
-        this.monto = this.pPetro * 3
-        this.conversion = this.monto * this.pDolar
-        }
-         Swal.fire({
-          title: `Estimado ${this.user}!`,
-          text: "Desea Generar Recibo de Pagar Derecho Semestral 2",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, Generar Recibo de Pago!",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.List_Pagos_Recaudacion = []
-            this.IpagarRecaudacion.id_opp = this.idOPP
-            this.IpagarRecaudacion.status_pc = 0
-            this.IpagarRecaudacion.tipo_pago_pc = 3
-            this.IpagarRecaudacion.monto_pc = '0'
-            this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
-            this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
-            this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
-            this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
-            this.IpagarRecaudacion.user_created = this.idOPP
-            this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-            this.xAPI.parametros = ''
-            this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-            this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
-            this.apiService.Ejecutar(this.xAPI).subscribe(
-              (data) => {
-                this.ListaPagosRecaudacion()
-                this.utilService.alertConfirmMini('success', 'Registro Guardado Exitosamente')
-                this.sectionBlockUI.stop()
-              },
-              (error) => {
-                console.log(error)
-                this.sectionBlockUI.stop()
-              }
-            )
-          }
-        });
-    }
-    /*
-    El 5 de Diciembre de cada año se cancela el derecho mensual 1 
-    por un monto de 1.5 Petros si eres SUBCONTRATISTA, y si eres OPP
-    cancelas un monto de 3 petros.
-    */
-    if (this.formattedDate === '12-05') {
-      if (this.TipoRegistro === 2) {
-        this.user = 'Subcontratista'
-        this.monto = this.pPetro * 3
-        this.conversion = this.monto * this.pDolar
-        } else {
-        this.user = 'Operador Postal'
-        this.monto = this.pPetro * 6
-        this.conversion = this.monto * this.pDolar
-        }
-         Swal.fire({
-          title: `Estimado ${this.user}!`,
-          text: "Desea Generar Recibo de Pagar Anualidad",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, Generar Recibo de Pago!",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.List_Pagos_Recaudacion = []
-            this.IpagarRecaudacion.id_opp = this.idOPP
-            this.IpagarRecaudacion.status_pc = 0
-            this.IpagarRecaudacion.tipo_pago_pc = 4
-            this.IpagarRecaudacion.monto_pc = '0'
-            this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
-            this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
-            this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
-            this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
-            this.IpagarRecaudacion.user_created = this.idOPP
-            this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-            this.xAPI.parametros = ''
-            this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-            this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
-            this.apiService.Ejecutar(this.xAPI).subscribe(
-              (data) => {
-                this.ListaPagosRecaudacion()
-                this.utilService.alertConfirmMini('success', 'Registro Guardado Exitosamente')
-                this.sectionBlockUI.stop()
-              },
-              (error) => {
-                console.log(error)
-                this.sectionBlockUI.stop()
-              }
-            )
-          }
-        });
-    }
-    
-
-  }
 
 }
 

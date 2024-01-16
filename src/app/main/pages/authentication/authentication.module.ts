@@ -27,7 +27,6 @@ import { AuthLoginV2Component } from 'app/main/pages/authentication/auth-login-v
 import { AuthResetPasswordV2Component } from './auth-reset-password-v2/auth-reset-password-v2.component';
 import { AuthForgotPasswordV2Component } from './auth-forgot-password-v2/auth-forgot-password-v2.component';
 import { AuthAdminComponent } from './auth-admin/auth-admin.component';
-import { AuthRegisterOppComponent } from './auth-register-opp/auth-register-opp.component';
 import { AuthRegisterSubcontratorComponent } from './auth-register-subcontrator/auth-register-subcontrator.component';
 import { BlockUIModule } from 'ng-block-ui';
 import { FooterComponent } from './footer/footer.component';
@@ -94,7 +93,6 @@ const routes: Routes = [
     AuthLoginV2Component,
     AuthResetPasswordV2Component,
     AuthForgotPasswordV2Component,
-    AuthRegisterOppComponent,
     AuthRegisterSubcontratorComponent,
     FooterComponent,
     AsistenteVirtualComponent,

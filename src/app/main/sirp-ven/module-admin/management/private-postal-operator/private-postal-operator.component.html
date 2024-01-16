@@ -265,18 +265,18 @@
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
                 [scrollbarH]="true">
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
-                  <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Empresa" prop="operador" width="auto">
+                  <ng-template let-operador="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold">{{ nombre_empresa }} </span>
+                      <span class="font-weight-bold">{{ operador }} </span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="RIF" prop="rif"  [width]="5">
-                  <ng-template let-rif="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="RIF" prop="rif_operador"  [width]="5">
+                  <ng-template let-rif_operador="value" ngx-datatable-cell-template>
                     <div>
-                      <span class="font-weight-bold"> {{ rif }}</span>
+                      <span class="font-weight-bold"> {{ rif_operador }}</span>
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
@@ -307,7 +307,7 @@
                 <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
                   <ng-template ngx-datatable-cell-template let-row="row">
                     <div ngbDropdown container="body" >
-                      <button ngbDropdownToggle type="button" *ngIf="row.cantidad != null" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
+                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
                         <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
                       </button>
                       <div ngbDropdownMenu>
@@ -333,7 +333,6 @@
 
   </div>
 </div>
-
 
 
 
@@ -903,3 +902,4 @@
     </button>
   </div>
 </ng-template>
+

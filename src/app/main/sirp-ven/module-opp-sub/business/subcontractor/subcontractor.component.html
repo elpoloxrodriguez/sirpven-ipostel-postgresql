@@ -1,127 +1,103 @@
 <div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
-    <div class="card-body">
+  <div class="card-body">
 
-      <section class="users-list-wrapper">
-        <div class="card">
-          <div class="row">
-            <div class="col-md-6 col-12">
-              <div class="d-flex justify-content-between align-items-center m-1">
-                <label class="d-flex align-items-center">Mostrar
-                  <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                  </select>
-                  Registros</label>
-              </div>
-            </div>
-            <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                    name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre Empresa"
-                    (keyup)="filterUpdateSubcontratistas($event)"
-                    (search)="filterUpdateSubcontratistas($event)" /></label>
-              </div>
+    <section class="users-list-wrapper">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-between align-items-center m-1">
+              <label class="d-flex align-items-center">Mostrar
+                <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                Registros</label>
             </div>
           </div>
-          
-          <ngx-datatable [rows]="rowsSubcontratistas"  rowHeight="auto" class="bootstrap core-bootstrap"
-            [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-            [scrollbarH]="true">
-  
-            <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="20">
-              <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
-                <div>
-                  <span class="font-weight-bold">{{ nombre_empresa }} </span>
-                </div>
-              </ng-template>
-            </ngx-datatable-column>
-  
-            <ngx-datatable-column name="Rif" prop="rif"  [width]="20">
-              <ng-template let-rif="value" ngx-datatable-cell-template>
-                <div>
-                  {{ rif }}
-                </div>
-              </ng-template>
-            </ngx-datatable-column>
-  
-            <ngx-datatable-column name="Tipología Empresa" prop="nombre_tipologia" [width]="20">
-              <ng-template let-nombre_tipologia="value" ngx-datatable-cell-template>
-                <div>
-                  {{ nombre_tipologia }}
-                </div>
-              </ng-template>
-            </ngx-datatable-column>
-  
-  
-            <ngx-datatable-column name="Correo Electronico" prop="correo_electronico" [width]="60">
-              <ng-template let-correo_electronico="value" ngx-datatable-cell-template>
-                <div>
-                  {{ correo_electronico }}
-                </div>
-              </ng-template>
-            </ngx-datatable-column> 
-  
-  
-            <ngx-datatable-column name="Status" prop="status_empresa" [width]="20">
-              <ng-template let-status_empresa="value" ngx-datatable-cell-template>
-                <div
-                  *ngIf="status_empresa === 0"
-                  class="badge badge-pill"
-                  ngClass="badge-light-warning">
-                  En Espera
-                </div>
-                <div
-                  *ngIf="status_empresa === 1"
-                  class="badge badge-pill"
-                  ngClass="badge-light-success">
-                  Aprobado
-                </div>
-                <div
-                  *ngIf="status_empresa === 2"
-                  class="badge badge-pill"
-                  ngClass="badge-light-danger">
-                  Rechazado
-                </div>
-              </ng-template>
-            </ngx-datatable-column> 
-            
-                <ngx-datatable-column name="Accion" [width]="20" [sortable]="false">
-                  <ng-template  ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                          <div *ngIf="row.status_empresa != 1; else nonStatus">
-                            <a (click)="DetallesOPP(ModalDetailsOPP,row)" ngbDropdownItem><span
-                              [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Detalles</a>
-                              <a (click)="CambiarStatusSubcontratista(ModalCambiarStatus,row)" ngbDropdownItem><span
-                                [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> Cambiar Status</a>
-                                <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
-                                  [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
-                          </div>
-                    </div>
-                      <ng-template  #nonStatus>
-                            <a (click)="DetallesOPP(ModalDetailsOPP,row)" ngbDropdownItem><span
-                              [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Detalles</a>
-                              <a (click)="CambiarContrasena(ModalCambiarContrasena,row)" ngbDropdownItem><span [size]="16"
-                                [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
-                            </ng-template>
-                    </div>  
-                      </ng-template>
-                    </ngx-datatable-column>
-      
-  
-          </ngx-datatable>
-  
-     
-      <!--/ Invoice List -->
-    </div>
-      </section>
+          <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+              <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
+                  name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre Empresa"
+                  (keyup)="filterUpdateSubcontratistas($event)"
+                  (search)="filterUpdateSubcontratistas($event)" /></label>
+            </div>
+          </div>
+        </div>
 
-    </div>
+        <ngx-datatable [rows]="rowsSubcontratistas" rowHeight="auto" class="bootstrap core-bootstrap"
+          [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+          [scrollbarH]="true">
+
+          <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="200">
+            <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+              <div>
+                <span class="font-weight-bold">{{ nombre_empresa }} </span>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Rif" prop="rif_empresa" [width]="100">
+            <ng-template let-rif_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ rif_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Tipo" prop="tipo_sub" [width]="20">
+            <ng-template let-tipo_sub="value" ngx-datatable-cell-template>
+              <div *ngIf="tipo_sub == 0" class="badge badge-pill" ngClass="badge-light-success">
+                Principal
+              </div>
+              <div *ngIf="tipo_sub == 1" class="badge badge-pill" ngClass="badge-light-info">
+                Sucursal
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+
+          <ngx-datatable-column name="Status" prop="status_agencia" [width]="20">
+            <ng-template let-status_agencia="value" ngx-datatable-cell-template>
+              <div *ngIf="status_agencia === 0" class="badge badge-pill" ngClass="badge-light-warning">
+                En Espera
+              </div>
+              <div *ngIf="status_agencia === 1" class="badge badge-pill" ngClass="badge-light-success">
+                Aprobado
+              </div>
+              <div *ngIf="status_agencia === 2" class="badge badge-pill" ngClass="badge-light-danger">
+                Rechazado
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Accion" [width]="20" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div ngbDropdown container="body">
+                <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
+                  <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
+                </button>
+                <div ngbDropdownMenu>
+                  <div>
+                    <a (click)="CambiarStatusSubcontratista(ModalCambiarStatus,row)" ngbDropdownItem><span
+                        [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> Cambiar Status</a>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+        </ngx-datatable>
+
+
+        <!--/ Invoice List -->
+      </div>
+    </section>
+
+  </div>
 </div>
 
 
@@ -134,275 +110,45 @@
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
       <!-- <div *blockUI="'section-block'"> -->
-      <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater">
-          <div class="row d-flex align-items-end">
+      <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm"
+        class="invoice-repeater">
+        <div class="row d-flex align-items-end">
 
 
-            <div class="col-md-12 col-12">
-              <div class="form-group">
-                <label>Seleccionar Status</label>
-                <ng-select [items]="SelectStatusSubcontratista" [(ngModel)]="CambiarStatus.status_empresa"
-                [ngModelOptions]="{standalone: true}"
-                 bindLabel="name" bindValue="id" placeholder="Seleccionar Status"
-                ></ng-select>
-              </div>
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label>Seleccionar Status</label>
+              <ng-select [items]="SelectStatusSubcontratista" [(ngModel)]="CambiarStatus.status_agencia"
+                [ngModelOptions]="{standalone: true}" bindLabel="name" bindValue="id"
+                placeholder="Seleccionar Status"></ng-select>
             </div>
-
-            <div class="col-md-12 col-12">
-              <div class="form-group">
-                <label >Observación</label>
-                <textarea type="text" class="form-control" rows="6" [(ngModel)]="CambiarStatus.observacion" autocomplete="off"
-                  [ngModelOptions]="{standalone: true}"
-                  placeholder="Ingrese Observación"></textarea>
-              </div>
-            </div>
-
           </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="basicInputFile">Observación</label>
+              <div class="custom-file">
+                <textarea class="form-control" [(ngModel)]="CambiarStatus.observacion"
+                  [ngModelOptions]="{standalone: true}" id="basicTextarea" rows="3"
+                  placeholder="Escribe Observación"></textarea>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
       </form>
-      
+
       <!-- </div> -->
       <!-- Header Ends -->
     </div>
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
-      <button type="submit"  (click)="RegistrarCambiarStatus()"
-      rippleEffect class="btn btn-success mr-1">Cambiar Status</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
-      Cerrar
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #ModalDetailsOPP let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Detalles de <strong>{{ DataEmpresa.nombre_empresa }}</strong></h5>
-  </div>
-  <div class="modal-body" tabindex="0" ngbAutofocus>
-    <div class="col-xl-12 col-md-12 col-12">
-      <!-- Header Starts -->
-      <ul ngbNav #navCenter="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
-        <li ngbNavItem>
-          <a ngbNavLink>DATOS GENERALES DEL OPP</a>
-          <ng-template ngbNavContent>
-            <div class="col-xl-12 col-md-12 col-12">
-              <!-- Header Starts -->
-              <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-                <div>
-                  <div class="logo-wrapper">
-                    <h3 class="text-primary invoice-logo"> {{ DataEmpresa.nombre_empresa }} </h3>
-                  </div>
-                  <p class="card-text mb-25"><strong>RIF:</strong> {{ DataEmpresa.rif }} </p>
-                  <p class="card-text mb-25"><strong>Email:</strong> {{ DataEmpresa.correo_electronico }} </p>
-                  <p class="card-text mb-0"><strong>Tipo Registro:</strong> {{ DataEmpresa.tipo_registro }} </p>
-                  <p class="card-text mb-0"><strong>Dirección:</strong> {{ DataEmpresa.direccion_empresa }} </p>
-                  <p class="card-text mb-25"><strong>Estado:</strong> {{ DataEmpresa.estado_empresa }} |
-                    <strong>Ciudad:</strong> {{ DataEmpresa.ciudad_empresa }}
-                    | <strong>Parroquia:</strong> {{ DataEmpresa.parroquia_empresa }}
-                  </p>
-                  <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataEmpresa.facebook_empresa ?
-                    DataEmpresa.facebook_empresa : 'N/A' }} | <strong>Instagram:</strong> {{ DataEmpresa.instagram_empresa
-                    ? DataEmpresa.instagram_empresa : 'N/A' }}
-                    | <strong>Twitter:</strong> {{ DataEmpresa.twitter_empresa ? DataEmpresa.twitter_empresa : 'N/A' }}
-                  </p>
-                  <p class="card-text mb-25"><strong>Tipo Agencia:</strong> {{ DataEmpresa.nombre_tipo_agencia }} </p>
-                  <p class="card-text mb-25"><strong>Tipologia Agencia:</strong> {{ DataEmpresa.nombre_tipologia }} </p>
-                  <p class="card-text mb-25"><strong>Cantidad Sucursales:</strong> {{ DataEmpresa.sucursales }} </p>
-                  <p class="card-text mb-25"><strong>Cantidad Subcontrataciones:</strong> {{ DataEmpresa.subcontrataciones
-                    }} </p>
-                  <p class="card-text mb-25"><strong>Especificación:</strong> {{ DataEmpresa.especificacion_servicio}}
-                  </p>
-                  <p class="card-text mb-25"><strong>Licencia Actividades Economicas Municipales:</strong> {{
-                    DataEmpresa.licencia_actividades_economicas_municipales}} </p>
-                  <p class="card-text mb-25"><strong>Licencia Actividades Economicas SENIAT:</strong> {{
-                    DataEmpresa.actividades_economicas_seniat}} </p>
-                  <p class="card-text mb-25"><strong>Certificado RUPDAE:</strong> {{ DataEmpresa.certificado_rupdae}} </p>
-                  <p class="card-text mb-25"><strong>Licencia Patronal IVSS:</strong> {{ DataEmpresa.patronal_ivss}} </p>
-                  <p class="card-text mb-25"><strong>Matricula INCES:</strong> {{ DataEmpresa.matricula_inces}} </p>
-                  <p class="card-text mb-25"><strong>Identificación Ministerio Trabajo:</strong> {{
-                    DataEmpresa.identificacion_laboral_ministerio_trabajo}} </p>
-                  <p class="card-text mb-25"><strong>Certificado EOMIC:</strong> {{ DataEmpresa.certificado_eomic}} </p>
-                  <p class="card-text mb-25"><strong>Permiso Bomberos:</strong> {{ DataEmpresa.permiso_bomberos}} </p>
-                  <p class="card-text mb-25"><strong>Registro SAPI:</strong> {{ DataEmpresa.registro_sapi}} </p>
-                  <p class="card-text mb-25"><strong>Registro Nacional Contratista:</strong> {{
-                    DataEmpresa.registro_nacional_contratista}} </p>
-                  <p class="card-text mb-25"><strong>Cantidad Trabajadores:</strong> {{ DataEmpresa.cantidad_trabajadores
-                    }} </p>
-                  <p class="card-text mb-25"><strong>Cantidad Subcontratados:</strong> {{
-                    DataEmpresa.cantidad_subcontratados}} </p>
-                </div>
-  
-              </div>
-              <!-- Header Ends -->
-            </div>
-            <hr class="invoice-spacing" />
-            <div class="card-body invoice-padding pt-0">
-              <div class="row invoice-spacing">
-                <div class="col-xl-4 p-0 mt-xl-0 mt-2">
-                  <h6 class="mb-2"><strong>Tipo Servicio</strong></h6>
-        <li *ngFor="let item of DataEmpresa.tipo_servicio; index as i; trackBy: trackByFn">
-          {{ item.nombre_tipo_servicio }}
-        </li>
-    </div>
-    <div class="col-xl-4 p-0 mt-xl-0 mt-2">
-      <h6 class="mb-2"><strong>Flota Utilizada</strong></h6>
-      <li *ngFor="let item of DataEmpresa.flota_utilizada; index as i; trackBy: trackByFn">
-        {{ item.nombre_flota_utilizada }}
-      </li>
-    </div>
-    <div class="col-xl-4 p-0 mt-xl-0 mt-2">
-      <h6 class="mb-2"><strong>Descripción Flota Utilizada</strong></h6>
-  
-    </div>
-  </div>
-  </div>
-  </ng-template>
-  </li>
-  <li ngbNavItem>
-    <a ngbNavLink>DATOS DEL REPRESENTANTE LEGAL</a>
-    <ng-template ngbNavContent>
-  
-      <div class="col-xl-12 col-md-12 col-12">
-        <!-- Header Starts -->
-        <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-          <div>
-            <div class="logo-wrapper">
-              <h3 class="text-primary invoice-logo"> {{ DataRepresentanteLegal.nombres_representante_legal }} {{
-                DataRepresentanteLegal.apellidos_representante_legal }} </h3>
-            </div>
-            <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{
-              DataRepresentanteLegal.cedula_representante_legal }} </p>
-            <p class="card-text mb-25"><strong>Email:</strong> {{ DataRepresentanteLegal.email_representante_legal }} </p>
-            <p class="card-text mb-25"><strong>Tomo:</strong> {{ DataRepresentanteLegal.tomo }} </p>
-            <p class="card-text mb-25"><strong>N# Registro:</strong> {{ DataRepresentanteLegal.n_registro}}</p>
-            <p class="card-text mb-25"><strong>Fecha Registro:</strong> {{ DataRepresentanteLegal.fecha_registro}}</p>
-            <p class="card-text mb-0"><strong>Dirección:</strong> {{ DataRepresentanteLegal.direccion_representante_legal
-              }} </p>
-            <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataRepresentanteLegal.facebook_representante_legal ?
-              DataRepresentanteLegal.facebook_representante_legal : 'N/A' }} | <strong>Instagram:</strong> {{
-              DataRepresentanteLegal.instagram_representante_legal
-              ? DataRepresentanteLegal.instagram_representante_legal : 'N/A' }}
-              | <strong>Twitter:</strong> {{ DataRepresentanteLegal.twitter_representante_legal ?
-              DataRepresentanteLegal.twitter_representante_legal : 'N/A' }}
-            </p>
-            <p class="card-text mb-25"><strong>Telefono Residencial:</strong> {{
-              DataRepresentanteLegal.telefono_residencial_representante_legal }} | <strong>Telefono Celular:</strong> {{
-              DataRepresentanteLegal.telefono_movil_representante_legal }} </p>
-            <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataRepresentanteLegal.cargo_representante_legal}}</p>
-          </div>
-  
-        </div>
-        <!-- Header Ends -->
-      </div>
-  
-  
-    </ng-template>
-  </li>
-  <li ngbNavItem>
-    <a ngbNavLink>DATOS DEL DELEGADO</a>
-    <ng-template ngbNavContent>
-  
-      <div class="col-xl-12 col-md-12 col-12">
-        <!-- Header Starts -->
-        <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-          <div>
-            <div class="logo-wrapper">
-              <h3 class="text-primary invoice-logo"> {{ DataDelegado.nombres_delegado }} {{
-                DataDelegado.apellidos_delegado }} </h3>
-            </div>
-            <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{ DataDelegado.cedula_delegado }} </p>
-            <p class="card-text mb-25"><strong>Email:</strong> {{ DataDelegado.email_delegado }} </p>
-            <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataDelegado.facebook_delegado ?
-              DataDelegado.facebook_delegado : 'N/A' }} | <strong>Instagram:</strong> {{ DataDelegado.instagram_delegado
-              ? DataDelegado.instagram_delegado : 'N/A' }}
-              | <strong>Twitter:</strong> {{ DataDelegado.twitter_delegado ? DataDelegado.twitter_delegado : 'N/A' }}
-            </p>
-            <p class="card-text mb-25"> <strong>Telefono Celular:</strong> {{ DataDelegado.telefono_delegado }} </p>
-            <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataDelegado.cargo_delegado}}</p>
-          </div>
-  
-        </div>
-        <!-- Header Ends -->
-      </div>
-  
-  
-    </ng-template>
-  </li>
-  
-  </ul>
-  <div [ngbNavOutlet]="navCenter" class="mt-2"></div>
-  
-      <!-- Header Ends -->
-    </div>
-  </div>
-  <!--/ Invoice -->
-  <div class="modal-footer">
-    <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
-      <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
-      Cerrar
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #ModalCambiarContrasena let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Cambiar Contraseña del Usuario:  <strong> {{ title_modal }} </strong></h5>
-  </div>
-  <div class="modal-body" tabindex="0" ngbAutofocus>
-    <div class="col-xl-12 col-md-12 col-12">
-      <!-- Header Starts -->
-      <div class="row">
-                
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label class="form-label">Nueva Contraseña</label>
-            <input required  type="text" class="form-control"
-            [(ngModel)]="NewPassword" [ngModelOptions]="{standalone: true}"
-            placeholder="Nueva Contraseña" />
-            <!-- <div class="input-group input-group-merge form-password-toggle">
-              <input [type]="passwordTextType ? 'text' : 'password'" [(ngModel)]="NewPassword"
-                [ngModelOptions]="{standalone: true, required: true}" class="form-control form-control-merge"
-                [ngClass]="{ 'is-invalid error': submitted && f.password.errors }" placeholder="Ingrese Nueva Contraseña"
-                aria-describedby="login-password" tabindex="2" autocomplete="false" />
-              <div class="input-group-append">
-                <span class="input-group-text cursor-pointer"><i class="feather font-small-4" [ngClass]="{
-                    'icon-eye-off': passwordTextType,
-                    'icon-eye': !passwordTextType
-                  }" (click)="togglePasswordTextType()"></i></span>
-              </div>
-            </div> -->
-          </div>
-        </div>
-        <div class="col-md-6 col-12">
-          <div class="form-group">
-            <label class="form-label">Confirme Nueva Contraseña</label>
-            <input required  type="text" class="form-control"
-            [(ngModel)]="ConfirmNewPassword" [ngModelOptions]="{standalone: true}"
-            placeholder="Confirme Nueva Contraseña" />
-            <!-- <div class="input-group input-group-merge form-password-toggle">
-              <input [type]="passwordTextTypeX ? 'text' : 'password'" [(ngModel)]="ConfirmNewPassword"
-                [ngModelOptions]="{standalone: true, required: true}" class="form-control form-control-merge"
-                [ngClass]="{ 'is-invalid error': submitted && f.password.errors }" placeholder="Ingrese Confirmación Nueva Contraseña"
-                aria-describedby="login-password" tabindex="2" autocomplete="false" />
-              <div class="input-group-append">
-                <span class="input-group-text cursor-pointer"><i class="feather font-small-4" [ngClass]="{
-                    'icon-eye-off': passwordTextTypeX,
-                    'icon-eye': !passwordTextTypeX
-                  }" (click)="togglePasswordTextTypeX()"></i></span>
-              </div> 
-            </div>-->
-          </div>
-        </div>
-        
-        </div>
-      <!-- Header Ends -->
-    </div>
-  </div>
-  <!--/ Invoice -->
-  <div class="modal-footer">
-    <button class="btn bg-gradient-success text-white" (click)="ResetPassword()">
-      <span class="fa fa-key"></span> Cambiar Contraseña del Usuario</button>
+    <button type="submit" (click)="RegistrarCambiarStatus()" rippleEffect class="btn btn-success mr-1">Cambiar
+      Status</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

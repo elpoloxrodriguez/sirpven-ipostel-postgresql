@@ -241,9 +241,9 @@ export interface IPOSTEL_DATA_DELEGADOP_ID {
 }
 
 export interface IPOSTEL_U_Status_Opp_Sub { // Cambiar Status OPP y/o SUBCONTRATISTA
-	id_opp	 :	number
-	status_empresa	 :	number
-	observacion	 :	string
+	id_suc	 :	number
+	status_agencia	 :	number
+	observacion : string
 }
 
 
@@ -345,6 +345,23 @@ export interface IPOSTEL_C_PagosDeclaracionOPP_SUB { // INSERTAR PAGO EN RECAUDA
 	archivo_adjunto	 :	any
 	user_created	 :	number
 	mantenimiento : string
+}
+
+export interface IPOSTEL_RegistrarSucursalSUB {
+	id_sub: number,
+	nombre_empresa: string,
+	rif_empresa: string,
+	estado_empresa: string,
+	ciudad_empresa: string,
+	municipio_empresa: string,
+	parroquia_empresa: string,
+	zona_empresa: string,
+	tipo_sub: number
+}
+
+export interface TablaMatrixSUBCONTRATO {
+	id_sub:number,
+	id_opp:number
 }
 
 export interface IPOSTEL_U_PagosDeclaracionOPP_SUB { // ACTUALIZA PAGO EN RECAUDACION

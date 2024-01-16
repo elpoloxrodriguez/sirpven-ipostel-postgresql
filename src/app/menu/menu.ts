@@ -62,7 +62,7 @@ export const menu: CoreMenu[] = [
     id: 'philately-admin',
     nombre: 'DUPVEN',
     title: 'DUPVEN',
-    role: [3, 6],
+    role: [3],
     type: 'collapsible',
     icono: 'package',
     children: [
@@ -102,6 +102,9 @@ export const menu: CoreMenu[] = [
     role: [3, 6],
     url: 'payments-obligations/obligations',
   },
+
+// MODULO OPERADOR POSTAL Y SUBCONTRATISTAS
+
   // Empresa
   {
     id: 'EmpresaOPP',
@@ -145,6 +148,15 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'business/subcontractor',
   },
+    // SUCURSALES SUBCONTRATISTAS
+    {
+      id: 'Sucursales',
+      nombre: 'Sucursales',
+      role: [2],
+      icono: 'users',
+      type: 'item',
+      url: 'subcontractor/branch-offices',
+    },
   // Pagos Postal
   {
     id: 'PagosPostales',

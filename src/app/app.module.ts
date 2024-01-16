@@ -52,6 +52,7 @@ import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 //  Recaptcha V2
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
 import { PaymentsObligationsComponent } from './main/sirp-ven/module-admin/payments-obligations/payments-obligations/payments-obligations.component';
+import { BranchOfficesComponent } from './main/sirp-ven/module-opp-sub/business/branch-offices/branch-offices/branch-offices.component';
 
 const appRoutes: Routes = [
   {
@@ -72,6 +73,7 @@ const appRoutes: Routes = [
     StatementOfPartiesComponent,
     ReportsRankingComponent,
     PaymentsObligationsComponent,
+    BranchOfficesComponent,
                           ],
   imports: [
     BrowserModule,
