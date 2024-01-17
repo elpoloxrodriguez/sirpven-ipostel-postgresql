@@ -150,9 +150,9 @@ export class ReportsRankingComponent implements OnInit {
                 display: true
               },
               ticks: {
-                stepSize: 1000,
+                stepSize: 10000,
                 min: valores.minV,
-                max: valores.maxV + 100,
+                max: valores.maxV,
                 fontColor: this.labelColor
               },
               gridLines: {
@@ -234,45 +234,49 @@ export class ReportsRankingComponent implements OnInit {
   async DataRecaudacionAnioActual(id, fan, fac) {
     this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
     this.xAPI.parametros = `${id},${fan},${fac}`
+    // this.xAPI.parametros = '40,2023,2024'
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
+          // console.log(e)
           this.CantidadAnterior.push(e)
           this.CantidadActual.push(e)
         })
 
         const objetosFiltradosAnterior = this.CantidadAnterior.filter(objeto => {
-          const yearFromMesField = objeto.mes.substring(0, 4); // Extraer el año del campo "mes"
+          const yearFromMesField = objeto.ano.substring(0, 4); // Extraer el año del campo "mes"
           return yearFromMesField === this.añoAn.toString(); // Filtrar por el año específico
         });
 
         objetosFiltradosAnterior.map(element => {
-          this.DatosCompletos.data1.push(element.cantidad_piezas)
+          this.DatosCompletos.data1.push(element.piezas_totales)
         });
 
-        const maxData1 = this.DatosCompletos.data1.length > 0 ? this.DatosCompletos.data1.reduce((a, b) => Math.max(a, b)) : 1000;
+        const maxData1 = this.DatosCompletos.data1.length > 0 ? this.DatosCompletos.data1.reduce((a, b) => Math.max(a, b)) : 0;
         const minData1 = this.DatosCompletos.data1.length > 0 ? this.DatosCompletos.data1.reduce((a, b) => Math.min(a, b)) : 0;
         this.valoresData1.push(maxData1, minData1)
 
         const objetosFiltradosActual = this.CantidadActual.filter(objeto => {
-          const yearFromMesField = objeto.mes.substring(0, 4); // Extraer el año del campo "mes"
+          const yearFromMesField = objeto.ano.substring(0, 4); // Extraer el año del campo "mes"
           return yearFromMesField === this.añoAc.toString(); // Filtrar por el año específico
         });
 
         objetosFiltradosActual.map(element => {
-          this.DatosCompletos.data2.push(element.cantidad_piezas)
+          this.DatosCompletos.data2.push(element.piezas_totales)
         });
-        const maxData2 = this.DatosCompletos.data2.length > 0 ? this.DatosCompletos.data2.reduce((a, b) => Math.max(a, b)) : 1000;
+        const maxData2 = this.DatosCompletos.data2.length > 0 ? this.DatosCompletos.data2.reduce((a, b) => Math.max(a, b)) : 0;
         const minData2 = this.DatosCompletos.data2.length > 0 ? this.DatosCompletos.data2.reduce((a, b) => Math.min(a, b)) : 0;
         this.valoresData2.push(maxData2, minData2)
 
 
         let arrayCombinado = this.valoresData1.concat(this.valoresData2);
 
-        this.DatosCompletos.maxV = arrayCombinado.length > 0 ? arrayCombinado.reduce((a, b) => Math.max(a, b)) : 1000;
+        // console.log(arrayCombinado)
+        this.DatosCompletos.maxV = arrayCombinado.length > 0 ? arrayCombinado.reduce((a, b) => Math.max(a, b)) : 0;
         this.DatosCompletos.minV = arrayCombinado.length > 0 ? arrayCombinado.reduce((a, b) => Math.min(a, b)) : 0;
 
+        // console.log(this.DatosCompletos)
         this.GenerarGrafico(this.DatosCompletos)
 
         setTimeout(() => {
