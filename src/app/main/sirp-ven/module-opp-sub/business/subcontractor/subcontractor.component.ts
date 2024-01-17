@@ -245,7 +245,7 @@ export class SubcontractorComponent implements OnInit {
   }
 
   async RegistrarCambiarStatus() {
-    this.sectionBlockUI.start('Cambiando Estatus, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Cambiando Estatus, por favor Espere!!!');
       this.subContratista.CambiarEstatusSubcontratista(this.CambiarStatus)
       .then((resultado) => {
         // Manejar el resolve

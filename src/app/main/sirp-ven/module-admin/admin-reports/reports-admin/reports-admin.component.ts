@@ -74,7 +74,7 @@ export class ReportsAdminComponent implements OnInit {
   async ReportEmpresasAprobadas(id: any) {
     switch (this.itemReports) {
       case 1:
-        this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
         this.statusEmpresa = '1'
         this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte01";
         this.xAPI.parametros = this.statusEmpresa
@@ -93,7 +93,7 @@ export class ReportsAdminComponent implements OnInit {
         )
         break;
         case 2:
-          this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
           this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte02";
           this.xAPI.parametros = ''
           this.xAPI.valores = ''
@@ -112,7 +112,7 @@ export class ReportsAdminComponent implements OnInit {
 
         break;
         case 3:
-        this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
         this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte03";
         this.xAPI.parametros = ''
         this.xAPI.valores = ''
@@ -130,7 +130,7 @@ export class ReportsAdminComponent implements OnInit {
         )
         break;
         case 4:
-          this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
           this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte04";
           this.xAPI.parametros = ''
           this.xAPI.valores = ''
@@ -144,7 +144,7 @@ export class ReportsAdminComponent implements OnInit {
           )
         break;
         case 5:
-          this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
           this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte05";
           this.xAPI.parametros = ''
           this.xAPI.valores = ''
@@ -158,7 +158,7 @@ export class ReportsAdminComponent implements OnInit {
           )
         break;
         case 6:
-          this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
           this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte06";
           this.xAPI.parametros = ''
           this.xAPI.valores = ''
@@ -173,7 +173,7 @@ export class ReportsAdminComponent implements OnInit {
         break;
         case 7:
           this.inputShow = true
-          this.sectionBlockUI.start('Generando Reporte, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
           this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte07";
           this.xAPI.parametros = ''
           this.xAPI.valores = ''

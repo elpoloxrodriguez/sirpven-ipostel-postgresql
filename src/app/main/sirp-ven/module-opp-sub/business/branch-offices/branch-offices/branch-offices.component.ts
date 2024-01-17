@@ -58,8 +58,6 @@ export class BranchOfficesComponent implements OnInit {
     parroquia_empresa: undefined,
     zona_empresa: '',
     tipo_sub: undefined,
-    nombre_empresa: '',
-    rif_empresa: ''
   }
 
   public ListaCompletaOPP = [];
@@ -203,6 +201,8 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   ModalAgregarSucursal(modal) {
+    this.ICrearSucursalSUB.nombre_empresa = this.token.Usuario[0].nombre_empresa
+    this.ICrearSucursalSUB.rif_empresa = this.token.Usuario[0].rif
     this.modalService.open(modal, {
       centered: true,
       size: 'lg',
@@ -214,7 +214,7 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   async GuardarSucursal() {
-    this.sectionBlockUI.start('Registrando Sucursal, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Registrando Sucursal, por favor Espere!!!');
     this.ICrearSucursalSUB.id_sub = this.IdOPP
     await this.agregarAgencia.AgregarAgencia(this.ICrearSucursalSUB)
       .then((resultado) => {
@@ -247,8 +247,8 @@ export class BranchOfficesComponent implements OnInit {
       parroquia_empresa: undefined,
       zona_empresa: '',
       tipo_sub: undefined,
-      nombre_empresa: '',
-      rif_empresa: ''
+      // nombre_empresa: '',
+      // rif_empresa: ''
     }
   }
 
@@ -260,7 +260,7 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   servicioGuardarSubcontrato(subcontrato : any){
-    this.sectionBlockUI.start('Agregando Subcontrato, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Agregando Subcontrato, por favor Espere!!!');
     this.agregarAgencia.AgregarSubcontrato(subcontrato)
     .then((resultado) => {
       // Manejar el resolve
@@ -322,7 +322,7 @@ export class BranchOfficesComponent implements OnInit {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.sectionBlockUI.start('Eliminando Agencia, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Eliminando Agencia, por favor Espere!!!');
         this.agregarAgencia.EliminarAgencia(row.id_suc)
         .then((resultado) => {
           // Manejar el resolve

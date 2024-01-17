@@ -54,6 +54,7 @@ import { DupvenAdminComponent } from '../dup-ven/dupven-admin/dupven-admin.compo
 import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';
 import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obligations/payments-obligations.module';
 import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-offices/branch-offices.module';
+import { ReportsRankingComponent } from '../sirp-ven/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
 
 
 
@@ -76,7 +77,7 @@ import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-
       PanelAsistenteVirtualComponent,
       SystemUsersComponent,
       DupvenAdminComponent,
-      DupvenOppComponent
+      DupvenOppComponent,
     ],
   imports: [
     CommonModule,

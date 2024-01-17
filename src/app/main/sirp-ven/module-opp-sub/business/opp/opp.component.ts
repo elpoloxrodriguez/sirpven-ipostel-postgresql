@@ -775,7 +775,7 @@ export class OppComponent implements OnInit {
     this.archivos.push(e.target.files[0])
   }
    subirArchivo(e) {
-    this.sectionBlockUI.start('Subiendo Archivo, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Subiendo Archivo, por favor Espere!!!');
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.DocAdjunto.nombre = this.archivos[0].name
     this.DocAdjunto.usuario = this.token.Usuario[0].id_opp

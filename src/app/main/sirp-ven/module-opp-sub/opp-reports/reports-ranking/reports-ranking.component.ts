@@ -23,11 +23,23 @@ export class ReportsRankingComponent implements OnInit {
     valores: {},
   };
 
-  public MontoRecaudacionAnioAnterior = []
-  public MontoRecaudacionAnioActual = []
-  public recaudacion = []
-  public anios = []
-  public CapacidadGraficos = 0
+
+
+  public CantidadAnterior = []
+  public CantidadActual = []
+
+
+  public DatosCompletos = {
+    data1: [],
+    data2: [],
+    minV: 0,
+    maxV: 0
+  }
+
+
+  public valoresData1 = []
+  public valoresData2 = []
+
   // public
   public radioModel = 1;
 
@@ -41,7 +53,7 @@ export class ReportsRankingComponent implements OnInit {
   public añoActual = new Date()
   public año = this.añoActual.getFullYear()
   public añoAc = this.año
-  public añoAn = this.año -1
+  public añoAn = this.año - 1
 
   public FechaDesde = ''
   public FechaHasta = ''
@@ -50,7 +62,7 @@ export class ReportsRankingComponent implements OnInit {
   public IdOPP
 
   // line chart
-  public lineChart 
+  public lineChart
 
   //** To add spacing between legends and chart
   public plugins = [
@@ -63,13 +75,18 @@ export class ReportsRankingComponent implements OnInit {
     }
   ];
 
+  // public DatosCompletos = {
+  //   data1: [588,456,906,456,878,6756,7867,4564,6785,67567,6756,8787],
+  //   data2: [345,564,6567,5],
+  //   minV: 5,
+  //   maxM: 9000 
+  // }
 
   /**
    *
    */
   constructor(
     private apiService: ApiService,
-    private utilService: UtilService,
   ) {
   }
 
@@ -82,16 +99,14 @@ export class ReportsRankingComponent implements OnInit {
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.IdOPP = this.token.Usuario[0].id_opp
+
+    this.GenerarGrafico(this.DatosCompletos)
     // content header
-    this.sectionBlockUI.start('Generando Graficas, Porfavor Espere!!!');
-    await this.DataRecaudacionAnioAnterior(this.añoAn)
-    await this.DataRecaudacionAnioActual(this.añoAc)
-    // setTimeout(() =>{
-    //   this.sectionBlockUI.stop()
-    // }, 1000)
+    this.sectionBlockUI.start('Generando Ranking Empresarial, por favor Espere!!!');
+    await this.DataRecaudacionAnioActual(this.IdOPP, this.añoAn, this.añoAc)
   }
 
-  GenerarGrafico(monto: number){
+  GenerarGrafico(valores: any) {
     this.lineChart = {
       chartType: 'line',
       options: {
@@ -135,9 +150,9 @@ export class ReportsRankingComponent implements OnInit {
                 display: true
               },
               ticks: {
-                stepSize: 10000,
-                min: 0,
-                max: monto ? monto : 500,
+                stepSize: 1000,
+                min: valores.minV,
+                max: valores.maxV + 100,
                 fontColor: this.labelColor
               },
               gridLines: {
@@ -165,14 +180,14 @@ export class ReportsRankingComponent implements OnInit {
           }
         }
       },
-  
+
       // labels: this.recaudacion,
-      labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+      labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
       datasets: [
         {
-          data: this.MontoRecaudacionAnioAnterior ? this.MontoRecaudacionAnioAnterior : 0,
+          data: valores.data1 ? valores.data1 : 0,
           // data: [30332,24776],
-          label: `Movimiento de Piezas Año ${ this.añoAn }`,
+          label: `Movimiento de Piezas Año ${this.añoAn}`,
           borderColor: this.lineChartDanger,
           lineTension: 0.5,
           pointStyle: 'circle',
@@ -191,7 +206,8 @@ export class ReportsRankingComponent implements OnInit {
         },
         {
           // data: [32332,3334,8346,13253,36575,33455,23365,66745,5565,56464,9787,6585],
-          data: this.MontoRecaudacionAnioActual ? this.MontoRecaudacionAnioActual : 0,
+          // data: this.dataFiltrada ? this.dataFiltrada : [0],
+          data: valores.data2 ? valores.data2 : 0,
           label: `Movimiento de Piezas Año ${this.añoAc}`,
           borderColor: this.lineChartPrimary,
           lineTension: 0.5,
@@ -211,51 +227,57 @@ export class ReportsRankingComponent implements OnInit {
         },
       ]
     };
-  
+    // this.sectionBlockUI.stop()
+
   }
 
-  async DataRecaudacionAnioAnterior(fecha) {
+  async DataRecaudacionAnioActual(id, fan, fac) {
     this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
-    this.xAPI.parametros = `${this.IdOPP},${fecha}%`
+    this.xAPI.parametros = `${id},${fan},${fac}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        data.Cuerpo.map(AnioAnterior => {
-           this.MontoRecaudacionAnioAnterior.push(AnioAnterior.total_piezas)
-          })
-          if (this.MontoRecaudacionAnioAnterior.length > 0 ) {
-            const maxValue = this.MontoRecaudacionAnioAnterior.reduce((a, b) => Math.max(a, b));
-          this.GenerarGrafico(maxValue)
-          this.sectionBlockUI.stop()
-          } else {
-            this.GenerarGrafico(0)
-            this.sectionBlockUI.stop()
-          }
-
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  }
-
-  async DataRecaudacionAnioActual(fecha) {
-    this.xAPI.funcion = "IPOSTEL_R_GestionMetasRecaudacion";
-    this.xAPI.parametros = `${this.IdOPP},${fecha}%`
-    this.xAPI.valores = ''
-    await this.apiService.Ejecutar(this.xAPI).subscribe(
-      (data) => {
-        data.Cuerpo.map(AnioActual => {
-          this.MontoRecaudacionAnioActual.push(AnioActual.total_piezas)
+        data.Cuerpo.map(e => {
+          this.CantidadAnterior.push(e)
+          this.CantidadActual.push(e)
         })
-        if (this.MontoRecaudacionAnioActual.length > 0 ) {
-          const maxValue = this.MontoRecaudacionAnioActual.reduce((a, b) => Math.max(a, b));
-        this.GenerarGrafico(maxValue)
-        this.sectionBlockUI.stop()
-        } else {
-          this.GenerarGrafico(0)
+
+        const objetosFiltradosAnterior = this.CantidadAnterior.filter(objeto => {
+          const yearFromMesField = objeto.mes.substring(0, 4); // Extraer el año del campo "mes"
+          return yearFromMesField === this.añoAn.toString(); // Filtrar por el año específico
+        });
+
+        objetosFiltradosAnterior.map(element => {
+          this.DatosCompletos.data1.push(element.cantidad_piezas)
+        });
+
+        const maxData1 = this.DatosCompletos.data1.length > 0 ? this.DatosCompletos.data1.reduce((a, b) => Math.max(a, b)) : 1000;
+        const minData1 = this.DatosCompletos.data1.length > 0 ? this.DatosCompletos.data1.reduce((a, b) => Math.min(a, b)) : 0;
+        this.valoresData1.push(maxData1, minData1)
+
+        const objetosFiltradosActual = this.CantidadActual.filter(objeto => {
+          const yearFromMesField = objeto.mes.substring(0, 4); // Extraer el año del campo "mes"
+          return yearFromMesField === this.añoAc.toString(); // Filtrar por el año específico
+        });
+
+        objetosFiltradosActual.map(element => {
+          this.DatosCompletos.data2.push(element.cantidad_piezas)
+        });
+        const maxData2 = this.DatosCompletos.data2.length > 0 ? this.DatosCompletos.data2.reduce((a, b) => Math.max(a, b)) : 1000;
+        const minData2 = this.DatosCompletos.data2.length > 0 ? this.DatosCompletos.data2.reduce((a, b) => Math.min(a, b)) : 0;
+        this.valoresData2.push(maxData2, minData2)
+
+
+        let arrayCombinado = this.valoresData1.concat(this.valoresData2);
+
+        this.DatosCompletos.maxV = arrayCombinado.length > 0 ? arrayCombinado.reduce((a, b) => Math.max(a, b)) : 1000;
+        this.DatosCompletos.minV = arrayCombinado.length > 0 ? arrayCombinado.reduce((a, b) => Math.min(a, b)) : 0;
+
+        this.GenerarGrafico(this.DatosCompletos)
+
+        setTimeout(() => {
           this.sectionBlockUI.stop()
-        }
+        }, 1000);
 
       },
       (error) => {
@@ -263,7 +285,8 @@ export class ReportsRankingComponent implements OnInit {
       }
     )
   }
-  
+
+
 
 }
 

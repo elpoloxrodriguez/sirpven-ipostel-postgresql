@@ -469,7 +469,7 @@ export class DashboardComponent implements OnInit {
 
 
    async GenerarReporteLiquidacionFPO() {
-    this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, por favor Espere!!!');
     let mes = this.mes_consultar
     let mes1 = this.mes_consultar + '-' + '01'
     let mes2 = this.mes_consultar + '-' + '31'
@@ -564,7 +564,7 @@ export class DashboardComponent implements OnInit {
     this.xAPI.valores = JSON.stringify(this.CrearCert)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Generando Certificado, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Certificado, por favor Espere!!!');
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
@@ -613,7 +613,7 @@ export class DashboardComponent implements OnInit {
     this.xAPI.valores = JSON.stringify(this.CrearCert)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Generando Autorización, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Autorización, por favor Espere!!!');
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token

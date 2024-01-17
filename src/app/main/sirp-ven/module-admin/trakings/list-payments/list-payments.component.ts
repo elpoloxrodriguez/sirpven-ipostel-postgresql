@@ -201,7 +201,7 @@ export class ListPaymentsComponent implements OnInit {
 
   async DescargarFactura(data: any) {
     // console.log(data)
-    this.sectionBlockUI.start('Generando Factura, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Generando Factura, por favor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion"
     this.xAPI.parametros = data.id_opp + ',' + data.id_pc
     this.xAPI.valores = ''
@@ -259,7 +259,7 @@ export class ListPaymentsComponent implements OnInit {
   }
 
   async ConciliarPagoRecaudacion() {
-    this.sectionBlockUI.start('Comprobando Pago, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Comprobando Pago, por favor Espere!!!');
     await this.updateConciliacion.UpdateCreacionRecaudacionIndividual(this.ActualizarPago)
       .then((resultado) => {
         // Manejar el resolve

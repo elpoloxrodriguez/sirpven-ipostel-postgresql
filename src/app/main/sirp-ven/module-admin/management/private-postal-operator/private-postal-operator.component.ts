@@ -315,7 +315,7 @@ public searchValueListaSubC = ''
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
             // console.log(data)
-            this.sectionBlockUI.start('Eliminando Registro, Porfavor Espere!!!');
+            this.sectionBlockUI.start('Eliminando Registro, por favor Espere!!!');
             this.rowsOPP_SUB.push(this.List_OPP_SUB)
             if (data.tipo === 1) {
               this.List_OPP_SUB = []
@@ -379,7 +379,7 @@ public searchValueListaSubC = ''
     this.xAPI.valores = JSON.stringify(this.CrearCert)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Generando Certificado, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Certificado, por favor Espere!!!');
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
@@ -428,7 +428,7 @@ public searchValueListaSubC = ''
     this.xAPI.valores = JSON.stringify(this.CrearCert)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Generando Autorización, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Autorización, por favor Espere!!!');
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
@@ -693,7 +693,7 @@ public searchValueListaSubC = ''
     this.xAPI.valores = JSON.stringify(this.ICrearConcesion)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Generando Concesión Postal, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Generando Concesión Postal, por favor Espere!!!');
         this.rowsOPP_SUB.push(this.List_OPP_SUB)
         if (data.tipo === 1) {
           this.List_OPP_SUB = []
@@ -740,7 +740,7 @@ public searchValueListaSubC = ''
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
             // console.log(data)
-            // this.sectionBlockUI.start('Generando Concesión Postal, Porfavor Espere!!!');
+            // this.sectionBlockUI.start('Generando Concesión Postal, por favor Espere!!!');
             this.rowsOPP_SUB.push(this.List_OPP_SUB)
             if (data.tipo === 1) {
               this.List_OPP_SUB = []

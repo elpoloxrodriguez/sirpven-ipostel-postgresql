@@ -171,7 +171,7 @@ export class PrivatePostalOperatorComponent  implements OnInit {
       if (result.isConfirmed) {
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
-            // this.sectionBlockUI.start('Generando Concesión Postal, Porfavor Espere!!!');
+            // this.sectionBlockUI.start('Generando Concesión Postal, por favor Espere!!!');
             this.rows.push(this.dataEmpresaDocumentosAdjuntos)
             this.rowsEmpresas.push(this.dataEmpresas)
             if (data.tipo === 1) {

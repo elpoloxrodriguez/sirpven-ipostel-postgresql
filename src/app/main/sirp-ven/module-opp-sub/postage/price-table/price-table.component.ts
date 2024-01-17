@@ -516,7 +516,7 @@ public NombreTipoFranqueo
     this.xAPI.valores = JSON.stringify(this.IupdateTarifaFranqueo)
     this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Actualizando Registros, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Actualizando Registros, por favor Espere!!!');
         this.rowsTarifas.push(this.TarifasFranqueo)
         if (data.tipo === 1) {
           this.TarifasFranqueo = []
@@ -561,7 +561,7 @@ public NombreTipoFranqueo
       // console.log(this.PesoEnvioFranqueo )
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
-          this.sectionBlockUI.start('Guardando Registros, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Guardando Registros, por favor Espere!!!');
           this.rowsTarifas.push(this.TarifasFranqueo)
           if (data.tipo === 1) {
             this.TarifasFranqueo = []

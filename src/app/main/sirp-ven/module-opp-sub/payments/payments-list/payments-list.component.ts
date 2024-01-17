@@ -134,7 +134,7 @@ export class PaymentsListComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // this.sectionBlockUI.start('Registrando Pago, Porfavor Espere!!!');
+    // this.sectionBlockUI.start('Registrando Pago, por favor Espere!!!');
     // setTimeout(() => this.sectionBlockUI.stop(), 3000)
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOPP = this.token.Usuario[0].id_opp
@@ -200,7 +200,7 @@ export class PaymentsListComponent implements OnInit {
   }
 
   subirArchivo(e) {
-    this.sectionBlockUI.start('Subiendo Archivo, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Subiendo Archivo, por favor Espere!!!');
     this.token = jwt_decode(sessionStorage.getItem('token'));
     // this.DocAdjunto.nombre = this.archivos[0].name
     // this.DocAdjunto.usuario = this.token.Usuario[0].id_opp
@@ -367,7 +367,7 @@ export class PaymentsListComponent implements OnInit {
     this.xAPI.funcion = "IPOSTEL_U_PagosDeclaracionOPP_SUB"
     this.xAPI.parametros = ''
     this.xAPI.valores = JSON.stringify(this.ActualizarPago)
-    this.sectionBlockUI.start('Comprobando Pago, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Comprobando Pago, por favor Espere!!!');
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.rowsPagosConciliacion.push(this.List_Pagos_Recaudacion)
@@ -390,7 +390,7 @@ export class PaymentsListComponent implements OnInit {
 
   async PagarRecaudacion() {
     // console.log(this.archivos[0].name)
-    this.sectionBlockUI.start('Reportando Pago, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Reportando Pago, por favor Espere!!!');
     this.ActualizarPago.archivo_adjunto = this.archivos[0].name ? this.archivos[0].name : null
     var frm = new FormData(document.forms.namedItem("forma"))
     try {
@@ -420,7 +420,7 @@ export class PaymentsListComponent implements OnInit {
               })
           } else {
             this.sectionBlockUI.stop();
-            this.utilService.alertConfirmMini('warning', 'El Monto Pagado es Diferente al de la Factura Adeudada, Porfavor verifique e intente nuevamente')
+            this.utilService.alertConfirmMini('warning', 'El Monto Pagado es Diferente al de la Factura Adeudada, por favor verifique e intente nuevamente')
           }
         }
       )
@@ -449,7 +449,7 @@ export class PaymentsListComponent implements OnInit {
 
   async DescargarFactura(data: any) {
     // console.log(data)
-    this.sectionBlockUI.start('Generando Factura, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Generando Factura, por favor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion"
     this.xAPI.parametros = `${data.id_opp}` + ',' + `${data.id_pc}`
     this.xAPI.valores = ''

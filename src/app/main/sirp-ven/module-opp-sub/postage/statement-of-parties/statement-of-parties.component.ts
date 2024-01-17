@@ -307,7 +307,7 @@ export class StatementOfPartiesComponent implements OnInit {
       const MontoCusado = this.InsertarMovilizacionPiezas.monto_fpo * element.cantidad_piezas
       this.InsertarMovilizacionPiezas.monto_causado = parseFloat(MontoCusado.toFixed(2))
       this.InsertarMovilizacionPiezas.user_created = this.idOPP
-      this.sectionBlockUI.start('Guardando Piezas, Porfavor Espere!!!');
+      this.sectionBlockUI.start('Guardando Piezas, por favor Espere!!!');
       await this.movilizacionPiezas.AgregarMovilizacionPiezas(this.InsertarMovilizacionPiezas)
         .then((resultado) => {
           // Manejar el resolve
@@ -334,7 +334,7 @@ export class StatementOfPartiesComponent implements OnInit {
       // this.xAPI.valores = JSON.stringify(this.InsertarMovilizacionPiezas)
       // await this.apiService.Ejecutar(this.xAPI).subscribe(
       //   (data) => {
-      //     this.sectionBlockUI.start('Guardando Declaración de Piezas, Porfavor Espere!!!');
+      //     this.sectionBlockUI.start('Guardando Declaración de Piezas, por favor Espere!!!');
       //     this.rowsDeclaracionPiezas.push(this.DeclaracionPiezas)
       //     if (data.tipo === 1) {
       //       this.ListaDeclaracionMovilizacionPiezasDECLARAR()
@@ -657,7 +657,7 @@ export class StatementOfPartiesComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.sectionBlockUI.start('Eliminando Piezas, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Eliminando Piezas, por favor Espere!!!');
         this.movilizacionPiezas.EliminarMovilizacionPiezas(data.id_movilizacion_piezas)
           .then((resultado) => {
             // Manejar el resolve
@@ -743,7 +743,7 @@ export class StatementOfPartiesComponent implements OnInit {
         // this.IpagarRecaudacion.archivo_adjunto = ''
         this.IpagarRecaudacion.user_created = this.idOPP
 
-        this.sectionBlockUI.start('Guardando Declaración, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Guardando Declaración, por favor Espere!!!');
         this.movilizacionPiezas.DeclararMovilizacionPiezas(this.IpagarRecaudacion)
 
           .then((resultado) => {
@@ -776,7 +776,7 @@ export class StatementOfPartiesComponent implements OnInit {
         // this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
         // this.xAPI.parametros = ''
         // this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-        // this.sectionBlockUI.start('Guardando Declaración, Porfavor Espere!!!');
+        // this.sectionBlockUI.start('Guardando Declaración, por favor Espere!!!');
         // this.apiService.Ejecutar(this.xAPI).subscribe(
         //   (data) => {
         //     if (data.tipo === 1) {
@@ -919,7 +919,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
         this.xAPI.parametros = ''
         this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-        this.sectionBlockUI.start('Guardando Declaración, Porfavor Espere!!!');
+        this.sectionBlockUI.start('Guardando Declaración, por favor Espere!!!');
         this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
             if (data.tipo === 1) {

@@ -349,8 +349,8 @@ export interface IPOSTEL_C_PagosDeclaracionOPP_SUB { // INSERTAR PAGO EN RECAUDA
 
 export interface IPOSTEL_RegistrarSucursalSUB {
 	id_sub: number,
-	nombre_empresa: string,
-	rif_empresa: string,
+	nombre_empresa ?: string,
+	rif_empresa ?: string,
 	estado_empresa: string,
 	ciudad_empresa: string,
 	municipio_empresa: string,

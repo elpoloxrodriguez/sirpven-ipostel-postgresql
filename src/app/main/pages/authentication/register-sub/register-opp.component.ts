@@ -259,7 +259,7 @@ export class RegisterOppComponent implements OnInit {
       (opp) => {
         this.ErrorRegistro = opp.msj
         if (opp.tipo === 1) {
-          this.sectionBlockUI.start('Guardo Registro, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Guardo Registro, por favor Espere!!!');
           this.IFormOPP_RepresentanteLegal.id_opp = opp.msj
           this.xAPI.funcion = 'IPOSTEL_C_RepresentanteLegal'
           this.xAPI.parametros = ''

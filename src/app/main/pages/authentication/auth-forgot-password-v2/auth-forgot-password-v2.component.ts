@@ -198,7 +198,7 @@ export class AuthForgotPasswordV2Component implements OnInit {
         this.tokenPWD = this.utilservice.TokenAleatorio(50)
         sessionStorage.setItem("TokenResetPassEmail", btoa(this.forgotPasswordForm.value.email));
         sessionStorage.setItem("TokenResetPass", btoa(this.tokenPWD));
-        this.utilservice.alertConfirmMini('success',' Datos Validos <br> Porfavor ingrese la nueva contraseña')
+        this.utilservice.alertConfirmMini('success',' Datos Validos <br> por favor ingrese la nueva contraseña')
         this._router.navigate(['reset-password/',this.tokenPWD])
     } else {
         this.utilservice.alertConfirmMini('warning','<font color="red">Oops Lo sentimos!</font><br> Alguno de los campos son incorrectos, verifiquelos e intente de nuevo')

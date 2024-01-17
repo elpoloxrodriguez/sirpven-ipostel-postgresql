@@ -89,7 +89,7 @@ export class FinesPenaltiesComponent implements OnInit {
       this.xAPI.funcion = "IPOSTEL_R_ListaOPPNoPagaron";
       this.xAPI.valores = ''
       this.xAPI.parametros = `${valor1},${valor2}`
-      this.sectionBlockUI.start('Generando Lista, Porfavor Espere!!!');
+      this.sectionBlockUI.start('Generando Lista, por favor Espere!!!');
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           data.Cuerpo.map(e => {
@@ -115,7 +115,7 @@ export class FinesPenaltiesComponent implements OnInit {
       this.xAPI.funcion = "IPOSTEL_R_ListaOPPSiPagaron";
       this.xAPI.valores = ''
       this.xAPI.parametros = `${valor1},${valor2}`
-      this.sectionBlockUI.start('Generando Lista, Porfavor Espere!!!');
+      this.sectionBlockUI.start('Generando Lista, por favor Espere!!!');
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           data.Cuerpo.map(e => {

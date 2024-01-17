@@ -149,7 +149,7 @@ public SelectidOPP
   }
 
   async ItemSeleccionadosRechazados(){
-    this.sectionBlockUI.start('Rechazando Tarifas, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Rechazando Tarifas, por favor Espere!!!');
     let parametros = '0'
     this.ListaSeleccionada.map(e => {
       parametros += ','+e.id_pef
@@ -174,7 +174,7 @@ public SelectidOPP
   }
 
   async ItemSeleccionadosAprobados(){
-    this.sectionBlockUI.start('Aprobando Tarifas, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Aprobando Tarifas, por favor Espere!!!');
     let parametros = '1'
     this.ListaSeleccionada.map(e => {
       parametros += ','+e.id_pef
@@ -219,7 +219,7 @@ public SelectidOPP
       this.xAPI.valores = JSON.stringify(this.IUpdateListaTablaTarifasFranqueo)
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
-          this.sectionBlockUI.start('Autorizando Tarifas, Porfavor Espere!!!');
+          this.sectionBlockUI.start('Autorizando Tarifas, por favor Espere!!!');
           this.rows.push(this.TarifasFranqueoAll)
           if (data.tipo === 1) {
             this.selected = []
@@ -262,7 +262,7 @@ public SelectidOPP
         this.xAPI.valores = JSON.stringify(this.IUpdateListaTablaTarifasFranqueo)
         await this.apiService.Ejecutar(this.xAPI).subscribe(
           (data) => {
-            this.sectionBlockUI.start('Rechazando Tarifas, Porfavor Espere!!!');
+            this.sectionBlockUI.start('Rechazando Tarifas, por favor Espere!!!');
             this.rows.push(this.TarifasFranqueoAll)
             if (data.tipo === 1) {
               this.TarifasFranqueoAll = []
@@ -283,7 +283,7 @@ public SelectidOPP
       }
 
   async ListaTarifasFranqueoAll(IDOPP) {
-    this.sectionBlockUI.start('Cargando Tarifas, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Cargando Tarifas, por favor Espere!!!');
     this.TarifasFranqueoAll = []
     if (this.SelectidOPP != null) {
     this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo"

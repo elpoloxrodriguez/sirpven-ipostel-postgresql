@@ -43,7 +43,7 @@ export class DupvenOppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
+    this.sectionBlockUI.start('Cargando..., por favor Espere!!!');
     // this.sectionBlockUI.stop()
   }
 

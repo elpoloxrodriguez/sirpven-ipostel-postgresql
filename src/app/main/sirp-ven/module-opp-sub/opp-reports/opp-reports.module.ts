@@ -1,18 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DatePipe} from '@angular/common';
-import { CoreCommonModule } from '@core/common.module';
-import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
+import { RouterModule, Routes } from '@angular/router';
+import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
+import {DatePipe} from '@angular/common';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgSelectModule } from '@ng-select/ng-select';
+
+import { CoreCommonModule } from '@core/common.module';
+
+
+import { CoreCardModule } from '@core/components/core-card/core-card.module';
+import { CardSnippetModule } from '@core/components/card-snippet/card-snippet.module';
+
+//  USer
+import { Ng2FlatpickrModule } from 'ng2-flatpickr';
+
+import { CoreDirectivesModule } from '@core/directives/directives';
+import { CorePipesModule } from '@core/pipes/pipes.module';
+import { CoreSidebarModule } from '@core/components';
 
 import { BlockUIModule } from 'ng-block-ui';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
+import { AngularFileUploaderModule } from "angular-file-uploader";
 import { OppReportsRoutingModule } from './opp-reports-routing.module';
 
 
@@ -20,16 +33,24 @@ import { OppReportsRoutingModule } from './opp-reports-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    OppReportsRoutingModule,
-    NgxDatatableModule,
+    AngularFileUploaderModule,
+    FormsModule, 
     BlockUIModule,
-    CommonModule,
-    ContentHeaderModule,
-    CoreCommonModule,
-    NgbModule,
-    NgSelectModule,
-    FormsModule,
     ReactiveFormsModule,
-  ]
+    RouterModule,
+    ContentHeaderModule,
+    // NgbModule,
+    CoreCommonModule,
+    NgxDatatableModule,
+    NgSelectModule,
+    CoreCardModule,
+    CardSnippetModule,
+    Ng2FlatpickrModule,
+    CoreDirectivesModule,
+    CorePipesModule,
+    CoreSidebarModule,
+    OppReportsRoutingModule,
+  ],
+  providers: [DatePipe]
 })
 export class OppReportsModule { }

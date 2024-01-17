@@ -157,7 +157,7 @@ export class PhilatelyAdminComponent implements OnInit {
     this.TokenTiraje = this.utilService.TokenAleatorio(10);
     this.ListaOpp()
     this.ListaReceptores()
-    // this.sectionBlockUI.start('Cargando..., Porfavor Espere!!!');
+    // this.sectionBlockUI.start('Cargando..., por favor Espere!!!');
     // this.sectionBlockUI.stop()
   }
 
@@ -286,7 +286,7 @@ export class PhilatelyAdminComponent implements OnInit {
   }
 
   async Generar() {
-    this.sectionBlockUI.start('Generando Tiraje Qr, Porfavor Espere!!!');
+    this.sectionBlockUI.start('Generando Tiraje Qr, por favor Espere!!!');
     if (this.xFilatelida.TipoEstampilla == 1) {
       this.CantidadQrTipoEstampilla = 127
     } else {
