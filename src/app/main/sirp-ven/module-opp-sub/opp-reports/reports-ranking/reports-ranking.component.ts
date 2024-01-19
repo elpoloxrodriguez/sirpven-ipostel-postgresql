@@ -60,6 +60,7 @@ export class ReportsRankingComponent implements OnInit {
 
   public token
   public IdOPP
+  public EmpresaOPP
 
   // line chart
   public lineChart
@@ -99,7 +100,7 @@ export class ReportsRankingComponent implements OnInit {
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.IdOPP = this.token.Usuario[0].id_opp
-
+    this.EmpresaOPP = this.token.Usuario[0].nombre_empresa
     this.GenerarGrafico(this.DatosCompletos)
     // content header
     this.sectionBlockUI.start('Generando Ranking Empresarial, por favor Espere!!!');

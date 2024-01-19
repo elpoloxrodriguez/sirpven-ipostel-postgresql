@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { UtilService } from '@core/services/util/util.service';
 
@@ -7,6 +7,9 @@ import { UtilService } from '@core/services/util/util.service';
 })
 
 export class MobilizationPartsService {
+    
+    listaActualizada: EventEmitter<void> = new EventEmitter<void>();
+
 
     public xAPI: IAPICore = {
         funcion: '',
@@ -18,6 +21,21 @@ export class MobilizationPartsService {
         private apiService: ApiService,
         private utilService: UtilService,
     ) { }
+
+
+    borrarRegistro(index: number) {
+        let registros = JSON.parse(sessionStorage.getItem('movilizacion') || '[]');
+        registros.splice(index, 1);
+        sessionStorage.setItem('movilizacion', JSON.stringify(registros));
+        this.listaActualizada.emit();
+      }
+    
+      agregarRegistro(nuevoRegistro: any) {
+        let registros = JSON.parse(sessionStorage.getItem('movilizacion') || '[]');
+        registros.push(nuevoRegistro);
+        sessionStorage.setItem('movilizacion', JSON.stringify(registros));
+        this.listaActualizada.emit();
+      }
 
     /*
         Este servicio se encarga de Agregar Agencia

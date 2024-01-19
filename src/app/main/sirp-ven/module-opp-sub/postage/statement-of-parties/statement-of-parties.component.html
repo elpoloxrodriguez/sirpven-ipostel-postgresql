@@ -127,8 +127,6 @@
           </ngx-datatable-column>
 
 
-
-
           <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
             <ng-template ngx-datatable-cell-template let-row="row">
               <button type="button" (click)="DeletePiezas(row)" class="btn btn-icon btn-outline-danger" rippleEffect>
@@ -941,46 +939,61 @@
                 </div> -->
             <div class="col-md-3 col-12">
               <div class="form-group">
-                <label for="id_peso_envio{{ i }}">Servicio de Franqueo </label>
-                <ng-select [items]="itemsSelectTipoServicio" [(ngModel)]="item.id_servicio_franqueo"
+                <label for="id_peso_envio">Servicio de Franqueo </label>
+                <ng-select [items]="itemsSelectTipoServicio" [(ngModel)]="servicio_franqueo"
                   (ngModelChange)="ListaPesoEnvio($event)" [ngModelOptions]="{standalone: true}" bindLabel="name"
-                  bindValue="id" name="itemPesoEnvio{{ i }}" id="itemPesoEnvio{{ i }}"
-                  placeholder="Seleccionar Tipo de Servicio de Franqueo"></ng-select>
+                  bindValue="id" placeholder="Seleccionar Tipo de Servicio de Franqueo"></ng-select>
               </div>
             </div>
 
-            <div class="col-md-4 col-12">
+
+
+            <div class="col-md-6 col-12">
               <div class="form-group">
-                <label for="id_peso_envio{{ i }}">Escala de Peso</label>
-                <ng-select [items]="itemsSelectPesoEnvio" [(ngModel)]="item.id_peso_envio"
-                  [ngModelOptions]="{standalone: true}" bindLabel="name" bindValue="id" name="itemPesoEnvio{{ i }}"
-                  (ngModelChange)="item.tarifa_servicio = itemsSelectPesoEnvio[i].pmvp ? itemsSelectPesoEnvio[i].pmvp : 0"
-                  id="itemPesoEnvio{{ i }}" placeholder="Seleccionar Peso de Envio"></ng-select>
+                <!-- <label for="id_peso_envio{{ i }}">Escala de Peso</label> -->
+                <label for="id_peso_envio">Escala de Peso</label>
+                <ng-select [items]="itemsSelectPesoEnvio" id="miNgSelect" [(ngModel)]="peso_envio"
+                  [ngModelOptions]="{standalone: true}" bindLabel="name"
+                  placeholder="Seleccionar Peso de Envio"></ng-select>
               </div>
             </div>
 
             <div class="col-md-2 col-12">
+              <div class="form-group">
+                <label for="itempmvp">Cantidad Piezas Movilizadas</label>
+                <input type="number" class="form-control" [(ngModel)]="cantidad_piezas" autocomplete="off"
+                  [ngModelOptions]="{standalone: true}" placeholder="Cantidad de Piezas Movilizadas" />
+              </div>
+            </div>
+
+
+            <!-- <div class="col-md-2 col-12">
               <div class="form-group">
                 <label for=" itempmvp">Tarifa de Servicio {{ item.tarifa_servicio }}</label>
                 <input type="number" class="form-control" [(ngModel)]="item.tarifa_servicio" autocomplete="off"
                   [ngModelOptions]="{standalone: true}" name="itempmvp{{ i }}" id="itempmvp{{ i }}"
                   placeholder="Monto PMVP" />
               </div>
-            </div>
+            </div> -->
 
-            <div class="col-md-2 col-12">
+            <!-- <div class="col-md-2 col-12">
               <div class="form-group">
                 <label for=" itempmvp">Cantidad Piezas Movilizadas</label>
                 <input type="number" class="form-control" [(ngModel)]="item.cantidad_piezas" autocomplete="off"
                   [ngModelOptions]="{standalone: true}" name="itemcantidad{{ i }}" id="itempmvp{{ i }}"
                   placeholder="Cantidad de Piezas Movilizadas" />
               </div>
-            </div>
+            </div> -->
+
 
             <div class="col-md-1 col-12">
               <div class="form-group">
-                <button class="btn btn-danger text-nowrap px-1" (click)="deleteItem(i)" rippleEffect>
+                <!-- <button class="btn btn-danger text-nowrap px-1" (click)="deleteItem(i)" rippleEffect>
                   <i data-feather="trash" class="mr-25"></i>
+                </button> -->
+                <button class="btn btn-success text-nowrap px-1"
+                  (click)="registro(servicio_franqueo,cantidad_piezas,peso_envio)" rippleEffect>
+                  <i data-feather="archive" class="mr-25"></i>
                 </button>
               </div>
             </div>
@@ -988,14 +1001,103 @@
           <hr />
         </div>
       </form>
-      <div class="row">
+
+
+
+      <!-- ngx-datatables responsive -->
+      <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="50"
+        [rowHeight]="58" [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="rows" [scrollbarH]="true">
+
+
+        <ngx-datatable-column name="Escala Pesos" prop="nombre_peso_envio" [width]="300">
+          <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
+            <div>
+              <span class="font-weight-bold"> {{ nombre_peso_envio }}</span>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column name="Franqueo" prop="nombre_servicios_franqueo" [width]="200">
+          <ng-template let-nombre_servicios_franqueo="value" ngx-datatable-cell-template>
+            <div>
+              <span class="font-weight-bold"> {{ nombre_servicios_franqueo }}</span>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column name="Tarifa Servicio" prop="tarifa_servicio" [width]="20">
+          <ng-template let-tarifa_servicio="value" ngx-datatable-cell-template>
+            <div>
+              <div class="badge badge-pill" ngClass="badge-light-info">
+                {{ tarifa_servicio }}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Tarifa %" prop="porcentaje_tarifa" [width]="20">
+          <ng-template let-porcentaje_tarifa="value" ngx-datatable-cell-template>
+            <div>
+              <div class="badge badge-pill" ngClass="badge-light-warning">
+                {{ porcentaje_tarifa }} %
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column name="Monto FPO" prop="monto_fpo" [width]="20">
+          <ng-template let-monto_fpo="value" ngx-datatable-cell-template>
+            <div class="badge badge-pill" ngClass="badge-light-info">
+              {{ monto_fpo }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Piezas Movilizadas" prop="cantidad_piezas" [width]="20">
+          <ng-template let-cantidad_piezas="value" ngx-datatable-cell-template>
+            <div class="badge badge-pill" ngClass="badge-light-warning">
+              {{ cantidad_piezas }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Monto Causado" prop="monto_causado" [width]="20">
+          <ng-template let-monto_causado="value" ngx-datatable-cell-template>
+            <div class="badge badge-pill" ngClass="badge-light-success">
+              {{ monto_causado }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Actions" [width]="10" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+            <div class="d-flex align-items-center" >
+              <!-- <i data-feather="trash"  class="text-danger cursor-pointer"></i> -->
+              <button class="btn btn-danger btn-sm text-nowrap px-1"
+              (click)="borrarRegistro(row.index)" rippleEffect>
+              <i data-feather="trash" class="mr-25"></i>
+            </button>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+      </ngx-datatable>
+      <!--/ ngx-datatables responsive -->
+
+
+
+      <!-- <div class="row">
         <div class="col-12" align="center">
           <button class="btn btn-icon btn-primary" type="button" (click)="addItem()" rippleEffect>
             <i data-feather="plus" class="mr-25"></i>
             <span>Agregar Movilización de PIezas</span>
           </button>
         </div>
-      </div>
+      </div> -->
       <!-- </div> -->
       <!-- Header Ends -->
     </div>
@@ -1069,82 +1171,82 @@
         <hr>
 
         <section class="users-list-wrapper">
-            
-            <ngx-datatable [rows]="rowsDeclaracionPiezas" [rowHeight]="50" class="bootstrap core-bootstrap"
-              [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-              [scrollbarH]="true">
 
-              <ngx-datatable-column name="Escala Peso" prop="nombre_peso_envio" [width]="200">
-                <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                  <div>
-                    <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+          <ngx-datatable [rows]="rowsDeclaracionPiezas" [rowHeight]="50" class="bootstrap core-bootstrap"
+            [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+            [scrollbarH]="true">
 
-              <ngx-datatable-column name="Mes" prop="mes" [width]="50">
-                <ng-template let-mes="value" ngx-datatable-cell-template>
-                  <div>
-                    <span class="font-weight-bold">{{ mes }} </span>
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+            <ngx-datatable-column name="Escala Peso" prop="nombre_peso_envio" [width]="200">
+              <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
 
-              <ngx-datatable-column name="Franqueo" prop="nombre_servicios_franqueo" [width]="200">
-                <ng-template let-nombre_servicios_franqueo="value" ngx-datatable-cell-template>
-                  <div>
-                    <span class="font-weight-bold">{{ nombre_servicios_franqueo }} </span>
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+            <ngx-datatable-column name="Mes" prop="mes" [width]="50">
+              <ng-template let-mes="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold">{{ mes }} </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
 
-              <ngx-datatable-column name="Tarifa Servicio" prop="tarifa_servicio" [width]="20">
-                <ng-template let-tarifa_servicio="value" ngx-datatable-cell-template>
-                  <div>
-                    <div class="badge badge-pill" ngClass="badge-light-info">
-                      {{ tarifa_servicio }}
-                    </div>
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+            <ngx-datatable-column name="Franqueo" prop="nombre_servicios_franqueo" [width]="200">
+              <ng-template let-nombre_servicios_franqueo="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold">{{ nombre_servicios_franqueo }} </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
 
-              <ngx-datatable-column name="Tarifa %" prop="porcentaje_tarifa" [width]="20">
-                <ng-template let-porcentaje_tarifa="value" ngx-datatable-cell-template>
-                  <div>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ porcentaje_tarifa }} %
-                    </div>
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
-
-
-              <ngx-datatable-column name="Monto FPO" prop="monto_fpo" [width]="20">
-                <ng-template let-monto_fpo="value" ngx-datatable-cell-template>
+            <ngx-datatable-column name="Tarifa Servicio" prop="tarifa_servicio" [width]="20">
+              <ng-template let-tarifa_servicio="value" ngx-datatable-cell-template>
+                <div>
                   <div class="badge badge-pill" ngClass="badge-light-info">
-                    {{ monto_fpo }}
+                    {{ tarifa_servicio }}
                   </div>
-                </ng-template>
-              </ngx-datatable-column>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
 
-              <ngx-datatable-column name="Piezas Movilizadas" prop="cantidad_piezas" [width]="20">
-                <ng-template let-cantidad_piezas="value" ngx-datatable-cell-template>
+            <ngx-datatable-column name="Tarifa %" prop="porcentaje_tarifa" [width]="20">
+              <ng-template let-porcentaje_tarifa="value" ngx-datatable-cell-template>
+                <div>
                   <div class="badge badge-pill" ngClass="badge-light-warning">
-                    {{ cantidad_piezas }}
+                    {{ porcentaje_tarifa }} %
                   </div>
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="Monto Causado" prop="monto_causado" [width]="20">
-                <ng-template let-monto_causado="value" ngx-datatable-cell-template>
-                  <div class="badge badge-pill" ngClass="badge-light-success">
-                    {{ monto_causado }}
-                  </div>
-                </ng-template>
-              </ngx-datatable-column>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
 
 
-            </ngx-datatable>
+            <ngx-datatable-column name="Monto FPO" prop="monto_fpo" [width]="20">
+              <ng-template let-monto_fpo="value" ngx-datatable-cell-template>
+                <div class="badge badge-pill" ngClass="badge-light-info">
+                  {{ monto_fpo }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Piezas Movilizadas" prop="cantidad_piezas" [width]="20">
+              <ng-template let-cantidad_piezas="value" ngx-datatable-cell-template>
+                <div class="badge badge-pill" ngClass="badge-light-warning">
+                  {{ cantidad_piezas }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Monto Causado" prop="monto_causado" [width]="20">
+              <ng-template let-monto_causado="value" ngx-datatable-cell-template>
+                <div class="badge badge-pill" ngClass="badge-light-success">
+                  {{ monto_causado }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+          </ngx-datatable>
 
 
         </section>

@@ -150,8 +150,8 @@ export const menu: CoreMenu[] = [
   },
     // SUCURSALES SUBCONTRATISTAS
     {
-      id: 'Sucursales',
-      nombre: 'Sucursales',
+      id: 'Agencias',
+      nombre: 'Agencias',
       role: [2],
       icono: 'users',
       type: 'item',

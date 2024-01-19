@@ -56,6 +56,21 @@ export class StatementOfPartiesComponent implements OnInit {
     user_created: undefined
   }
 
+  public prueba = {
+    id_opp: undefined,
+    id_servicio_franqueo: undefined,
+    id_peso_envio: undefined,
+    tarifa_servicio: undefined,
+    porcentaje_tarifa: 0,
+    monto_fpo: 0,
+    mes: '',
+    nombre_peso_envio: '',
+    nombre_servicios_franqueo: '',
+    cantidad_piezas: 0,
+    monto_causado: 0,
+    user_created: undefined
+  }
+
   public IidFacturaMovilizacionPiezas: IPOSTEL_U_MovilizacionPiezasIdFactura = {
     id_factura: 0,
     id_movilizacion_piezas: 0
@@ -119,10 +134,12 @@ export class StatementOfPartiesComponent implements OnInit {
   public DolarDia
   public PetroDia
 
-  public cantidadMovilidad : number
+  public cantidadMovilidad: number
 
 
   public MontoCausadoYMantenimiento
+
+  miArray: any[];
 
   public montoPagar
   public fechaActual
@@ -136,6 +153,10 @@ export class StatementOfPartiesComponent implements OnInit {
   public tempDataDeclaracionPiezas = []
 
   public idFactura
+
+  public montoFranqueo = []
+
+  public nuevoCalculo = []
 
   public DeclaracionPiezasLength
   public selected = 0
@@ -179,6 +200,12 @@ export class StatementOfPartiesComponent implements OnInit {
   public convertirTotalBolivares
 
 
+  public servicio_franqueo = undefined
+  public cantidad_piezas = ''
+  public peso_envio = undefined
+
+  public rows = []
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -189,6 +216,11 @@ export class StatementOfPartiesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.movilizacionPiezas.listaActualizada.subscribe(() => {
+      // Vuelve a cargar la lista de registros desde sessionStorage
+      this.cargarRegistros();
+    });
+
     this.token = jwt_decode(sessionStorage.getItem('token'));
     // console.log(this.token)
     if (this.token.Usuario[0].iva_exento == 1) {
@@ -258,6 +290,51 @@ export class StatementOfPartiesComponent implements OnInit {
     });
   }
 
+  cargarRegistros() {
+    this.miArray = JSON.parse(sessionStorage.getItem('movilizacion') || '[]');
+    let i = 0
+    this.rows = []
+    if (this.miArray !== null) {
+      this.miArray.map(element => {
+        element.index = i++
+        this.rows.push(element)
+      });
+    }
+  }
+
+
+  registro(row1: any, row2: any, row3: any) {
+    this.prueba.id_opp = this.idOPP
+    this.prueba.id_servicio_franqueo = row1
+    this.prueba.id_peso_envio = row3.id_peso_envio
+    this.prueba.tarifa_servicio = row3.pmvp
+    this.prueba.nombre_peso_envio = row3.nombre_peso_envio
+    this.prueba.nombre_servicios_franqueo = row3.nombre_servicios_franqueo
+    this.prueba.porcentaje_tarifa = this.montoTASA
+    const MontoFPO = this.prueba.tarifa_servicio * this.prueba.porcentaje_tarifa / 100
+    this.prueba.monto_fpo = parseFloat(MontoFPO.toFixed(2))
+    this.prueba.mes = this.fechax
+    this.prueba.cantidad_piezas = row2
+    const MontoCusado = this.prueba.monto_fpo * row2
+    this.prueba.monto_causado = parseFloat(MontoCusado.toFixed(2))
+    this.prueba.user_created = this.idOPP
+    this.movilizacionPiezas.agregarRegistro(this.prueba);
+    this.cargarRegistros()
+    this.servicio_franqueo = undefined
+    this.cantidad_piezas = ''
+    this.peso_envio = undefined
+
+  }
+
+
+
+  borrarRegistro(index: number) {
+    this.movilizacionPiezas.borrarRegistro(index);
+  }
+
+
+
+
   LimpiarSelects() {
     // this.itemsSelectTipoServicio = []
     this.itemsSelectPesoEnvio = []
@@ -291,43 +368,49 @@ export class StatementOfPartiesComponent implements OnInit {
     )
   }
 
+
   async RegistrarDeclaracionPiezas() {
-    let valor = this.items
+    // let valor = this.items
+    let valor = this.miArray
     for (let i = 0; i < valor.length; i++) {
       const element = valor[i];
       this.InsertarMovilizacionPiezas.id_opp = this.idOPP
       this.InsertarMovilizacionPiezas.id_servicio_franqueo = element.id_servicio_franqueo
       this.InsertarMovilizacionPiezas.id_peso_envio = element.id_peso_envio
       this.InsertarMovilizacionPiezas.tarifa_servicio = element.tarifa_servicio
-      this.InsertarMovilizacionPiezas.porcentaje_tarifa = this.montoTASA
-      const MontoFPO = this.InsertarMovilizacionPiezas.tarifa_servicio * this.InsertarMovilizacionPiezas.porcentaje_tarifa / 100
-      this.InsertarMovilizacionPiezas.monto_fpo = parseFloat(MontoFPO.toFixed(2))
-      this.InsertarMovilizacionPiezas.mes = this.fechax
       this.InsertarMovilizacionPiezas.cantidad_piezas = element.cantidad_piezas
-      const MontoCusado = this.InsertarMovilizacionPiezas.monto_fpo * element.cantidad_piezas
-      this.InsertarMovilizacionPiezas.monto_causado = parseFloat(MontoCusado.toFixed(2))
+      // const MontoCusado = this.InsertarMovilizacionPiezas.monto_fpo * element.cantidad_piezas
+      this.InsertarMovilizacionPiezas.porcentaje_tarifa = element.porcentaje_tarifa
+      // const MontoFPO = this.InsertarMovilizacionPiezas.tarifa_servicio * this.InsertarMovilizacionPiezas.porcentaje_tarifa / 100
+      this.InsertarMovilizacionPiezas.monto_fpo = element.monto_fpo
+      this.InsertarMovilizacionPiezas.mes = element.mes
+      this.InsertarMovilizacionPiezas.monto_causado = element.monto_causado
       this.InsertarMovilizacionPiezas.user_created = this.idOPP
+
+
       this.sectionBlockUI.start('Guardando Piezas, por favor Espere!!!');
       await this.movilizacionPiezas.AgregarMovilizacionPiezas(this.InsertarMovilizacionPiezas)
         .then((resultado) => {
-          // Manejar el resolve
-          // console.log('Operación exitosa:', resultado);
           this.DeclaracionPiezas = []
+          this.rowsDeclaracionPiezas = []
+          this.cantidadMovilidad = 0
+          this.tempDataDeclaracionPiezas = []
+          sessionStorage.removeItem('movilizacion')
           this.utilService.alertConfirmMini('success', 'Piezas Registradas Exitosamente!')
           this.ListaDeclaracionMovilizacionPiezas()
           this.modalService.dismissAll('Close')
         })
         .catch((error) => {
-          // Manejar el reject
-          // console.error('Error en la operación:', error);
           this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
         })
         .finally(() => {
-          // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
-          // console.log('Procesamiento finalizado');
           this.ListaDeclaracionMovilizacionPiezasDECLARAR()
           this.sectionBlockUI.stop()
         });
+
+
+
+
 
       // this.xAPI.funcion = 'IPOSTEL_C_MovilizacionPiezas'
       // this.xAPI.parametros = ''
@@ -526,6 +609,8 @@ export class StatementOfPartiesComponent implements OnInit {
   async ListaDeclaracionMovilizacionPiezas() {
     // const date = this.anio + '-' + this.mes
     this.DeclaracionPiezas = []
+    this.rowsDeclaracionPiezas = []
+    this.cantidadMovilidad = 0
     const id = this.ServicioFranqueoID
     // this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date_id"
     // this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + id + ',' + 0
@@ -616,6 +701,7 @@ export class StatementOfPartiesComponent implements OnInit {
   }
 
   AddMovilizacionPiezas(modal) {
+    this.miArray = JSON.parse(sessionStorage.getItem('movilizacion'));
     this.modalService.open(modal, {
       centered: true,
       size: 'xl',
@@ -624,6 +710,7 @@ export class StatementOfPartiesComponent implements OnInit {
       windowClass: 'fondo-modal',
     });
     this.fechax = this.fechaUri
+    this.cargarRegistros()
     this.items.splice(0);
     this.items.push([{
       id_opp: this.idOPP, // ID DE LA OPP
@@ -756,7 +843,7 @@ export class StatementOfPartiesComponent implements OnInit {
             for (let i = 0; i < this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
               const element = this.UpdateMovilizacionPiezasDeclaracion[i];
               this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
-              this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
+                this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
               this.MezclarPiezasFactura(this.IidFacturaMovilizacionPiezas)
             }
           })
