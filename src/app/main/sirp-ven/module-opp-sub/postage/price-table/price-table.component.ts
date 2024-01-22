@@ -219,6 +219,14 @@ export class PriceTableComponent implements OnInit {
 
   public archivos = []
 
+  public DatosConexionBD = {
+    host: '',
+    basedatos: '',
+    puerto: '',
+    usuario: '',
+    clave: ''
+  }
+
 
   public ListaLote = []
   public rowsListaLote = []
@@ -260,6 +268,7 @@ export class PriceTableComponent implements OnInit {
       this.montoIVA = 0
     }
     this.idOPP = this.token.Usuario[0].id_opp
+    await this.DriverConexion()
     await this.ListaLotes()
     await this.TasaPostal(parseInt(this.token.Usuario[0].tipologia_empresa), this.idOPP)
     await this.ListaTarifas()
@@ -676,6 +685,20 @@ export class PriceTableComponent implements OnInit {
     );
   }
 
+  async DriverConexion(){
+    this.xAPI.funcion = 'IPOSTEL_R_DriverID'
+    this.xAPI.parametros = 'SIRPVEN IPOSTEL'
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data)=> {
+        this.DatosConexionBD = data
+      },
+      (error)=> {
+        console.log(error)
+      }
+      )
+  }
+
   consultarMasivo(id: number) {
     this.xAPI.funcion = "IPOSTEL_R_CargaMasiva";
     this.xAPI.parametros = `${id}`
@@ -698,11 +721,16 @@ export class PriceTableComponent implements OnInit {
     this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
     this.fnx = {
       funcion: 'Fnx_SubirTarifasLote',
-      pass: '123456789',
-      host: '127.0.0.1',
-      db: 'sirpven-ipostel',
-      port: '5432',
-      user: 'ipsfa',
+      host:this.DatosConexionBD[0].host,
+      db:this.DatosConexionBD[0].basedatos,
+      port:this.DatosConexionBD[0].puerto,
+      user:this.DatosConexionBD[0].usuario,
+      pass:this.DatosConexionBD[0].clave,
+      // pass: '123456789',
+      // host: '127.0.0.1',
+      // db: 'sirpven-ipostel',
+      // port: '5432',
+      // user: 'ipsfa',
       schema: 'public',
       table: 'peso_envio_franqueo',
       columns: 'id_servicio_franqueo,id_opp,mes,transaction_id,id_peso_envio,descripcion,pmvp',
