@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BusinessService } from '../business.service';
+import { GenerarPagoService } from '@core/services/generar-pago.service';
 
 
 @Component({
@@ -195,20 +196,75 @@ export class SubcontractorComponent implements OnInit {
 
   public TitleModal
 
+  public DolarPetroDia
+  public pDolar
+  public pPetro
+
+  public MontoObligacionUsoContratoSub = 0
+  public nombreObligacionUsoContratoSub
+  public tipoStatus
+
+  public ListaTipoObligacion
+
+  public idRealSUB = 0
+
   public item = []
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
     private modalService: NgbModal,
     private router: Router,
-    private subContratista : BusinessService
+    private subContratista : BusinessService,
+    private generarConciliacion: GenerarPagoService
   ) { }
 
   async ngOnInit() {
-    this.token = jwt_decode(sessionStorage.getItem('token'));
+    this.token = jwt_decode(sessionStorage.getItem('token'))
+    await this.Precio_Dolar_Petro()
+    await this.LstObligaciones()
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
     this.IdOPP = this.token.Usuario[0].id_opp
     await this.Subcontratistas(this.IdOPP)
+  }
+
+
+  async LstObligaciones() {
+    this.xAPI.funcion = "IPOSTEL_R_Tipo_Pagos_Obligaciones";
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.ListaTipoObligacion = data.Cuerpo.map(e => {
+         if (e.id_tipo_pagos == 5) {
+          this.nombreObligacionUsoContratoSub = e.nombre_tipo_pagos
+          this.MontoObligacionUsoContratoSub = e.tasa_petro
+         }
+          return e
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+
+  async Precio_Dolar_Petro() {
+    this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.DolarPetroDia = data.Cuerpo.map(e => {
+          this.pDolar = e.dolar
+          this.pPetro = e.petro_bolivares
+          // console.log(e)
+          return e
+        });
+        // console.log(this.pDolar,this.pPetro)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
 
 
@@ -244,12 +300,17 @@ export class SubcontractorComponent implements OnInit {
     this.table.offset = 0;
   }
 
+  capturarSelect(evento : any){
+      this.tipoStatus = evento
+  }
+
   async RegistrarCambiarStatus() {
     this.sectionBlockUI.start('Cambiando Estatus, por favor Espere!!!');
       this.subContratista.CambiarEstatusSubcontratista(this.CambiarStatus)
       .then((resultado) => {
-        // Manejar el resolve
-        // console.log('Operación exitosa:', resultado);
+        if (this.tipoStatus == 1) {
+          this.ProcesarOblicacion()
+        }
         this.Subcontratista = []
         this.Subcontratistas(this.IdOPP)
         this.modalService.dismissAll('Cerrar Modal')
@@ -270,6 +331,7 @@ export class SubcontractorComponent implements OnInit {
 
   async CambiarStatusSubcontratista(modal, data) {
     // console.log(data)
+    this.idRealSUB = data.id_real_sub
     this.CambiarStatus.id_suc = data.id_tabla_agencia
     this.CambiarStatus.status_agencia = data.status_agencia
     this.CambiarStatus.observacion = data.observacion
@@ -281,6 +343,33 @@ export class SubcontractorComponent implements OnInit {
       keyboard: false,
       windowClass: 'fondo-modal',
     });
+  }
+
+
+  async ProcesarOblicacion() {
+    this.IpagarRecaudacion.id_opp = this.idRealSUB
+    this.IpagarRecaudacion.status_pc = 0
+    this.IpagarRecaudacion.tipo_pago_pc = 5
+    this.IpagarRecaudacion.monto_pc = '0'
+    this.IpagarRecaudacion.monto_pagar = this.MontoObligacionUsoContratoSub.toString()
+    this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
+    this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
+    this.IpagarRecaudacion.observacion_pc = this.nombreObligacionUsoContratoSub
+    this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
+    this.IpagarRecaudacion.user_created = this.IdOPP
+    this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
+    await this.generarConciliacion.GuardarCreacionRecaudacionIndividual(this.IpagarRecaudacion)
+      .then((resultado) => {
+        console.log(resultado)
+        this.utilService.alertConfirmMini('success', 'Recibo Guardado Exitosamente')
+      })
+      .catch((error) => {
+        this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+      })
+      .finally(() => {
+        // this.ListaPagosObligaciones()
+        this.sectionBlockUI.stop()
+      });
   }
 
 

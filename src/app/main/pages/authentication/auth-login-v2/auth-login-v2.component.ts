@@ -12,7 +12,8 @@ import { CoreMenuService } from '@core/components/core-menu/core-menu.service';
 import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
 import { VERSION } from '@angular/core';
-import {Md5} from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5/dist/md5';
+import { Auditoria, InterfaceService } from '@core/services/auditoria/auditoria.service';
 
 
 @Component({
@@ -28,15 +29,25 @@ export class AuthLoginV2Component implements OnInit {
     event.preventDefault();
   }
 
-  public xAPI : IAPICore = {
+  public xAuditoria: Auditoria = {
+    id: '',
+    usuario: '',
+    ip: '',
+    mac: '',
+    funcion: '',
+    metodo: '',
+    fecha: '',
+  }
+  
+  public xAPI: IAPICore = {
     funcion: '',
     parametros: '',
-    valores : {},
+    valores: {},
   };
 
-  token: string|undefined;
+  token: string | undefined;
 
-  public fecha = new Date(); 
+  public fecha = new Date();
   public hora = this.fecha.getHours();
   public dia = this.fecha.getDay();
   public btnShow = true
@@ -58,7 +69,7 @@ export class AuthLoginV2Component implements OnInit {
 
   public foto = 'assets/images/background/background.jpeg'
 
-  public Nsession : string = '0';
+  public Nsession: string = '0';
 
   //  QR certifucado
   public Qr
@@ -72,8 +83,8 @@ export class AuthLoginV2Component implements OnInit {
   private _unsubscribeAll: Subject<any>;
 
   public TipoVerificacion = [
-    {id:1, name: 'Certificado'},
-    {id:2, name: 'Filatelia'}
+    { id: 1, name: 'Certificado' },
+    { id: 2, name: 'Filatelia' }
   ]
   public TipoSeleccion
 
@@ -84,14 +95,15 @@ export class AuthLoginV2Component implements OnInit {
    */
   constructor(
     private _coreMenuService: CoreMenuService,
-    private apiService : ApiService,
+    private apiService: ApiService,
     private _coreConfigService: CoreConfigService,
     private _formBuilder: FormBuilder,
     private _route: ActivatedRoute,
     private loginService: LoginService,
     private _router: Router,
     private utilservice: UtilService,
-    private rutaActiva: ActivatedRoute
+    private rutaActiva: ActivatedRoute,
+    private auditoria : InterfaceService
   ) {
     this.token = undefined;
     this._unsubscribeAll = new Subject();
@@ -162,7 +174,7 @@ export class AuthLoginV2Component implements OnInit {
     }
 
     // console.log(this.rutaActiva.snapshot.params.id)
-    
+
     // await this.BloqueoSystem()
 
     // let urlQR = this._router.url
@@ -176,7 +188,7 @@ export class AuthLoginV2Component implements OnInit {
     if (sessionStorage.getItem("token") != undefined) {
       this._router.navigate(['/home'])
       return
-   }
+    }
     this.loginForm = this._formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', Validators.required]
@@ -211,16 +223,16 @@ export class AuthLoginV2Component implements OnInit {
   }
 
 
-  ValidarSeleccion(event,Qr){
+  ValidarSeleccion(event, Qr) {
     if (Qr !== undefined) {
       switch (event) {
         case 1:
           this.Certificado(Qr)
           break;
-          case 2:
-            this.Philately(Qr)
+        case 2:
+          this.Philately(Qr)
           break;
-      
+
         default:
           break;
       }
@@ -233,51 +245,62 @@ export class AuthLoginV2Component implements OnInit {
     }
   }
 
-   login() {
+  login() {
     this.submitted = true;
     this.loading = true;
     const md5 = new Md5();
-    const password =  md5.appendStr(this.clave).end()
+    const password = md5.appendStr(this.clave).end()
     var Xapi = {
       "funcion": 'IPOSTEL_R_Login',
       "parametros": this.usuario + ',' + password
     }
-     this.loginService.getLoginExternas(Xapi).subscribe(
+    this.loginService.getLoginExternas(Xapi).subscribe(
       (data) => {
         // console.log(data);
         const stoken = jwt_decode(data.token)
-        this.sessionTOKEN = stoken 
+        this.sessionTOKEN = stoken
         const tokenSession = this.sessionTOKEN.Usuario[0].status_empresa
         // console.log(tokenSession)
         switch (tokenSession) {
           case 0:
-             this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta aun no se encuentra validada por <strong><font color="red">IPOSTEL</font></strong>, porfavor intente de nuevo mas tarde.');
-             this.loading = false;
-             this._router.navigate(['login'])     
-             break;
-            case 1:
+            this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta aun no se encuentra validada por <strong><font color="red">IPOSTEL</font></strong>, porfavor intente de nuevo mas tarde.');
+            this.loading = false;
+            this._router.navigate(['login'])
+            break;
+          case 1:
             this.itk = data;
+            // INICIO AGREGAR AUDITORIA //
+            this.xAuditoria.id = this.utilservice.GenerarUnicId()
+            this.xAuditoria.ip = ''
+            this.xAuditoria.mac = ''
+            this.xAuditoria.usuario = this.itk.token
+            this.xAuditoria.funcion = Xapi.funcion,
+            this.xAuditoria.parametro = Xapi.parametros,
+            this.xAuditoria.metodo = 'Entrando al Sistema',
+            this.xAuditoria.fecha = Date()
+            this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+            // FIN AGREGAR AUDITORIA //
             sessionStorage.setItem("token", this.itk.token);
             this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
             this.utilservice.alertConfirmMini('success', `Bienvenido al IPOSTEL`);
-            this._router.navigate(['']).then(() => {window.location.reload()});
-          // return;
+            this._router.navigate(['']).then(() => { window.location.reload() });
+            // return;
             break;
-            case 2:
-              this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">REVOCATORIA</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
-              this.loading = false;
-              this._router.navigate(['login'])      
-              break;
-             case 3:
-              this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">FINIQUITO DE CONTRATO</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
-              this.loading = false;
-              this._router.navigate(['login'])      
-              break;
-             case 4:
-              this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">NO MOVILIZACIÓN DE PIEZAS</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
-              this.loading = false;
-              this._router.navigate(['login'])      
-              break;
+          case 2:
+            this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">REVOCATORIA</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
+            this.loading = false;
+            this._router.navigate(['login'])
+            break;
+          case 3:
+            this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">FINIQUITO DE CONTRATO</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
+            this.loading = false;
+            this._router.navigate(['login'])
+            break;
+          case 4:
+            this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">NO MOVILIZACIÓN DE PIEZAS</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
+            this.loading = false;
+            this._router.navigate(['login'])
+            break;
           default:
             break;
         }
@@ -297,31 +320,34 @@ export class AuthLoginV2Component implements OnInit {
       (error) => {
         this.loading = false;
         this._router.navigate(['login'])
-        this.utilservice.alertConfirmMini('error','Verifique los datos, e intente nuevamente')
+        this.utilservice.alertConfirmMini('error', 'Verifique los datos, e intente nuevamente')
         this.usuario = ''
         this.clave = ''
       }
     );
   }
 
-  async BloqueoSystem(){
+
+
+
+  async BloqueoSystem() {
     this.xAPI.funcion = "IPOSTEL_R_Settings_Initials"
     this.xAPI.parametros = ''
     await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           if (e.status_hora == '1') {
-            if(this.hora >= e.hora_desde || this.hora < e.hora_hasta ){
-              this.utilservice.alertMessageAutoCloseTimer(5000,'<font color="red">Estimado Usuario</font>', '<strong><h4>El sistema estará operativo de Lunes a Viernes de 7:00AM hasta las 8:00PM.</h4></strong>')
+            if (this.hora >= e.hora_desde || this.hora < e.hora_hasta) {
+              this.utilservice.alertMessageAutoCloseTimer(5000, '<font color="red">Estimado Usuario</font>', '<strong><h4>El sistema estará operativo de Lunes a Viernes de 7:00AM hasta las 8:00PM.</h4></strong>')
               this.btnShow = false
               this._router.navigate(['login']);
               sessionStorage.clear();
               localStorage.clear();
-              }
+            }
           }
           if (e.status_dia == '1') {
-            if(this.dia == e.dia_desde || this.dia == e.dia_hasta ){
-              this.utilservice.alertMessageAutoCloseTimer(5000,'<font color="red">Estimado Usuario</font>', '<strong><h4>El sistema estará operativo de Lunes a Viernes de 7:00AM hasta las 8:00PM.</h4></strong>')
+            if (this.dia == e.dia_desde || this.dia == e.dia_hasta) {
+              this.utilservice.alertMessageAutoCloseTimer(5000, '<font color="red">Estimado Usuario</font>', '<strong><h4>El sistema estará operativo de Lunes a Viernes de 7:00AM hasta las 8:00PM.</h4></strong>')
               this.btnShow = false
               this._router.navigate(['login']);
               sessionStorage.clear();
@@ -329,8 +355,8 @@ export class AuthLoginV2Component implements OnInit {
             }
           }
           if (e.app_status == '1') {
-            if(this.dia > e.app_dia ){
-              this.utilservice.alertMessageAutoCloseTimer(10000,'<h5><font color="red"><strong>Estimados Operadores Postales Privados</strong></font></h5>', '<strong><h5>En este momento nos encontramos realizando <strong>Mantenimiento y Mejoras</strong> al sistema <strong>SIRPVEN-IPOSTEL</strong> lamentamos los inconvenientes ocasionados, por favor intente de nuevo mas tarde! <br><br><strong><font color="red">Sistema Integrado de Regulación Postal Privado Venezolano 🇻🇪</font></strong></h5></strong>')
+            if (this.dia > e.app_dia) {
+              this.utilservice.alertMessageAutoCloseTimer(10000, '<h5><font color="red"><strong>Estimados Operadores Postales Privados</strong></font></h5>', '<strong><h5>En este momento nos encontramos realizando <strong>Mantenimiento y Mejoras</strong> al sistema <strong>SIRPVEN-IPOSTEL</strong> lamentamos los inconvenientes ocasionados, por favor intente de nuevo mas tarde! <br><br><strong><font color="red">Sistema Integrado de Regulación Postal Privado Venezolano 🇻🇪</font></strong></h5></strong>')
               this.btnShow = false
               this._router.navigate(['login']);
               sessionStorage.clear();
@@ -345,10 +371,10 @@ export class AuthLoginV2Component implements OnInit {
     )
   }
 
-  async Certificado(id: string){
+  async Certificado(id: string) {
     this.xAPI.funcion = "IPOSTEL_R_Certificados";
     this.xAPI.parametros = `${id}`
-     await this.apiService.EjecutarDev(this.xAPI).subscribe(
+    await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (data) => {
         // console.log(data)
         if (data.Cuerpo.length != 0) {
@@ -360,9 +386,9 @@ export class AuthLoginV2Component implements OnInit {
             case 1:
               this.tipo = 'Certificado Unico de Inscripción'
               break;
-              case 2:
-                this.tipo = 'Autorización Postal'
-                break;
+            case 2:
+              this.tipo = 'Autorización Postal'
+              break;
             default:
               break;
           }
@@ -418,7 +444,7 @@ export class AuthLoginV2Component implements OnInit {
             // confirmButtonText: 'Cerrar',
             // confirmButtonColor: '#3085d6',
           })
-         } else {
+        } else {
           // this.Qr = ''
           Swal.fire({
             title: 'Certificado NO Valido!',
@@ -428,25 +454,25 @@ export class AuthLoginV2Component implements OnInit {
             imageHeight: 200,
             imageAlt: 'Custom image',
           })
-         } 
+        }
       },
       (error) => {
         console.log(error)
       }
-     )
+    )
   }
 
-  async Philately(id: string){
-          Swal.fire({
-            title: 'Filatelia!',
-            text: 'QR Valido',
-            icon: 'success',
-            imageWidth: 400,
-            imageHeight: 200,
-            imageAlt: 'Custom image',
-          })
-          this.Qr = ''
-          this.TipoSeleccion = undefined
+  async Philately(id: string) {
+    Swal.fire({
+      title: 'Filatelia!',
+      text: 'QR Valido',
+      icon: 'success',
+      imageWidth: 400,
+      imageHeight: 200,
+      imageAlt: 'Custom image',
+    })
+    this.Qr = ''
+    this.TipoSeleccion = undefined
 
   }
 

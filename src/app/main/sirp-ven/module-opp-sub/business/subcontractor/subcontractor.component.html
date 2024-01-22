@@ -119,7 +119,7 @@
             <div class="form-group">
               <label>Seleccionar Status</label>
               <ng-select [items]="SelectStatusSubcontratista" [(ngModel)]="CambiarStatus.status_agencia"
-                [ngModelOptions]="{standalone: true}" bindLabel="name" bindValue="id"
+                [ngModelOptions]="{standalone: true}" (ngModelChange)="capturarSelect($event)" bindLabel="name" bindValue="id"
                 placeholder="Seleccionar Status"></ng-select>
             </div>
           </div>

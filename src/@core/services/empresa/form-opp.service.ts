@@ -13,6 +13,19 @@ export interface FilateliaCrear {
 	Qr: string
 }
 
+export interface CargaMasiva {
+	llave: string;
+	nombre: string;
+	funcion: string;
+	ruta: string; //cencrypt
+	pdf: string; //cencrypt
+	file: string; //cencrypt
+	csv: string; //cencrypt
+	log: string;
+	estatus: number;
+	usuario: string;
+  }
+
 
 export interface GuardarQRs {
 	tipo: number,

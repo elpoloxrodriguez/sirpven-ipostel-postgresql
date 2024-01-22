@@ -4,27 +4,30 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
+import { Auditoria, InterfaceService } from '../auditoria/auditoria.service';
+import { ApiService } from '../apicore/api.service';
+import { UtilService } from '../util/util.service';
 
 
-export interface IUsuario{
-  nombre : string,
-  cedula : string,
-  tipo : string,
-  componente : string,
-  clave : string,
-  correo : string,
+export interface IUsuario {
+  nombre: string,
+  cedula: string,
+  tipo: string,
+  componente: string,
+  clave: string,
+  correo: string,
 }
 
-export interface IToken{
-  token : string,
+export interface IToken {
+  token: string,
 }
 
-export interface UClave{
+export interface UClave {
   login: string,
-  clave : string,
+  clave: string,
   nueva: string,
   repetir: string,
-  correo : string,
+  correo: string,
 }
 
 @Injectable({
@@ -34,63 +37,77 @@ export interface UClave{
 
 
 export class LoginService {
- 
-  public URL : string =  environment.API
 
-  public RUTA : string = environment.Url
-  
-  public Id : string = ''
-  
-  public SToken : any
+  public xAuditoria: Auditoria = {
+    id: '',
+    usuario: '',
+    ip: '',
+    mac: '',
+    metodo: '',
+    fecha: '',
+  }
 
-  public Token : any
+  public URL: string = environment.API
 
-  public Usuario : any
+  public RUTA: string = environment.Url
 
-  public Aplicacion : any
+  public Id: string = ''
 
-  constructor(private router: Router, private http : HttpClient) {
+  public SToken: any
+
+  public Token: any
+
+  public Usuario: any
+
+  public Aplicacion: any
+
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private utilservice: UtilService,
+    private auditoria: InterfaceService
+  ) {
     this.Id = environment.ID
-    if (sessionStorage.getItem("token") != undefined ) this.SToken = sessionStorage.getItem("token");
+    if (sessionStorage.getItem("token") != undefined) this.SToken = sessionStorage.getItem("token");
   }
 
   async Iniciar() {
     await this.getUserDecrypt()
     return this.obenterAplicacion()
   }
-  getLogin(user: string, clave : string) : Observable<IToken>{
+  getLogin(user: string, clave: string): Observable<IToken> {
     var usuario = {
-      "nombre" : user,
-      "clave" : clave,
+      "nombre": user,
+      "clave": clave,
     }
     if (environment.production === true) {
-      var url = this.RUTA  + this.URL + 'wusuario/login'
+      var url = this.RUTA + this.URL + 'wusuario/login'
     } else {
-      var url =  this.URL + 'wusuario/login'
+      var url = this.URL + 'wusuario/login'
     }
-    return this.http.post<IToken>(url, usuario )
+    return this.http.post<IToken>(url, usuario)
   }
 
-    getLoginExternas(parametro: any) : Observable<IToken>{
+  getLoginExternas(parametro: any): Observable<IToken> {
     if (environment.production === true) {
       var url = this.URL + 'wusuario/access'
     } else {
       // var url =  this.URL + 'wusuario/access'
-      var url =  '/v1/api/wusuario/access'
+      var url = '/v1/api/wusuario/access'
     }
-    return this.http.post<IToken>(url, parametro )
-  }
-  
-  makeUser(user: IUsuario): Observable<any>{    
-    if (environment.production === true) {
-      var url = this.RUTA  + this.URL + 'identicacion'
-    } else {
-      var url =  this.URL + 'identicacion'
-    }
-    return this.http.post<any>( url, user )
+    return this.http.post<IToken>(url, parametro)
   }
 
-  logout(){
+  makeUser(user: IUsuario): Observable<any> {
+    if (environment.production === true) {
+      var url = this.RUTA + this.URL + 'identicacion'
+    } else {
+      var url = this.URL + 'identicacion'
+    }
+    return this.http.post<any>(url, user)
+  }
+
+  logout() {
     Swal.fire({
       title: 'Desea cerrar sesión?',
       text: "Gracias por su tiempo!",
@@ -102,12 +119,24 @@ export class LoginService {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        
-        Swal.fire(
-          'Hasta la próxima!',
-          'Te esperamos',
-          'success'
-        )
+
+        // Swal.fire(
+        //   'Hasta la próxima!',
+        //   'Te esperamos',
+        //   'success'
+        // )
+
+        // INICIO AGREGAR AUDITORIA //
+        this.xAuditoria.id = this.utilservice.GenerarUnicId()
+        this.xAuditoria.ip = ''
+        this.xAuditoria.mac = ''
+        this.xAuditoria.usuario = sessionStorage.getItem('token')
+        this.xAuditoria.metodo = 'Salio del Sistema'
+        this.xAuditoria.fecha = Date()
+        this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+        // FIN AGREGAR AUDITORIA //
+
+
         this.router.navigate(['login']);
         sessionStorage.clear();
         // localStorage.clear();
@@ -115,54 +144,54 @@ export class LoginService {
     })
   }
 
-  protected getUserDecrypt() : any {    
+  protected getUserDecrypt(): any {
     var e = sessionStorage.getItem("token");
     var s = e.split(".");
-    
+
     //var str = Buffer.from(s[1], 'base64').toString();
-    var str = atob( s[1] );
+    var str = atob(s[1]);
     this.Token = JSON.parse(str)
     // console.info(this.Token)
     this.Usuario = this.Token.Usuario
     return JSON.parse(str);
   }
-  
+
   //ObenterAplicacion 
-  protected obenterAplicacion(){
+  protected obenterAplicacion() {
     var Aplicacion = this.Token.Usuario.Aplicacion
     Aplicacion.forEach(e => {
-      if(e.id == this.Id ){
+      if (e.id == this.Id) {
         this.Aplicacion = e;
       }
     });
     return this.Aplicacion
   }
-  
-  obtenerMenu() : any {
+
+  obtenerMenu(): any {
     var i = 0
-    return  this.Aplicacion.Rol.Menu.map(e => {
+    return this.Aplicacion.Rol.Menu.map(e => {
       e.id = e.url
       e.type = e.clase
       e.title = e.descripcion
-      if(  e.SubMenu != undefined ) {
+      if (e.SubMenu != undefined) {
         e.children = e.SubMenu.map(el => {
-          el.id =   el.url.replace('/', '-')
+          el.id = el.url.replace('/', '-')
           el.title = el.descripcion
           el.type = el.clase
-          el.url =  el.url
+          el.url = el.url
           return el
-        }) 
+        })
         e.url = ''
       }
       return e
-    }) 
+    })
     // return this.Aplicacion.Rol.Menu
   }
 
-  obtenerSubMenu(idUrl : string) : any{   
+  obtenerSubMenu(idUrl: string): any {
     var App = this.Aplicacion
-    var SubMenu = [] 
-    App.Rol.Menu.forEach(e => {if (e.url == idUrl) SubMenu = e.SubMenu});
+    var SubMenu = []
+    App.Rol.Menu.forEach(e => { if (e.url == idUrl) SubMenu = e.SubMenu });
     return SubMenu
   }
 

@@ -19,6 +19,10 @@ export class UtilService {
     return texto.replace(/^(\d{4})-(\d{2})-(\d{2})$/g,'$3/$2/$1');
   }
 
+  GenerarUnicId () : string {
+    return Math.random().toString(36).substr(2, 18);
+  }
+
 
   /**
    * Fecha Actual del sistema desde la application

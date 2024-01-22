@@ -1,38 +1,42 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { Router } from '@angular/router';
 import { UtilService } from '@core/services/util/util.service';
 import { NgbModal, NgbActiveModal, NgbModalConfig, NgbDateStruct, NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { IPOSTEL_C_Peso_Envio_Franqueo, IPOSTEL_U_TarifasFranqueo } from '@core/services/empresa/form-opp.service';
+import { CargaMasiva, IPOSTEL_C_Peso_Envio_Franqueo, IPOSTEL_U_TarifasFranqueo } from '@core/services/empresa/form-opp.service';
 import jwt_decode from "jwt-decode";
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
+import * as XLSX from 'xlsx'; // Importa la librería xlsx
+import { MobilizationPartsService } from '../mobilization-parts.service';
+import { AngularFileUploaderComponent } from 'angular-file-uploader';
 
 
-export const repeaterAnimation = trigger('heightIn', [
-  transition(':enter', [
-    style({ opacity: '0', height: '0px' }),
-    animate('.2s ease-out', style({ opacity: '1', height: '*' }))
-  ])
-]);
+
 
 @Component({
   selector: 'app-price-table',
   templateUrl: './price-table.component.html',
   styleUrls: ['./price-table.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [NgbModalConfig, NgbModal],
-  animations: [repeaterAnimation]
+  providers: [NgbModalConfig, NgbModal]
 })
 export class PriceTableComponent implements OnInit {
 
+  private fileUpload1: AngularFileUploaderComponent
   @ViewChild(DatatableComponent) table: DatatableComponent;
   @BlockUI() blockUI: NgBlockUI;
   @BlockUI('section-block') sectionBlockUI: NgBlockUI;
+
+  @BlockUI('modal-section-block') modalsectionBlockUI: NgBlockUI;
+
+
+  @ViewChild('CapturarLote') modalSubirXLS: TemplateRef<any>;
+
 
 
   public xAPI: IAPICore = {
@@ -40,6 +44,25 @@ export class PriceTableComponent implements OnInit {
     parametros: '',
     valores: {},
   };
+
+  public files = {
+    pdf: "",
+    csv: "",
+    hash: "",
+  };
+
+  public ICargaMasiva: CargaMasiva = {
+    llave: '',
+    nombre: '',
+    funcion: '',
+    ruta: '',
+    pdf: '',
+    csv: '',
+    log: '',
+    estatus: 0,
+    usuario: '',
+    file: ''
+  }
 
   public PesoEnvioFranqueo: IPOSTEL_C_Peso_Envio_Franqueo = {
     id_opp: 0,
@@ -54,7 +77,7 @@ export class PriceTableComponent implements OnInit {
     status_pef: 0
   }
 
-  public IupdateTarifaFranqueo : IPOSTEL_U_TarifasFranqueo = {
+  public IupdateTarifaFranqueo: IPOSTEL_U_TarifasFranqueo = {
     status_pef: 0,
     id_peso_envio: 0,
     pmvp: '',
@@ -148,13 +171,15 @@ export class PriceTableComponent implements OnInit {
     { name: '2022' },
   ]
 
+  public fnx;
+
   public Xnombre_peso_envio
   public Xpmvp
   public Xiva
   public Xtasa_postal
   public Xtotal_pagar
 
-public NombreTipoFranqueo
+  public NombreTipoFranqueo
   public loginForm: FormGroup;
 
   public selectServicioFranqueo = []
@@ -167,6 +192,8 @@ public NombreTipoFranqueo
   public rowsTarifaFranqueoAll
   public tempDataTarifasFranqueoAll = []
 
+  public loteRegistros = []
+  public llave
 
   public montoIVA = 0
   public montoTASA
@@ -186,6 +213,22 @@ public NombreTipoFranqueo
   public tempPeso = '';
   public tempStatus = '';
 
+  public numControl
+  public hashcontrol
+  public frm: any
+
+  public archivos = []
+
+
+  public ListaLote = []
+  public rowsListaLote = []
+  public tempListaLote = []
+
+
+  public ListaTarifaLote = []
+  public rowsLotes = []
+  public tempDataLotes = []
+
   public selectedRole = [];
   public selectedPlan = [];
   public selectedStatus = [];
@@ -194,25 +237,30 @@ public NombreTipoFranqueo
   private _unsubscribeAll: Subject<any>;
 
   public itemsSelectStatus = [
-    { id: '0', name: 'No Autorizado'},
-    { id: '1', name: 'Autorizado'}
+    { id: '0', name: 'No Autorizado' },
+    { id: '1', name: 'Autorizado' }
   ]
-  
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
     private modalService: NgbModal,
     private router: Router,
     private _formBuilder: FormBuilder,
+    private movilizacionPiezas: MobilizationPartsService
   ) { }
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
+    this.numControl = this.token.Usuario[0].rif
+    this.llave = this.utilService.GenerarUnicId();
+
     // console.log(this.token)
-    if ( this.token.Usuario[0].iva_exento == 1) {
+    if (this.token.Usuario[0].iva_exento == 1) {
       this.montoIVA = 0
     }
     this.idOPP = this.token.Usuario[0].id_opp
+    await this.ListaLotes()
     await this.TasaPostal(parseInt(this.token.Usuario[0].tipologia_empresa), this.idOPP)
     await this.ListaTarifas()
     await this.fechaF()
@@ -245,9 +293,9 @@ public NombreTipoFranqueo
     }
   }
 
-  async TasaPostal(tipologia, id_opp){
+  async TasaPostal(tipologia, id_opp) {
     this.xAPI.funcion = "IPOSTEL_R_TasaPostal"
-    this.xAPI.parametros = tipologia+','+id_opp
+    this.xAPI.parametros = tipologia + ',' + id_opp
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
@@ -318,14 +366,14 @@ public NombreTipoFranqueo
     }
   }
 
-  async fechaF(){
+  async fechaF() {
     const date = this.anio + '-' + this.mes
     return date
   }
 
   async ListaTarifas() {
     this.TarifasFranqueo = []
-    const date = this.anio + '-' + '0'+this.mes
+    const date = this.anio + '-' + '0' + this.mes
     const id = this.ServicioFranqueoID
     // console.log(id)
     // this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo_date_id"
@@ -356,6 +404,59 @@ public NombreTipoFranqueo
     )
   }
 
+
+  async ListaLotes() {
+    this.ListaTarifaLote = []
+    this.xAPI.funcion = "IPOSTEL_R_ListarTafiasLotes"
+    this.xAPI.parametros = `${this.idOPP}`
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          this.ListaTarifaLote.push(e)
+        });
+        this.rowsLotes = this.ListaTarifaLote;
+        this.tempDataLotes = this.rowsTarifas
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  EliminarLote(row: any) {
+    Swal.fire({
+      title: "Desea Eliminar Lote?",
+      text: "Tenga en cuenta que una vez elimine, no podra reversar los cambios",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Eliminar!",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.rowsLotes = []
+        this.xAPI.funcion = "IPOSTEL_D_ListarTafiasLotes"
+        this.xAPI.parametros = `${row.llave}`
+        this.xAPI.valores = ''
+        this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            if (data.tipo == 1) {
+              this.utilService.alertConfirmMini('success', 'Lote Eliminado Exitosamente!')
+            } else {
+              this.utilService.alertConfirmMini('error', 'Oops, algo salio mal!')
+            }
+            this.ListaLotes()
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      }
+    });
+  }
+
   async ListaTarifasFranqueoAll() {
     this.xAPI.funcion = "IPOSTEL_R_TarifasFranqueo"
     this.xAPI.parametros = `${this.idOPP}`
@@ -365,9 +466,9 @@ public NombreTipoFranqueo
         this.TarifasFranqueoAll = []
         data.Cuerpo.map(e => {
           if (e.status_pef == 1) {
-            e.status = 'Autorizado' 
+            e.status = 'Autorizado'
           } else {
-            e.status = 'No Autorizado' 
+            e.status = 'No Autorizado'
           }
           e.pmvp = this.utilService.ConvertirMoneda(e.pmvp);
           e.iva = this.utilService.ConvertirMoneda(e.iva);
@@ -403,7 +504,7 @@ public NombreTipoFranqueo
     )
   }
 
-  async ModalListaServicioFranqueo(TipoFranqueoId : any) { //Mostrar el Tipo de Franqueo en el Modal
+  async ModalListaServicioFranqueo(TipoFranqueoId: any) { //Mostrar el Tipo de Franqueo en el Modal
     this.xAPI.funcion = "IPOSTEL_R_ServicioFranqueo";
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
@@ -434,7 +535,7 @@ public NombreTipoFranqueo
       }
     )
   }
-  
+
   async ModalRegistrarTarifaEnvio(modal) {
     this.modalService.open(modal, {
       centered: true,
@@ -443,7 +544,7 @@ public NombreTipoFranqueo
       keyboard: false,
       windowClass: 'fondo-modal',
     });
-    this.fechax = this.anio+'-0'+this.mes
+    this.fechax = this.anio + '-0' + this.mes
     this.items.splice(0);
     this.items.push([{
       id_opp: '',
@@ -459,7 +560,185 @@ public NombreTipoFranqueo
     }]);
   }
 
-  async EditTarifa(modal, data){
+  SubirXLS(modal: any) {
+    this.hashcontrol = btoa("LT" + this.numControl + this.llave) //Cifrar documentos
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  onFileChange(event) {
+    this.ListaLote = []
+    this.rowsListaLote = []
+    let file = event.target.files[0];
+    this.archivos.push(event.target.files[0])
+
+    this.files.hash = this.hashcontrol;
+    var frm = new FormData(document.forms.namedItem("forma"))
+
+
+
+    this.sectionBlockUI.start(`Leyendo Archivo (${file.name}), por favor Espere!!!`);
+
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = () => {
+      let data = reader.result;
+      this.movilizacionPiezas.processCsvData(data)
+        .then((data) => {
+          setTimeout(() => {
+            this.sectionBlockUI.stop(),
+              this.utilService.alertConfirmMini('success', 'Lectura de XLS Exitosa'),
+              this.modalService.open(this.modalSubirXLS, {
+                centered: true,
+                size: 'xl',
+                backdrop: false,
+                keyboard: false,
+                windowClass: 'fondo-modal',
+              });
+          }, 6000);
+          data.map(e => {
+            e.montopmvp = this.utilService.ConvertirMoneda(e.montopmvp)
+            this.ListaLote.push(e)
+          });
+          this.rowsListaLote = this.ListaLote
+          this.tempListaLote = this.rowsListaLote
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    };
+
+    reader.onerror = () => {
+      console.log('Error al leer el archivo');
+      this.archivos = []
+      this.utilService.alertConfirmMini('error', 'Error al leer el archivo')
+    };
+  }
+
+  subirArchivo() {
+    var frm = new FormData(document.forms.namedItem("forma"))
+    Swal.fire({
+      title: "Desea Subir Archivo CSV?",
+      text: "Esto puede tardar, el proceso se ejecutara en segundo plano",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, subir lote!",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          this.apiService.EnviarArchivos(frm).subscribe((data) => {
+            this.modalService.dismissAll('Close')
+            this.ValoresMasivos();
+          });
+        } catch (error) {
+          this.utilService.alertConfirmMini('error', 'Oops!, algo salio mal!')
+          console.error(error);
+        }
+      }
+    });
+  }
+
+  ValoresMasivos() {
+    this.ICargaMasiva = {
+      llave: this.llave,
+      nombre: "TARIFAS POR LOTE",
+      funcion: "Fnx_TarifaXlote",
+      ruta: this.hashcontrol,
+      pdf: '',
+      file: '',
+      csv: this.archivos[0].name,
+      log: "INICIANDO PROCESO",
+      estatus: 0,
+      usuario: this.idOPP.toString(),
+    };
+    this.xAPI.funcion = "IPOSTEL_C_CargaMasiva";
+    this.xAPI.parametros = "";
+    this.xAPI.valores = JSON.stringify(this.ICargaMasiva);
+
+    document.forms.namedItem("forma").reset();
+
+    this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.consultarMasivo(data.msj)
+      },
+      (errot) => {
+        console.log(errot)
+      }
+    );
+  }
+
+  consultarMasivo(id: number) {
+    this.xAPI.funcion = "IPOSTEL_R_CargaMasiva";
+    this.xAPI.parametros = `${id}`
+    this.xAPI.valores = ''
+    this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        // this.SubirLote(this.llave,this.ICargaMasiva.ruta)
+        if (data.Cuerpo.length > 0) {
+          data.Cuerpo.map(e => {
+            this.SubirLote(e.llave, e.ruta, e.csv)
+          });
+        }
+      },
+      (e) => {
+        console.log(e)
+      })
+  }
+
+  async SubirLote(transaction_id: any, ruta: any, archivo: any) {
+    this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
+    this.fnx = {
+      funcion: 'Fnx_SubirTarifasLote',
+      pass: '123456789',
+      host: '127.0.0.1',
+      db: 'sirpven-ipostel',
+      port: '5432',
+      user: 'ipsfa',
+      schema: 'public',
+      table: 'peso_envio_franqueo',
+      columns: 'id_servicio_franqueo,id_opp,mes,transaction_id,id_peso_envio,descripcion,pmvp',
+      delimiter: ';',
+      ruta: `tmp/file/out/${ruta}`,
+      // original : archivo,
+      // ruta: 'tmp/file',
+      original: archivo,
+      nuevo: 'archivo_nuevo.csv',
+      transaction_id: transaction_id,
+      id_opp: this.idOPP.toString(),
+      fecha: this.fechax.toString()
+    };
+    await this.apiService.ExecFnx(this.fnx).subscribe(
+      (data) => {
+        if (data.tipo == 1) {
+          this.modalService.dismissAll('Close')
+          setTimeout(() => {
+            this.sectionBlockUI.stop()
+            this.utilService.alertConfirmMini('success', 'Lote Exitoso!')
+            this.router.navigate(['postage/price-table']).then(() => { window.location.reload() });
+          }, 10000);
+
+        } else {
+          this.sectionBlockUI.stop()
+          this.utilService.alertConfirmMini('warning', 'Oops lo sentimos, algo salio mal!')
+        }
+      },
+      (error) => {
+        this.sectionBlockUI.stop()
+        this.utilService.alertConfirmMini('error', 'Oops lo sentimos, algo salio mal!')
+      }
+    )
+  }
+
+  async EditTarifa(modal, data) {
     // console.log(data);
     this.Xnombre_peso_envio = data.nombre_peso_envio
     this.Xpmvp = data.pmvpx
@@ -484,8 +763,8 @@ public NombreTipoFranqueo
     });
   }
 
-  CambiarMontos(data: any){
-    var ivaq = data * this.montoIVA  / 100
+  CambiarMontos(data: any) {
+    var ivaq = data * this.montoIVA / 100
     var tasaq = data * this.montoTASA / 100
     var suma = (ivaq + tasaq)
     var totalq = parseFloat(data) + suma
@@ -500,7 +779,7 @@ public NombreTipoFranqueo
     this.IupdateTarifaFranqueo.total_pagar = this.Xtotal_pagar
   }
 
-  async UpdateTarifa(){
+  async UpdateTarifa() {
     await Swal.fire({
       title: 'Esta Seguro?',
       html: "De Actualizar el Monto de este Registro! <br> Tenga en cuenta que una vez modifique el monto tendra que esperar la autorización del mismo por parte de <font color='red'><strong>IPOSTEL</strong</font>",
@@ -511,13 +790,59 @@ public NombreTipoFranqueo
       confirmButtonText: 'Si, Actualizarlo!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
-    this.xAPI.funcion = "IPOSTEL_U_TarifasFranqueo"
+      this.xAPI.funcion = "IPOSTEL_U_TarifasFranqueo"
+      this.xAPI.parametros = ''
+      this.xAPI.valores = JSON.stringify(this.IupdateTarifaFranqueo)
+      this.apiService.Ejecutar(this.xAPI).subscribe(
+        (data) => {
+          this.sectionBlockUI.start('Actualizando Registros, por favor Espere!!!');
+          this.rowsTarifas.push(this.TarifasFranqueo)
+          if (data.tipo === 1) {
+            this.TarifasFranqueo = []
+            this.TarifasFranqueoAll = []
+            this.ListaTarifas()
+            this.ListaTarifasFranqueoAll()
+            this.modalService.dismissAll('Close')
+            this.sectionBlockUI.stop()
+            this.utilService.alertConfirmMini('success', 'Tarifas Actualizadas Exitosamente!')
+          } else {
+            this.sectionBlockUI.stop();
+            this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    })
+  }
+
+  async RegistrarTarifaLote() {
+    this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
+    for (let index = 0; index < this.ListaLote.length; index++) {
+      const element = this.ListaLote[index];
+      let convMonto = parseFloat(element.montopmvp)
+      const iva = convMonto * this.montoIVA / 100
+      const tasa = convMonto * this.montoTASA / 100
+      const total = convMonto + iva + tasa
+      this.PesoEnvioFranqueo.id_opp = this.idOPP
+      this.PesoEnvioFranqueo.pmvp = convMonto
+      this.PesoEnvioFranqueo.id_peso_envio = parseInt(element.id_peso_envio)
+      this.PesoEnvioFranqueo.descripcion = element.descripcion
+      this.PesoEnvioFranqueo.iva = parseFloat(iva.toFixed(2))
+      this.PesoEnvioFranqueo.tasa_postal = parseFloat(tasa.toFixed(2))
+      this.PesoEnvioFranqueo.total_pagar = parseFloat(total.toFixed(2))
+      this.PesoEnvioFranqueo.mes = this.fechax
+      this.PesoEnvioFranqueo.id_servicio_franqueo = parseInt(element.id_servicio_franqueo)
+      this.PesoEnvioFranqueo.user_created = this.idOPP
+      this.loteRegistros.push(this.PesoEnvioFranqueo)
+    }
+    this.xAPI.funcion = "IPOSTEL_C_Peso_Envio_Franqueo"
     this.xAPI.parametros = ''
-    this.xAPI.valores = JSON.stringify(this.IupdateTarifaFranqueo)
-    this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.xAPI.valores = JSON.stringify(this.PesoEnvioFranqueo)
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.sectionBlockUI.start('Actualizando Registros, por favor Espere!!!');
-        this.rowsTarifas.push(this.TarifasFranqueo)
+        this.rowsTarifas.push(this.PesoEnvioFranqueo)
         if (data.tipo === 1) {
           this.TarifasFranqueo = []
           this.TarifasFranqueoAll = []
@@ -525,7 +850,7 @@ public NombreTipoFranqueo
           this.ListaTarifasFranqueoAll()
           this.modalService.dismissAll('Close')
           this.sectionBlockUI.stop()
-          this.utilService.alertConfirmMini('success', 'Tarifas Actualizadas Exitosamente!')
+          this.utilService.alertConfirmMini('success', 'Tarifas Registradas Exitosamente!')
         } else {
           this.sectionBlockUI.stop();
           this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
@@ -535,9 +860,7 @@ public NombreTipoFranqueo
         console.log(error)
       }
     )
-    })
   }
-
 
   async RegistrarTarifaNacionalAereo() {
     for (let index = 0; index < this.items.length; index++) {
@@ -558,7 +881,6 @@ public NombreTipoFranqueo
       this.xAPI.funcion = "IPOSTEL_C_Peso_Envio_Franqueo"
       this.xAPI.parametros = ''
       this.xAPI.valores = JSON.stringify(this.PesoEnvioFranqueo)
-      // console.log(this.PesoEnvioFranqueo )
       await this.apiService.Ejecutar(this.xAPI).subscribe(
         (data) => {
           this.sectionBlockUI.start('Guardando Registros, por favor Espere!!!');
@@ -606,7 +928,7 @@ public NombreTipoFranqueo
               this.TarifasFranqueo = []
               this.TarifasFranqueoAll = []
               this.ListaTarifas()
-              this.ListaTarifasFranqueoAll()  
+              this.ListaTarifasFranqueoAll()
             } else {
               this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
             }
@@ -631,9 +953,6 @@ public NombreTipoFranqueo
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
-
-
-
 
   filterUpdate(event) {
     // Reset ng-select on search
@@ -676,7 +995,7 @@ public NombreTipoFranqueo
     // console.log(event.name)
     const filter = event ? event.name : '';
     this.tempStatus = filter;
-    this.temp = this.filterRows(this.tempFecha, this.tempServicio, this.tempPeso,  filter);
+    this.temp = this.filterRows(this.tempFecha, this.tempServicio, this.tempPeso, filter);
     this.rows = this.temp;
   }
 
@@ -685,17 +1004,14 @@ public NombreTipoFranqueo
     servicio = servicio.toLowerCase();
     peso = peso.toLowerCase();
     status = status.toLowerCase();
-    return this.tempData.filter(row => {                            
+    return this.tempData.filter(row => {
       let tempFecha = fecha == '' ? true : row.mes.indexOf(fecha) !== -1;
       let tempServicio = servicio == '' ? true : row.nombre_servicios_franqueo.toLowerCase().toString().indexOf(servicio) !== -1;
-      let tempPeso = peso == '' ? true : row.nombre_peso_envio.toLowerCase().toString().indexOf(peso) !== -1 ;
-      let tempStatus = status == '' ? true : row.status.toLowerCase().toString().indexOf(status) !== -1 ;
+      let tempPeso = peso == '' ? true : row.nombre_peso_envio.toLowerCase().toString().indexOf(peso) !== -1;
+      let tempStatus = status == '' ? true : row.status.toLowerCase().toString().indexOf(status) !== -1;
       return tempFecha && tempServicio && tempPeso && tempStatus;
     });
   }
 
 
-
 }
-
-

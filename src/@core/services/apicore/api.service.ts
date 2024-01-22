@@ -48,12 +48,12 @@ export interface ObjectoGenerico {
 }
 
 export interface IPOSTEL_I_ArchivoDigital {
-	usuario	 ?:	string //CodeEncrypt
-	nombre	 ?:	string
-	empresa	?:	string
-  numc ?: string
-  tipo ?: number
-  vencimiento ?: string
+  usuario?: string //CodeEncrypt
+  nombre?: string
+  empresa?: string
+  numc?: string
+  tipo?: number
+  vencimiento?: string
 }
 
 @Injectable({
@@ -73,16 +73,32 @@ export class ApiService {
     })
   };
 
-    httpOptionsQR = {
-      headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
-        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-      })
+  httpOptionsQR = {
+    headers: new HttpHeaders({
+      'Content-Type': 'text/plain',
+      'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+    })
   };
 
   constructor(private router: Router, private http: HttpClient, private utilservice: UtilService) {
 
   }
+
+
+  //Ejecutar Api generales
+  ExecFnx(fnx: any): Observable<any> {
+    var url = this.URL + "fnx";
+    return this.http.post<any>(url, fnx, this.httpOptions);
+  }
+
+  //  Consulta el PID de una funcion
+  ExecFnxId(id: string): Observable<any> {
+    var url = this.URL + `fnx:${id}`;
+    return this.http.get<any>(url, this.httpOptions);
+  }
+
+
+
 
   Guardar(xAPI: IAPICore, sApi: string): Observable<any> {
 
@@ -108,7 +124,7 @@ export class ApiService {
   //Ejecutar Api generales
   Ejecutar(xAPI: IAPICore): Observable<any> {
     // var url = this.URL + "accion" + this.hash;
-    var url =  "/v1/api/accion" + this.hash;
+    var url = "/v1/api/accion" + this.hash;
     // if (environment.production === true) {
     //   var url = this.RUTA  + this.URL + "accion" + this.hash;
     // } else {
@@ -117,22 +133,22 @@ export class ApiService {
     return this.http.post<any>(url, xAPI, this.httpOptions);
   }
 
-    //Ejecutar Api generales
-    EjecutarDev(xAPI: IAPICore): Observable<any> {
-      var url =  "/devel/api/accion" + this.hash;
-      return this.http.post<any>(url, xAPI, this.httpOptions);
-    }
+  //Ejecutar Api generales
+  EjecutarDev(xAPI: IAPICore): Observable<any> {
+    var url = "/devel/api/accion" + this.hash;
+    return this.http.post<any>(url, xAPI, this.httpOptions);
+  }
 
-         //EnviarArchivos generales
-         EnviarArchivos(frm : FormData ) : Observable<any>{
-          var httpOptions = {
-            headers: new HttpHeaders({
-              'Authorization': 'Bearer ' + sessionStorage.getItem('token') 
-            })
-          };
-          // return this.http.post<any>(this.URL + "subirarchivos", frm, httpOptions);
-          return this.http.post<any>("/v1/api/subirarchivosdinamicos", frm, httpOptions);
-        }
+  //EnviarArchivos generales
+  EnviarArchivos(frm: FormData): Observable<any> {
+    var httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+      })
+    };
+    // return this.http.post<any>(this.URL + "subirarchivos", frm, httpOptions);
+    return this.http.post<any>("/v1/api/subirarchivosdinamicos", frm, httpOptions);
+  }
 
 
   //ListarModulos
@@ -154,19 +170,20 @@ export class ApiService {
   }
 
 
-  Dws( peticion : any ) {
-    return  '/v1/api/dw/' + peticion
+  Dws(peticion: any) {
+    return '/v1/api/dw/' + peticion
   }
 
-  GenQR( id : string, ruta: string) :Observable<any> {
+
+  GenQR(id: string, ruta: string): Observable<any> {
     // var rut = atob(ruta)
     // console.log(rut)
     // console.log(id+' '+atob(ruta))
     // return this.http.get<any>(this.URL + 'genqr/' + id+'/'+ruta, this.httpOptions)
-    return this.http.get<any>('/v1/api/genqr/' + id+'/'+ruta, this.httpOptions)
+    return this.http.get<any>('/v1/api/genqr/' + id + '/' + ruta, this.httpOptions)
   }
 
-  LoadQR( id : string) :Observable<any> {
+  LoadQR(id: string): Observable<any> {
     // return this.http.get<any>(this.URL + 'imgslocalbase64/' + id, this.httpOptionsQR)
     return this.http.get<any>('/v1/api/imgslocalbase64/' + id, this.httpOptionsQR)
   }
@@ -203,7 +220,7 @@ export class ApiService {
     return strI
   }
 
-  seleccionarTipo(tipo : string):string {
+  seleccionarTipo(tipo: string): string {
     var c = ''
     switch (tipo) {
       case 'int':

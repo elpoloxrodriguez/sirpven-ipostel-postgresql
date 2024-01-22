@@ -11,7 +11,8 @@ import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { CoreMenuService } from '@core/components/core-menu/core-menu.service';
 import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
-import {Md5} from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5/dist/md5';
+import { Auditoria, InterfaceService } from '@core/services/auditoria/auditoria.service';
 
 
 @Component({
@@ -23,11 +24,21 @@ import {Md5} from 'ts-md5/dist/md5';
 })
 export class AuthAdminComponent implements OnInit {
 
-  public xAPI : IAPICore = {
+  public xAPI: IAPICore = {
     funcion: '',
     parametros: '',
-    valores : {},
+    valores: {},
   };
+
+  public xAuditoria: Auditoria = {
+    id: '',
+    usuario: '',
+    ip: '',
+    mac: '',
+    funcion: '',
+    metodo: '',
+    fecha: '',
+  }
 
   //  Public
   public coreConfig: any;
@@ -56,13 +67,14 @@ export class AuthAdminComponent implements OnInit {
    */
   constructor(
     private _coreMenuService: CoreMenuService,
-    private apiService : ApiService,
+    private apiService: ApiService,
     private _coreConfigService: CoreConfigService,
     private _formBuilder: FormBuilder,
     private _route: ActivatedRoute,
     private loginService: LoginService,
     private _router: Router,
-    private utilservice: UtilService
+    private utilservice: UtilService,
+    private auditoria: InterfaceService
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -106,7 +118,7 @@ export class AuthAdminComponent implements OnInit {
     }
     if (sessionStorage.getItem("token") != undefined) {
       // this._router.navigate(['/home']);
-      this._router.navigate(['/home']).then(() => {window.location.reload()});
+      this._router.navigate(['/home']).then(() => { window.location.reload() });
     }
 
     // Login
@@ -115,7 +127,7 @@ export class AuthAdminComponent implements OnInit {
     // redirect to home page
     setTimeout(() => {
       // this._router.navigate(['/']);
-      this._router.navigate(['/']).then(() => {window.location.reload()});
+      this._router.navigate(['/']).then(() => { window.location.reload() });
     }, 200);
   }
 
@@ -127,19 +139,19 @@ export class AuthAdminComponent implements OnInit {
    */
   ngOnInit(): void {
     let urlQR = this._router.url
-    if (urlQR  == undefined) {
+    if (urlQR == undefined) {
       this.Qr = ''
     } else {
-      this.Qr = urlQR.substring(7, urlQR.length  +1)
+      this.Qr = urlQR.substring(7, urlQR.length + 1)
       // this.EmpresaRIF()
       this.Qr = ''
     }
 
     if (sessionStorage.getItem("token") != undefined) {
       // this._router.navigate(['/home'])
-      this._router.navigate(['/home']).then(() => {window.location.reload()});
+      this._router.navigate(['/home']).then(() => { window.location.reload() });
       return
-   }
+    }
     this.loginForm = this._formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', Validators.required]
@@ -155,11 +167,11 @@ export class AuthAdminComponent implements OnInit {
   }
 
 
-   login() {
+  login() {
     this.submitted = true;
     this.loading = true;
     const md5 = new Md5();
-    const password =  md5.appendStr(this.clave).end()
+    const password = md5.appendStr(this.clave).end()
     var Xapi = {
       "funcion": 'IPOSTEL_R_Login_admin',
       "parametros": this.usuario + ',' + password
@@ -169,11 +181,23 @@ export class AuthAdminComponent implements OnInit {
         // console.log(data)
         if (sessionStorage.getItem("token") != '') {
           this.itk = data;
+          // INICIO AGREGAR AUDITORIA //
+          this.xAuditoria.id = this.utilservice.GenerarUnicId()
+          this.xAuditoria.ip = ''
+          this.xAuditoria.mac = ''
+          this.xAuditoria.usuario = this.itk.token
+          this.xAuditoria.funcion = Xapi.funcion,
+            this.xAuditoria.parametro = Xapi.parametros,
+            this.xAuditoria.metodo = 'Entrando al Sistema',
+            this.xAuditoria.fecha = Date()
+          this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+          // FIN AGREGAR AUDITORIA //
+
           sessionStorage.setItem("token", this.itk.token);
           this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
           // console.log(this.infoUsuario.Usuario[0])
           this.utilservice.alertConfirmMini('success', `Bienvenido al SIRP-IPOSTEL`);
-          this._router.navigate(['/home']).then(() => {window.location.reload()});
+          this._router.navigate(['/home']).then(() => { window.location.reload() });
           return;
         } else {
           this.utilservice.alertConfirmMini('error', 'Errorr');
@@ -183,7 +207,7 @@ export class AuthAdminComponent implements OnInit {
         // console.log(error)
         this.loading = false;
         this._router.navigate(['sirpv-admin'])
-        this.utilservice.alertConfirmMini('error','Verifique los datos, e intente nuevamente')
+        this.utilservice.alertConfirmMini('error', 'Verifique los datos, e intente nuevamente')
       }
     );
   }
