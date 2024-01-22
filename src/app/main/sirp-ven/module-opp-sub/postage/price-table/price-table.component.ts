@@ -701,6 +701,7 @@ export class PriceTableComponent implements OnInit {
         console.log(error)
       }
       )
+      console.info(this.DatosConexionBD)
   }
 
   consultarMasivo(id: number) {
