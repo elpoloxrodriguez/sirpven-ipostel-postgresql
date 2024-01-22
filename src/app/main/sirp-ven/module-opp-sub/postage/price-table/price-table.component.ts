@@ -722,7 +722,6 @@ export class PriceTableComponent implements OnInit {
   }
 
   async SubirLote(transaction_id: any, ruta: any, archivo: any) {
-    console.info(this.DatosConexionBD)
     this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
     this.fnx = {
       funcion: 'Fnx_SubirTarifasLote',
@@ -747,7 +746,6 @@ export class PriceTableComponent implements OnInit {
       id_opp: this.idOPP.toString(),
       fecha: this.fechax.toString()
     };
-    console.info(this.fnx)
     await this.apiService.ExecFnx(this.fnx).subscribe(
       (data) => {
         if (data.tipo == 1) {
