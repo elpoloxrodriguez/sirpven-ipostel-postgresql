@@ -691,7 +691,11 @@ export class PriceTableComponent implements OnInit {
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data)=> {
-        this.DatosConexionBD = data
+        this.DatosConexionBD.host = data[0].host
+        this.DatosConexionBD.basedatos = data[0].basedatos
+        this.DatosConexionBD.puerto = data[0].puerto
+        this.DatosConexionBD.usuario = data[0].usuario
+        this.DatosConexionBD.clave = data[0].clave
       },
       (error)=> {
         console.log(error)
@@ -721,11 +725,11 @@ export class PriceTableComponent implements OnInit {
     this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
     this.fnx = {
       funcion: 'Fnx_SubirTarifasLote',
-      host:this.DatosConexionBD[0].host,
-      db:this.DatosConexionBD[0].basedatos,
-      port:this.DatosConexionBD[0].puerto,
-      user:this.DatosConexionBD[0].usuario,
-      pass:this.DatosConexionBD[0].clave,
+      host:this.DatosConexionBD.host,
+      db:this.DatosConexionBD.basedatos,
+      port:this.DatosConexionBD.puerto,
+      user:this.DatosConexionBD.usuario,
+      pass:this.DatosConexionBD.clave,
       // pass: '123456789',
       // host: '127.0.0.1',
       // db: 'sirpven-ipostel',
