@@ -701,7 +701,6 @@ export class PriceTableComponent implements OnInit {
         console.log(error)
       }
       )
-      console.info(this.DatosConexionBD)
   }
 
   consultarMasivo(id: number) {
@@ -723,14 +722,15 @@ export class PriceTableComponent implements OnInit {
   }
 
   async SubirLote(transaction_id: any, ruta: any, archivo: any) {
+    console.info(this.DatosConexionBD)
     this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
     this.fnx = {
       funcion: 'Fnx_SubirTarifasLote',
+      pass:this.DatosConexionBD.clave,
       host:this.DatosConexionBD.host,
       db:this.DatosConexionBD.basedatos,
       port:this.DatosConexionBD.puerto,
       user:this.DatosConexionBD.usuario,
-      pass:this.DatosConexionBD.clave,
       // pass: '123456789',
       // host: '127.0.0.1',
       // db: 'sirpven-ipostel',
@@ -741,14 +741,13 @@ export class PriceTableComponent implements OnInit {
       columns: 'id_servicio_franqueo,id_opp,mes,transaction_id,id_peso_envio,descripcion,pmvp',
       delimiter: ';',
       ruta: `tmp/file/out/${ruta}`,
-      // original : archivo,
-      // ruta: 'tmp/file',
       original: archivo,
       nuevo: 'archivo_nuevo.csv',
       transaction_id: transaction_id,
       id_opp: this.idOPP.toString(),
       fecha: this.fechax.toString()
     };
+    console.info(this.fnx)
     await this.apiService.ExecFnx(this.fnx).subscribe(
       (data) => {
         if (data.tipo == 1) {
