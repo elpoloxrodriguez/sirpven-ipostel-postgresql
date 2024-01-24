@@ -148,6 +148,7 @@ export class DashboardComponent implements OnInit {
    * On init
    */
   async ngOnInit() {
+    // this.WebScrapring()
     this.token = jwt_decode(sessionStorage.getItem('token'));
     await this.Precio_Dolar_Petro()
     await this.Meses()
@@ -297,6 +298,21 @@ export class DashboardComponent implements OnInit {
         console.log(err)
       }
     )
+  }
+
+  WebScrapring() {
+    return new Promise((resolve, reject) => {
+      this.httpClient.get('https://localhost/devel/api/scraping').subscribe(
+        (data) => {
+          console.log('Correo: ',data)
+          resolve(data);
+        },
+        (error) => {
+          console.log('Error: ',error)
+          reject(error);
+        }
+      );
+    });
   }
 
   async EmpresasReparos(date1: any, date2: any) {

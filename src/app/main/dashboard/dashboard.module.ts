@@ -55,6 +55,7 @@ import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';
 import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obligations/payments-obligations.module';
 import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-offices/branch-offices.module';
 import { ReportsRankingComponent } from '../sirp-ven/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
+import { UsersModule } from '../sirp-ven/users/users.module';
 
 
 
@@ -110,7 +111,8 @@ import { ReportsRankingComponent } from '../sirp-ven/module-opp-sub/opp-reports/
     PhilatelyModule,
     DupvenRoutingModule,
     PaymentsObligationsModule,
-    BranchOfficesModule
+    BranchOfficesModule,
+    UsersModule
   ],
   exports: [],
   providers: [DatePipe]

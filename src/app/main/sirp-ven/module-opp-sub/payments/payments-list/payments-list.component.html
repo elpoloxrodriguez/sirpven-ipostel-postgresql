@@ -135,8 +135,8 @@
                         <a (click)="ModalPagar(ModalPagarDeclaracion,row)" *ngIf="row.montoReal != '0'"
                           ngbDropdownItem><span [size]="16" [data-feather]="'credit-card'"
                             [class]="'mr-50'"></span>Reportar Pago</a>
-                        <!-- <a  *ngIf="row.montoReal === '0.00'" ngbDropdownItem><span [size]="16"
-                              [data-feather]="'credit-card'" [class]="'mr-50'"></span>Pago Cero (0.00)</a> -->
+                        <a (click)="VerDetalle(UsoContrato,row)" ngbDropdownItem><span [size]="16"
+                            [data-feather]="'eye'" [class]="'mr-50'"></span>Ver Detalle</a>
                       </div>
                     </div>
                   </ng-template>
@@ -565,10 +565,92 @@
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-    <button type="submit"  (click)="PagarRecaudacion()" rippleEffect
-      class="btn btn-success mr-1">Reportar Pago</button>
+    <button type="submit" (click)="PagarRecaudacion()" rippleEffect class="btn btn-success mr-1">Reportar Pago</button>
     <!-- <button type="submit" *ngIf="ShowModificarPago == true" (click)="ModificarConciliarPagoRecaudacion()" rippleEffect
       class="btn btn-success mr-1">ModificarPago</button> -->
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #UsoContrato let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Detalle de Recibo de Pago</h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
+      <!-- <form method="post" enctype="multipart/form-data"  id="forma" name="forma"> -->
+      <!-- <form class="form" method="post" enctype="multipart/form-data" id="forma" name="forma"
+        (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
+        <div class="row d-flex align-items-end">
+
+          <table #No class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Dolares</th>
+                <th scope="col">Bolivares Referencial</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of MantenimientoYSeguridad; index as i">
+                <th scope="row">{{ i + 1 }}</th>
+                <td> {{ item.iniciales_tipo_pagos }} </td>
+                <td>{{ item.nombre_tipo_pagos }}</td>
+                <td>{{ item.tasa_petro }}</td>
+                <td>{{item.bolivaresx}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>
+                  <font color="red">TOTAL</font>
+                </th>
+                <th>
+                  <font color="red">$ {{ totalPetros.toFixed(2) }}</font>
+                </th>
+                <th>
+                  <font color="red">{{ convertirTotalBolivares }}</font>
+                </th>
+              </tr>
+            </tfoot>
+          </table>
+
+          <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Monto</label>
+              <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly [value]="montoPagar"
+                placeholder="Monto a Pagar" />
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Fecha</label>
+              <input type="text" name="fechaNO" class="form-control" readonly [value]="fechaActual" autocomplete="off"
+                [(ngModel)]="fechaActual" [ngModelOptions]="{standalone: true}" placeholder="Mes" />
+            </div>
+          </div>
+
+
+        </div>
+      <!-- </form> -->
+    </div>
+    <!-- Header Starts -->
+    <!-- </div> -->
+    <!-- Header Ends -->
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

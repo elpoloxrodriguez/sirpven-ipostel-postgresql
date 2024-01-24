@@ -28,7 +28,9 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 // Subir Archivos
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { HashLocationStrategy, JsonPipe, LocationStrategy } from '@angular/common';
+
 import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
+
 import { AuthInterceptorService } from '@core/services/seguridad/auth-interceptor.service';
 import { AuthLoginV2Component } from './main/pages/authentication/auth-login-v2/auth-login-v2.component';
 import { ErrorInterceptor, JwtInterceptor } from './auth/helpers';
@@ -54,6 +56,7 @@ import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSet
 import { PaymentsObligationsComponent } from './main/sirp-ven/module-admin/payments-obligations/payments-obligations/payments-obligations.component';
 import { BranchOfficesComponent } from './main/sirp-ven/module-opp-sub/business/branch-offices/branch-offices/branch-offices.component';
 import { OppReportsModule } from './main/sirp-ven/module-opp-sub/opp-reports/opp-reports.module';
+import { ProfileComponent } from './main/sirp-ven/users/profile/profile.component';
 
 const appRoutes: Routes = [
   {
@@ -75,6 +78,7 @@ const appRoutes: Routes = [
     ReportsRankingComponent,
     PaymentsObligationsComponent,
     BranchOfficesComponent,
+    ProfileComponent,
                           ],
   imports: [
     BrowserModule,

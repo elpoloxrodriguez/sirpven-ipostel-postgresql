@@ -363,6 +363,17 @@ export class PaymentsListComponent implements OnInit {
     });
   }
 
+
+  VerDetalle(modal:any, row:any){
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
   async ModificarConciliarPagoRecaudacion() {
     this.xAPI.funcion = "IPOSTEL_U_PagosDeclaracionOPP_SUB"
     this.xAPI.parametros = ''

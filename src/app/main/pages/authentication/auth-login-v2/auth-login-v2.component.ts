@@ -88,6 +88,8 @@ export class AuthLoginV2Component implements OnInit {
   ]
   public TipoSeleccion
 
+  public idFnx // ID de la funcion
+
   /**
    * Constructor
    *
@@ -326,8 +328,6 @@ export class AuthLoginV2Component implements OnInit {
       }
     );
   }
-
-
 
 
   async BloqueoSystem() {

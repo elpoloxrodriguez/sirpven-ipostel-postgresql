@@ -545,8 +545,8 @@ export class StatementOfPartiesComponent implements OnInit {
     this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
-          e.bolivares = e.tasa_petro * this.PetroDia ? this.PetroDia : 0
-          var valor = e.tasa_petro * this.PetroDia
+          e.bolivares = e.tasa_petro * this.DolarDia ? this.DolarDia : 0
+          var valor = e.tasa_petro * this.DolarDia
           e.bolivaresx = this.utilService.ConvertirMoneda(valor)
           return e
         });
@@ -560,10 +560,9 @@ export class StatementOfPartiesComponent implements OnInit {
         this.totalBolivares = this.MantenimientoYSeguridad.reduce((
           acc,
           objx,
-        ) => acc + (objx.tasa_petro * parseFloat(this.PetroDia)),
+        ) => acc + (objx.tasa_petro * parseFloat(this.DolarDia)),
           0);
         this.convertirTotalBolivares = this.utilService.ConvertirMoneda(this.totalBolivares ? this.totalBolivares : 0)
-        // console.log(this.totalBolivares)
       },
       (error) => {
         console.log(error)
@@ -657,13 +656,8 @@ export class StatementOfPartiesComponent implements OnInit {
         var montoPagar = this.MontoCausado
         var montoMant = this.totalBolivares
         var TotalMontoPagar = montoPagar
-        // var TotalMontoPagar = montoPagar +  this.totalBolivares completo y mantenimiento 
-        // console.log(montoPagar)
-        // console.log(this.totalBolivares)
-        // console.log(TotalMontoPagar)
+        var TotalMontoPagar = montoPagar +  this.totalBolivares  //completo y mantenimiento 
         var TotalMontoPagarConvertido = TotalMontoPagar.toFixed(2)
-        // this.PrecioMantenimientoXT = TotalMontoPagar 
-        // this.PrecioMantenimientoXT = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         var ok = parseFloat(SumaMontos) / parseFloat(this.PetroDia)
         var val = ok.toFixed(8)
@@ -822,7 +816,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.IpagarRecaudacion.tipo_pago_pc = 1
         this.IpagarRecaudacion.monto_pc = '0'
         this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
-        // this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF
+        this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF
         this.IpagarRecaudacion.monto_pagar = this.MontoCausado
         this.IpagarRecaudacion.dolar_dia = this.DolarDia
         this.IpagarRecaudacion.petro_dia = this.PetroDia

@@ -13,6 +13,11 @@ export interface FilateliaCrear {
 	Qr: string
 }
 
+export interface CambiarClave {
+	id_opp: number,
+	password: string
+}
+
 export interface CargaMasiva {
 	llave: string;
 	nombre: string;

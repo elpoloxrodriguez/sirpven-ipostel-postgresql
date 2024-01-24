@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
 import { IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_DATA_DELEGADOP_ID, IPOSTEL_DATA_EMPRESA_ID, IPOSTEL_DATA_REPRESENTANTE_LEGAL_ID, IPOSTEL_U_Status_Opp_Sub } from '@core/services/empresa/form-opp.service';
@@ -20,6 +20,8 @@ export class SubcontractorComponent implements OnInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   @BlockUI() blockUI: NgBlockUI;
   @BlockUI('section-block') sectionBlockUI: NgBlockUI;
+
+  @ViewChild('UsoContrato') modalUsoContrato: TemplateRef<any>;
 
 
   public xAPI: IAPICore = {
@@ -208,6 +210,12 @@ export class SubcontractorComponent implements OnInit {
 
   public idRealSUB = 0
 
+  public MantenimientoYSeguridad = []
+  public DolarDia = 0
+  public totalPetros = 0
+  public totalBolivares = 0
+  public convertirTotalBolivares
+
   public item = []
   constructor(
     private apiService: ApiService,
@@ -227,6 +235,63 @@ export class SubcontractorComponent implements OnInit {
     await this.Subcontratistas(this.IdOPP)
   }
 
+  async Precio_Dolar_Petro() {
+    this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.DolarPetroDia = data.Cuerpo.map(e => {
+          this.DolarDia = parseFloat(e.dolar)
+          this.pDolar = e.dolar
+          this.pPetro = e.petro_bolivares
+          // console.log(e)
+          this.ListaMantenimientoSeguidad(this.DolarDia)
+          return e
+        });
+        // console.log(this.DolarDia)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+
+  async ListaMantenimientoSeguidad(dolar:any) {
+    let Xdolar = parseFloat(dolar ? dolar : 0)
+    this.xAPI.funcion = "IPOSTEL_R_MantenimientoSeguridad"
+    this.xAPI.parametros = '2'
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+         data.Cuerpo.map(e => {
+          e.tasa_petro = parseFloat(e.tasa_petro)
+          e.bolivares = e.tasa_petro * Xdolar
+          var valor = e.tasa_petro * Xdolar
+          var mon = valor ? valor : 0
+          e.bolivaresx = this.utilService.ConvertirMoneda(mon)
+          this.MantenimientoYSeguridad.push(e)
+        });
+        console.log(this.MantenimientoYSeguridad[0])
+        //Calculamos el TOTAL 
+        this.totalPetros = this.MantenimientoYSeguridad.reduce((
+          acc,
+          obj,
+        ) => acc + (parseFloat(obj.tasa_petro)),
+          0);
+        this.totalBolivares = this.MantenimientoYSeguridad.reduce((
+          acc,
+          objx,
+        ) => acc + (objx.tasa_petro * Xdolar),
+          0);
+        this.convertirTotalBolivares = this.utilService.ConvertirMoneda(this.totalBolivares ? this.totalBolivares : 0)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
 
   async LstObligaciones() {
     this.xAPI.funcion = "IPOSTEL_R_Tipo_Pagos_Obligaciones";
@@ -239,27 +304,6 @@ export class SubcontractorComponent implements OnInit {
          }
           return e
         });
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  }
-
-
-  async Precio_Dolar_Petro() {
-    this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
-    this.xAPI.parametros = ''
-    this.xAPI.valores = ''
-    await this.apiService.Ejecutar(this.xAPI).subscribe(
-      (data) => {
-        this.DolarPetroDia = data.Cuerpo.map(e => {
-          this.pDolar = e.dolar
-          this.pPetro = e.petro_bolivares
-          // console.log(e)
-          return e
-        });
-        // console.log(this.pDolar,this.pPetro)
       },
       (error) => {
         console.log(error)
@@ -348,6 +392,7 @@ export class SubcontractorComponent implements OnInit {
 
   async ProcesarOblicacion() {
     this.IpagarRecaudacion.id_opp = this.idRealSUB
+    this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
     this.IpagarRecaudacion.status_pc = 0
     this.IpagarRecaudacion.tipo_pago_pc = 5
     this.IpagarRecaudacion.monto_pc = '0'
@@ -360,7 +405,7 @@ export class SubcontractorComponent implements OnInit {
     this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
     await this.generarConciliacion.GuardarCreacionRecaudacionIndividual(this.IpagarRecaudacion)
       .then((resultado) => {
-        console.log(resultado)
+        // console.log(resultado)
         this.utilService.alertConfirmMini('success', 'Recibo Guardado Exitosamente')
       })
       .catch((error) => {
