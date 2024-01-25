@@ -122,8 +122,33 @@
               </div>
             </div> -->
 
-          <div class="form-group" align="center">
-            <!-- <form #form="ngForm"> -->
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="custom-control custom-switch custom-switch-success">
+                  <p class="mb-50">Eres Subcontratista?</p>
+                  <input type="checkbox" class="custom-control-input" id="customSwitch111" [checked]="checkboxValue" (change)="toggleCheckbox($event)"  />
+                  <label class="custom-control-label" for="customSwitch111">
+                    <span class="switch-icon-left"><i data-feather="check"></i></span>
+                    <span class="switch-icon-right"><i data-feather="x"></i></span>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
+                [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
+              <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
+                <div *ngIf="recaptcha.errors?.['required']">El reCAPTCHA es requerido.</div>
+                </div>
+              </div>
+
+          </div>
+
+
+
+
+          <!-- <div class="form-group" align="center">
             <div class="row mt-3">
               <div class="col-sm-12 mb-2">
                 <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
@@ -133,8 +158,9 @@
                 </div>
               </div>
             </div>
-            <!-- </form> -->
-          </div>
+          </div> -->
+
+          <br>
 
           <button [disabled]="loading" *ngIf="btnShow" (click)="send(form)" class="btn btn-primary btn-block"
             tabindex="4" rippleEffect>

@@ -1,6 +1,6 @@
 import { Component, HostListener, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationExtras } from '@angular/router';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -28,6 +28,9 @@ export class AuthLoginV2Component implements OnInit {
   onRightClick(event) {
     event.preventDefault();
   }
+
+  checkboxValue = false;
+  checkboxControl = new FormControl(this.checkboxValue);
 
   public xAuditoria: Auditoria = {
     id: '',
@@ -209,6 +212,11 @@ export class AuthLoginV2Component implements OnInit {
     });
   }
 
+  toggleCheckbox(event: any) {
+    this.checkboxValue = event.target.checked;
+    this.checkboxControl.setValue(this.checkboxValue);
+  }
+
 
   public send(form: NgForm): void {
     // console.log(form.invalid)
@@ -252,17 +260,26 @@ export class AuthLoginV2Component implements OnInit {
     this.loading = true;
     const md5 = new Md5();
     const password = md5.appendStr(this.clave).end()
-    var Xapi = {
-      "funcion": 'IPOSTEL_R_Login',
-      "parametros": this.usuario + ',' + password
+    // var Xapi = {
+    //   "funcion": 'IPOSTEL_R_Login',
+    //   "parametros": this.usuario + ',' + password
+    // }
+    if (this.checkboxValue == false) {
+      this.xAPI.funcion = "IPOSTEL_R_LoginOperador" 
+      this.xAPI.parametros = this.usuario + ',' + password 
+      this.xAPI.valores = ''
+      // alert('Eres Operador') 
+    } else {
+      // alert('Eres subcontratista')
+      this.xAPI.funcion = "IPOSTEL_R_LoginSubcontratista" 
+      this.xAPI.parametros = this.usuario + ',' + password
+      this.xAPI.valores = ''
     }
-    this.loginService.getLoginExternas(Xapi).subscribe(
+    this.loginService.getLoginExternas(this.xAPI).subscribe(
       (data) => {
-        // console.log(data);
         const stoken = jwt_decode(data.token)
         this.sessionTOKEN = stoken
         const tokenSession = this.sessionTOKEN.Usuario[0].status_empresa
-        // console.log(tokenSession)
         switch (tokenSession) {
           case 0:
             this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta aun no se encuentra validada por <strong><font color="red">IPOSTEL</font></strong>, porfavor intente de nuevo mas tarde.');
@@ -276,8 +293,8 @@ export class AuthLoginV2Component implements OnInit {
             this.xAuditoria.ip = ''
             this.xAuditoria.mac = ''
             this.xAuditoria.usuario = this.itk.token
-            this.xAuditoria.funcion = Xapi.funcion,
-            this.xAuditoria.parametro = Xapi.parametros,
+            this.xAuditoria.funcion = this.xAPI.funcion,
+            this.xAuditoria.parametro = this.xAPI.parametros,
             this.xAuditoria.metodo = 'Entrando al Sistema',
             this.xAuditoria.fecha = Date()
             this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
@@ -286,7 +303,6 @@ export class AuthLoginV2Component implements OnInit {
             this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
             this.utilservice.alertConfirmMini('success', `Bienvenido al IPOSTEL`);
             this._router.navigate(['']).then(() => { window.location.reload() });
-            // return;
             break;
           case 2:
             this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta Deshabilitada por <strong><font color="red">REVOCATORIA</font></strong>, porfavor pongase en contacto con la administración de IPOSTEL.');
@@ -306,23 +322,11 @@ export class AuthLoginV2Component implements OnInit {
           default:
             break;
         }
-
-        // if (tokenSession != '0') {
-        //   this.itk = data;
-        //   sessionStorage.setItem("token", this.itk.token);
-        //   this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
-        //   this.utilservice.alertConfirmMini('success', `Bienvenido al IPOSTEL`);
-        //   this._router.navigate(['']).then(() => {window.location.reload()});
-        //   return;
-        // } else {
-        //   this.loading = false;
-        //   this.utilservice.alertConfirmMini('error', '<strong><font color="red">Oops lo sentimos!</font></strong> <br> Estimado usuario su cuenta aun no se encuentra validada por <strong><font color="red">IPOSTEL</font></strong>, porfavor intente de nuevo mas tarde.');
-        // }
       },
       (error) => {
         this.loading = false;
         this._router.navigate(['login'])
-        this.utilservice.alertConfirmMini('error', 'Verifique los datos, e intente nuevamente')
+        this.utilservice.alertConfirmMini('error', 'Usuario y/o Contraseña Incorrectos, Verifique e Intente Nuevamente')
         this.usuario = ''
         this.clave = ''
       }
