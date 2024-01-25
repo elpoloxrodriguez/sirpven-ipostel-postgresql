@@ -121,7 +121,7 @@ export class StatementOfPartiesComponent implements OnInit {
   public PrecioMantenimiento
   public PrecioMantenimientoX
   public PrecioMantenimientoXT
-  public PrecioMantenimientoXTF
+  public PrecioMantenimientoXTF : number = 0
   public MontoPetroTotalSumaServicio
   public MantenimientoYSeguridad = []
 
@@ -636,6 +636,7 @@ export class StatementOfPartiesComponent implements OnInit {
 
   ListaDeclaracionMovilizacionPiezasDECLARAR() {
     this.DeclaracionPiezasLength = []
+    this.selected = 0
     this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_date_id_Declarar"
     this.xAPI.parametros = this.idOPP + ',' + atob(this.rutaActiva.snapshot.params.id) + ',' + 0
     this.xAPI.valores = ''
@@ -655,8 +656,10 @@ export class StatementOfPartiesComponent implements OnInit {
         var montoMant = this.totalBolivares
         var TotalMontoPagar = montoPagar
         var TotalMontoPagar = montoPagar +  this.totalBolivares  //completo y mantenimiento 
-        var TotalMontoPagarConvertido = TotalMontoPagar.toFixed(2)
-        this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
+        var TotalMontoPagarConvertido = parseFloat(TotalMontoPagar.toFixed(2))
+        // this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
+        var TotalMante = TotalMontoPagarConvertido
+        this.PrecioMantenimientoXTF = TotalMontoPagarConvertido
         var ok = parseFloat(SumaMontos) / parseFloat(this.PetroDia)
         var val = ok.toFixed(8)
         this.MontoPetro = 'P ' + val
@@ -814,7 +817,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.IpagarRecaudacion.tipo_pago_pc = 1
         this.IpagarRecaudacion.monto_pc = '0'
         this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
-        this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF
+        this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF.toString()
         this.IpagarRecaudacion.monto_pagar = this.MontoCausado
         this.IpagarRecaudacion.dolar_dia = this.DolarDia
         this.IpagarRecaudacion.petro_dia = this.PetroDia
@@ -905,6 +908,7 @@ export class StatementOfPartiesComponent implements OnInit {
   }
 
   async SIDeclararPiezasIPOSTEL(modal) {
+    this.ListaDeclaracionMovilizacionPiezasDECLARAR()
     this.PetroConvertidoBolivares = this.PetroConvertidoBolivaresx
     Swal.fire({
       title: 'Visualizar Resumen de Declaración?',

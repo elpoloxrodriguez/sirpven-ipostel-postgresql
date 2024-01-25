@@ -1263,24 +1263,24 @@
         <hr>
         <div class="col-md-12 col-12" align="center">
           <label><strong>
-              <font color="red">Descripcion Total de la Declaración de Piezas</font>
+              <font color="red">Descripcion del Monto Total de la Declaración de Piezas</font>
             </strong></label>
         </div>
         <div class="row d-flex align-items-end">
           <div class="col-md-3 col-12">
             <div class="form-group">
-              <label for=" itempmvp">Monto Total a Pagar</label>
+              <label for=" itempmvp">Monto Total de Declaración</label>
               <input type="text" class="form-control" autocomplete="off" [(ngModel)]="MontoCausadoX"
                 [ngModelOptions]="{standalone: true}" readonly placeholder="Monto a Pagar" />
             </div>
           </div>
-          <div class="col-md-3 col-12">
+          <!-- <div class="col-md-3 col-12">
             <div class="form-group">
               <label for=" itempmvp">Monto a Pagar en Petros</label>
               <input type="text" class="form-control" autocomplete="off" [(ngModel)]="MontoPetro"
                 [ngModelOptions]="{standalone: true}" readonly placeholder="Monto a Pagar Petros" />
             </div>
-          </div>
+          </div> -->
           <div class="col-md-3 col-12">
             <div class="form-group">
               <label for=" itempmvp">Total de Declaraciones</label>
@@ -1295,10 +1295,17 @@
                 [ngModelOptions]="{standalone: true}" placeholder="Mes" />
             </div>
           </div>
+          <div class="col-md-3 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Monto Total a Pagar en Bolivares</label>
+              <input type="text" class="form-control" autocomplete="off" [(ngModel)]="PrecioMantenimientoXTF"
+                [ngModelOptions]="{standalone: true}" readonly placeholder="Monto a Pagar" />
+            </div>
+          </div>
 
         </div>
         <hr>
-        <div class="col-md-12 col-12" align="center">
+        <!-- <div class="col-md-12 col-12" align="center">
           <label><strong>
               <font color="red">Monto Total a Declarar</font>
             </strong></label>
@@ -1318,7 +1325,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </form>
     </div>
     <!-- Header Starts -->
