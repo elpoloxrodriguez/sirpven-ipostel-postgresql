@@ -40,7 +40,8 @@
                   </p>
                   <small>
                     <strong>
-                      <p style="color: #002aff;">Tiempo de Declaración Activo</p>
+                      <p style="color: #002aff;" *ngIf="dat.btn == true">Tiempo de Declaración Activo</p>
+                      <p style="color: #ff0000;" *ngIf="dat.btn == false">Tiempo de Declaración Finalizado</p>
                     </strong>
                   </small>
                 </span>
