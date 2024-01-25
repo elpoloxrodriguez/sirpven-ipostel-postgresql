@@ -533,7 +533,7 @@ export class StatementOfPartiesComponent implements OnInit {
   }
 
   RegresarAtras(){
-    this.router.navigate(['/postage/postage-per-month']).then(() => { window.location.reload() });
+    this.router.navigate(['/postage/postage-per-month']);
   }
 
   ListaMantenimientoSeguidad() {

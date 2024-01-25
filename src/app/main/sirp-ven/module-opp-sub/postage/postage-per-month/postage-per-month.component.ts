@@ -5,6 +5,7 @@ import { UtilService } from '@core/services/util/util.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from "jwt-decode";
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-postage-per-month',
@@ -15,6 +16,8 @@ import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 export class PostagePerMonthComponent implements OnInit {
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
+  @BlockUI() blockUI: NgBlockUI;
+  @BlockUI('section-block') sectionBlockUI: NgBlockUI;
 
   public fecha = new Date();
   public mes = this.fecha.getMonth() + 1;
@@ -100,19 +103,17 @@ export class PostagePerMonthComponent implements OnInit {
   }
 
   async ConsultarDeclaracion(id: any) {
+    this.sectionBlockUI.start('Cargando datos, por favor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_MovimientosPiezasMeses"
     this.xAPI.parametros = `${id}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-
         this.fechaActual.setMonth(this.fechaActual.getMonth() - 1);
         var mesAnterior = this.fechaActual.getMonth(); // Ten en cuenta que los meses en JavaScript comienzan desde 0 (enero) hasta 11 (diciembre)
         var anioAnterior = this.fechaActual.getFullYear()
         this.mesEncode64 = btoa(anioAnterior + '-' + mesAnterior)
         this.mesDecode64 = anioAnterior + '-' + mesAnterior
-
-
         this.meses = [
           { name: "ENERO", fecha: anioAnterior, btn: this.BtnPago, mesx: 0, value: anioAnterior + '-' + '01', mes: btoa(anioAnterior + '-' + '01') },
           { name: "FEBRERO", fecha: anioAnterior, btn: this.BtnPago, mesx: 1, value: anioAnterior + '-' + '02', mes: btoa(anioAnterior + '-' + '02') },
@@ -131,8 +132,6 @@ export class PostagePerMonthComponent implements OnInit {
         for (let i = 0; i <= mesAnterior; i++) {
           this.Xdata.push(this.meses[i])
         }
-
-
         this.meses.map(e => {
           e.monto = 0
           e.montox = 0
@@ -151,6 +150,7 @@ export class PostagePerMonthComponent implements OnInit {
             return e
           });
         });
+        this.sectionBlockUI.stop()
       },
       (error) => {
         console.log(error)
@@ -158,7 +158,7 @@ export class PostagePerMonthComponent implements OnInit {
   }
 
   rutaDeclarar(mes: any) {
-    this.router.navigate([`/postage/movement-of-parts/${mes}`]).then(() => { window.location.reload() });
+    this.router.navigate([`/postage/movement-of-parts/${mes}`]);
   }
 
 
