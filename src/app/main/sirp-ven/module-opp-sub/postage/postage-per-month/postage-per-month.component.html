@@ -34,9 +34,9 @@
                   <p class="card-text">
                     <strong>{{ dat.name }} - {{ dat.fecha }}</strong>
                     &nbsp;
-                    <button type="submit" class="btn btn-primary btn-sm" *ngIf="dat.monto == 0" (click)="rutaDeclarar(dat.mes)">Declarar</button>
+                    <button type="submit" class="btn btn-warning btn-sm" *ngIf="dat.monto == 0" (click)="rutaDeclarar(dat.mes)">Declarar</button>
                     &nbsp;
-                    <button type="submit" class="btn btn-info btn-sm" (click)="rutaVisualizar(ModalVisualizar,dat.value)">Visualizar</button>
+                    <button type="submit" class="btn btn-success btn-sm" *ngIf="dat.monto != 0" (click)="rutaVisualizar(ModalVisualizar,dat.value)">Visualizar</button>
                   </p>
                   <small>
                     <strong>
@@ -49,8 +49,8 @@
                     <strong>Piezas:</strong> {{ dat.piezas | number }} - <strong>Monto:</strong> {{ dat.monto }}
                   </span>
                 </p>
-                <img *ngIf="dat.monto == 0" src="../../../../../../assets/images/icons/warning.webp" style="position: absolute; top: 20px; right: 10px; width: 35px; height: auto;" alt="image">
-                <img *ngIf="dat.monto != 0" src="../../../../../../assets/images/icons/success.webp" style="position: absolute; top: 20px; right: 10px; width: 25px; height: auto;" alt="image">
+                <img *ngIf="dat.monto == 0" src="assets/images/icons/warning.webp" style="position: absolute; top: 20px; right: 10px; width: 35px; height: auto;" alt="image">
+                <img *ngIf="dat.monto != 0" src="assets/images/icons/success.webp" style="position: absolute; top: 20px; right: 10px; width: 25px; height: auto;" alt="image">
               </div>
             </div>
             
