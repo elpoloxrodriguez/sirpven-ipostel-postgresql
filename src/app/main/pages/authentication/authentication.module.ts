@@ -42,49 +42,40 @@ const routes: Routes = [
     path: 'login',
     component: AuthLoginV2Component,
     // canActivate: [AuthGuard,AuthGuardGuard],
-    data: { animation: 'misc' }
   },
   {
     path: 'certificate/:id',
     component: AuthLoginV2Component,
     // canActivate: [AuthGuard,AuthGuardGuard],
-    data: { animation: 'misc' }
   },
   {
     path: 'philately/:id',
     component: AuthLoginV2Component,
     // canActivate: [AuthGuard,AuthGuardGuard],
-    data: { animation: 'misc' }
   },
   {
     path: 'sirpv-admin',
     component: AuthAdminComponent,
-    data: { animation: 'misc' }
   },
   {
     path: '',
     component: AuthLoginV2Component,
-    data: { animation: 'misc' }
   },
   {
     path: 'register-private-post-offices',
     component: RegisterOppComponent,
-    data: { animation: 'misc' }
   },
-  {
-    path: 'register-private-post-offices-subcontrator',
-    component: AuthRegisterSubcontratorComponent,
-    data: { animation: 'misc' }
-  },
+  // {
+  //   path: 'register-private-post-offices-subcontrator',
+  //   component: AuthRegisterSubcontratorComponent,
+  // },
   {
     path: 'reset-password/:id',
     component: AuthResetPasswordV2Component,
-    data: { animation: 'misc' }
   },
   {
     path: 'forgot-password',
     component: AuthForgotPasswordV2Component,
-    data: { animation: 'misc' }
   },
 ];
 
