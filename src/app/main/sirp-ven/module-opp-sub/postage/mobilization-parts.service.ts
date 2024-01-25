@@ -139,9 +139,10 @@ export class MobilizationPartsService {
 
     async UpdateMovilizacionPiezas(declarar: any): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.xAPI.funcion = "IPOSTEL_U_MovilizacionPiezasIdFactura";
-            this.xAPI.parametros = ''
-            this.xAPI.valores = JSON.stringify(declarar)
+            this.xAPI.funcion = "IPOSTEL_U_MovilizacionPiezasIdFacturaX";
+            this.xAPI.parametros = `${declarar.id_factura},${declarar.id_opp},${declarar.mes}`
+            this.xAPI.valores = ''
+            // this.xAPI.valores = JSON.stringify(declarar)
             this.apiService.Ejecutar(this.xAPI).subscribe(
                 (data) => {
                     if (data.tipo == 1) {

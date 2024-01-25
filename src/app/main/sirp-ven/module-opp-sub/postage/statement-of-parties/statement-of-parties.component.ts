@@ -223,6 +223,7 @@ export class StatementOfPartiesComponent implements OnInit {
     this.idOPP = this.token.Usuario[0].id_opp
     this.fechaUri = atob(this.rutaActiva.snapshot.params.id);
 
+
     this.Precio_Dolar_Petro()
     this.ListaMantenimientoSeguidad()
     await this.BloqueoBtnDeclaracion()
@@ -789,6 +790,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.rowsDeclaracionPiezas = []
         this.modalService.dismissAll('Close')
         this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
+        this.router.navigate(['/postage/postage-per-month'])
       })
       .catch((error) => {
         this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
@@ -826,21 +828,20 @@ export class StatementOfPartiesComponent implements OnInit {
         this.IpagarRecaudacion.user_created = this.idOPP
 
         this.sectionBlockUI.start('Guardando Declaración, por favor Espere!!!');
+
         this.movilizacionPiezas.DeclararMovilizacionPiezas(this.IpagarRecaudacion)
-
           .then((resultado) => {
-            this.idFactura = `${resultado}`
-            this.DeclaracionPiezasLength.map(e => {
-              e.id_factura = resultado
-              this.UpdateMovilizacionPiezasDeclaracion.push(e)
-            });
+            this.idFactura = resultado
 
-            for (let i = 0; i < this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
-              const element = this.UpdateMovilizacionPiezasDeclaracion[i];
-              this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
-                this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
-              this.MezclarPiezasFactura(this.IidFacturaMovilizacionPiezas)
+            let ok = {
+              id_factura : this.idFactura,
+              id_opp: this.idOPP,
+              mes: this.fechaUri
             }
+            this.MezclarPiezasFactura(ok)
+            this.utilService.alertConfirmMini('success', 'Liquidación Generada Satisfactoriamente')
+
+
           })
           .catch((error) => {
             // Manejar el reject
@@ -852,56 +853,6 @@ export class StatementOfPartiesComponent implements OnInit {
             // this.ListaDeclaracionMovilizacionPiezasDECLARAR()
             // this.sectionBlockUI.stop()
           });
-
-
-
-        // this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
-        // this.xAPI.parametros = ''
-        // this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)
-        // this.sectionBlockUI.start('Guardando Declaración, por favor Espere!!!');
-        // this.apiService.Ejecutar(this.xAPI).subscribe(
-        //   (data) => {
-        //     if (data.tipo === 1) {
-        //       this.idFactura = `${data.msj}`
-        //       console.log(data)
-        //       this.DeclaracionPiezasLength.map(e => {
-        //         e.id_factura = data.msj
-        //         this.UpdateMovilizacionPiezasDeclaracion.push(e)
-        //       });
-        //       for (let i = 0; i < this.UpdateMovilizacionPiezasDeclaracion.length; i++) {
-        //         const element = this.UpdateMovilizacionPiezasDeclaracion[i];
-        //           this.IidFacturaMovilizacionPiezas.id_factura = this.idFactura,
-        //           this.IidFacturaMovilizacionPiezas.id_movilizacion_piezas = element.id_movilizacion_piezas
-        //         this.xAPI.funcion = "IPOSTEL_U_MovilizacionPiezasIdFactura";
-        //         this.xAPI.parametros = ''
-        //         this.xAPI.valores = JSON.stringify(this.IidFacturaMovilizacionPiezas)
-        //         this.apiService.Ejecutar(this.xAPI).subscribe(
-        //           (datax) => {
-        //             if (datax.tipo === 1) {
-        //               this.modalService.dismissAll('Close')
-        //               this.sectionBlockUI.stop()
-        //               this.utilService.alertConfirmMini('success', 'Declaración Registrada Exitosamente!')
-        //               this.router.navigate(['payments/payments-list']).then(() => { window.location.reload() });
-        //             } else {
-        //               this.sectionBlockUI.stop();
-        //               this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> No se agregaron las declaraciones de movilizacion de piezas a la factura Verifique e intente de nuevo')
-        //             }
-        //           },
-        //           (error) => {
-        //             this.sectionBlockUI.stop();
-        //             this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
-        //           }
-        //         )
-        //       }
-        //     } else {
-        //       this.sectionBlockUI.stop();
-        //       this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
-        //     }
-        //   },
-        //   (error) => {
-        //     console.log(error)
-        //   }
-        // )
 
       }
     })
