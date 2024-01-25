@@ -13,20 +13,14 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { AngularFileUploaderComponent } from 'angular-file-uploader';
 import { MobilizationPartsService } from '../mobilization-parts.service';
 
-export const repeaterAnimation = trigger('heightIn', [
-  transition(':enter', [
-    style({ opacity: '0', height: '0px' }),
-    animate('.2s ease-out', style({ opacity: '1', height: '*' }))
-  ])
-]);
+
 
 @Component({
   selector: 'app-statement-of-parties',
   templateUrl: './statement-of-parties.component.html',
   styleUrls: ['./statement-of-parties.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [NgbModalConfig, NgbModal],
-  animations: [repeaterAnimation]
+  providers: [NgbModalConfig, NgbModal]
 })
 export class StatementOfPartiesComponent implements OnInit {
 
@@ -536,6 +530,10 @@ export class StatementOfPartiesComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  RegresarAtras(){
+    this.router.navigate(['/postage/postage-per-month']).then(() => { window.location.reload() });
   }
 
   ListaMantenimientoSeguidad() {
