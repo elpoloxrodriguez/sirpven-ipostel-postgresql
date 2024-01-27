@@ -56,6 +56,7 @@ import { PaymentsObligationsModule } from '../sirp-ven/module-admin/payments-obl
 import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-offices/branch-offices.module';
 import { ReportsRankingComponent } from '../sirp-ven/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
 import { UsersModule } from '../sirp-ven/users/users.module';
+import { AuditModule } from '../audit/audit.module';
 
 
 
@@ -112,7 +113,8 @@ import { UsersModule } from '../sirp-ven/users/users.module';
     DupvenRoutingModule,
     PaymentsObligationsModule,
     BranchOfficesModule,
-    UsersModule
+    UsersModule,
+    AuditModule
   ],
   exports: [],
   providers: [DatePipe]

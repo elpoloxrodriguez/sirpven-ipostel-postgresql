@@ -12,7 +12,7 @@ import { CoreMenuService } from '@core/components/core-menu/core-menu.service';
 import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
 import { Md5 } from 'ts-md5/dist/md5';
-import { Auditoria, InterfaceService } from '@core/services/auditoria/auditoria.service';
+import { Auditoria, InterfaceService } from 'app/main/audit/auditoria.service';
 
 
 @Component({
@@ -53,6 +53,8 @@ export class AuthAdminComponent implements OnInit {
 
   //  QR certifucado
   public Qr
+
+  public tokenA
 
   public infoUsuario
   public iToken: IToken = { token: '', };
@@ -172,30 +174,37 @@ export class AuthAdminComponent implements OnInit {
     this.loading = true;
     const md5 = new Md5();
     const password = md5.appendStr(this.clave).end()
-    var Xapi = {
-      "funcion": 'IPOSTEL_R_Login_admin',
-      "parametros": this.usuario + ',' + password
-    }
-    this.loginService.getLoginExternas(Xapi).subscribe(
+    // var Xapi = {
+    //   "funcion": 'IPOSTEL_R_Login_admin',
+    //   "parametros": this.usuario + ',' + password
+    // }
+    this.xAPI.funcion = "IPOSTEL_R_Login_admin"
+    this.xAPI.parametros = this.usuario + ',' + password
+    this.xAPI.valores = ''
+    this.loginService.getLoginExternas(this.xAPI).subscribe(
       (data) => {
         // console.log(data)
         if (sessionStorage.getItem("token") != '') {
           this.itk = data;
-          // INICIO AGREGAR AUDITORIA //
+          sessionStorage.setItem("token", this.itk.token);
+
+          // INICIO AGREGAR AUDITORIA //                
+          this.tokenA = jwt_decode(sessionStorage.getItem('token'))
           this.xAuditoria.id = this.utilservice.GenerarUnicId()
-          this.xAuditoria.ip = ''
-          this.xAuditoria.mac = ''
-          this.xAuditoria.usuario = this.itk.token
-          this.xAuditoria.funcion = Xapi.funcion,
-            this.xAuditoria.parametro = Xapi.parametros,
-            this.xAuditoria.metodo = 'Entrando al Sistema',
-            this.xAuditoria.fecha = Date()
-          this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+          this.xAuditoria.usuario = this.tokenA.Usuario[0]
+          this.xAuditoria.funcion = this.xAPI.funcion
+          this.xAuditoria.parametro = this.xAPI.parametros
+          this.xAuditoria.metodo = 'Entrando al Sistema'
+          this.xAuditoria.fecha = Date()
           // FIN AGREGAR AUDITORIA //
 
-          sessionStorage.setItem("token", this.itk.token);
+
           this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
           // console.log(this.infoUsuario.Usuario[0])
+
+          // AUDITORIA //
+          this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+          // AUDITORIA //
           this.utilservice.alertConfirmMini('success', `Bienvenido al SIRP-IPOSTEL`);
           this._router.navigate(['/home']).then(() => { window.location.reload() });
           return;

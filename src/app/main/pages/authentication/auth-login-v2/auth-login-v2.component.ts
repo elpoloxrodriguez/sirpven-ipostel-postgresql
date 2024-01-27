@@ -13,7 +13,7 @@ import { UtilService } from '@core/services/util/util.service';
 import jwt_decode from "jwt-decode";
 import { VERSION } from '@angular/core';
 import { Md5 } from 'ts-md5/dist/md5';
-import { Auditoria, InterfaceService } from '@core/services/auditoria/auditoria.service';
+import { Auditoria, InterfaceService } from 'app/main/audit/auditoria.service';
 
 
 @Component({
@@ -35,13 +35,11 @@ export class AuthLoginV2Component implements OnInit {
   public xAuditoria: Auditoria = {
     id: '',
     usuario: '',
-    ip: '',
-    mac: '',
     funcion: '',
     metodo: '',
     fecha: '',
   }
-  
+
   public xAPI: IAPICore = {
     funcion: '',
     parametros: '',
@@ -91,6 +89,8 @@ export class AuthLoginV2Component implements OnInit {
   ]
   public TipoSeleccion
 
+  public tokenA
+
   public idFnx // ID de la funcion
 
   /**
@@ -108,7 +108,7 @@ export class AuthLoginV2Component implements OnInit {
     private _router: Router,
     private utilservice: UtilService,
     private rutaActiva: ActivatedRoute,
-    private auditoria : InterfaceService
+    private auditoria: InterfaceService
   ) {
     this.token = undefined;
     this._unsubscribeAll = new Subject();
@@ -265,13 +265,13 @@ export class AuthLoginV2Component implements OnInit {
     //   "parametros": this.usuario + ',' + password
     // }
     if (this.checkboxValue == false) {
-      this.xAPI.funcion = "IPOSTEL_R_LoginOperador" 
-      this.xAPI.parametros = this.usuario + ',' + password 
+      this.xAPI.funcion = "IPOSTEL_R_LoginOperador"
+      this.xAPI.parametros = this.usuario + ',' + password
       this.xAPI.valores = ''
       // alert('Eres Operador') 
     } else {
       // alert('Eres subcontratista')
-      this.xAPI.funcion = "IPOSTEL_R_LoginSubcontratista" 
+      this.xAPI.funcion = "IPOSTEL_R_LoginSubcontratista"
       this.xAPI.parametros = this.usuario + ',' + password
       this.xAPI.valores = ''
     }
@@ -288,20 +288,23 @@ export class AuthLoginV2Component implements OnInit {
             break;
           case 1:
             this.itk = data;
-            // INICIO AGREGAR AUDITORIA //
-            this.xAuditoria.id = this.utilservice.GenerarUnicId()
-            this.xAuditoria.ip = ''
-            this.xAuditoria.mac = ''
-            this.xAuditoria.usuario = this.itk.token
-            this.xAuditoria.funcion = this.xAPI.funcion,
-            this.xAuditoria.parametro = this.xAPI.parametros,
-            this.xAuditoria.metodo = 'Entrando al Sistema',
-            this.xAuditoria.fecha = Date()
-            this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
-            // FIN AGREGAR AUDITORIA //
             sessionStorage.setItem("token", this.itk.token);
             this.infoUsuario = jwt_decode(sessionStorage.getItem('token'));
+            // AUDITORIA //
+            this.tokenA = jwt_decode(sessionStorage.getItem('token'))
+            this.xAuditoria.id = this.utilservice.GenerarUnicId()
+            this.xAuditoria.usuario = this.tokenA.Usuario[0]
+            this.xAuditoria.funcion = this.xAPI.funcion
+            this.xAuditoria.parametro = this.xAPI.parametros
+            this.xAuditoria.metodo = 'Entrando al Sistema'
+            this.xAuditoria.fecha = Date()
+            // AUDITORIA //
+
             this.utilservice.alertConfirmMini('success', `Bienvenido al IPOSTEL`);
+            // INICIO AGREGAR AUDITORIA //
+            this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+            // FIN AGREGAR AUDITORIA //
+
             this._router.navigate(['']).then(() => { window.location.reload() });
             break;
           case 2:

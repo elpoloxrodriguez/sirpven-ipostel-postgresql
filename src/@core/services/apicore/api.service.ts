@@ -97,7 +97,16 @@ export class ApiService {
     return this.http.get<any>(url, this.httpOptions);
   }
 
-
+  ExecColeccionAuditoria(xObjeto, token): Observable<any> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    };
+    var url = "/v1/api/mcoleccion" + this.hash;
+    return this.http.post<any>(url, xObjeto, httpOptions);
+  }
 
 
   Guardar(xAPI: IAPICore, sApi: string): Observable<any> {

@@ -58,6 +58,14 @@ import { BranchOfficesComponent } from './main/sirp-ven/module-opp-sub/business/
 import { OppReportsModule } from './main/sirp-ven/module-opp-sub/opp-reports/opp-reports.module';
 import { ProfileComponent } from './main/sirp-ven/users/profile/profile.component';
 
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs);
+
+
+
 const appRoutes: Routes = [
   {
     path: '',
@@ -128,6 +136,7 @@ const appRoutes: Routes = [
     // PagesModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
     { provide: [ LocationStrategy, AuthGuardGuard,  JsonPipe], useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS,useClass: AuthInterceptorService, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

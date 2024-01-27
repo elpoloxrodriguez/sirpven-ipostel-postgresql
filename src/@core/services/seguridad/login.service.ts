@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
-import { Auditoria, InterfaceService } from '../auditoria/auditoria.service';
 import { ApiService } from '../apicore/api.service';
 import { UtilService } from '../util/util.service';
-
+import jwt_decode from "jwt-decode";
+import { Auditoria, InterfaceService } from 'app/main/audit/auditoria.service';
 
 export interface IUsuario {
   nombre: string,
@@ -56,6 +56,8 @@ export class LoginService {
   public SToken: any
 
   public Token: any
+
+  public token
 
   public Usuario: any
 
@@ -126,16 +128,16 @@ export class LoginService {
         //   'success'
         // )
 
-        // INICIO AGREGAR AUDITORIA //
-        this.xAuditoria.id = this.utilservice.GenerarUnicId()
-        this.xAuditoria.ip = ''
-        this.xAuditoria.mac = ''
-        this.xAuditoria.usuario = sessionStorage.getItem('token')
-        this.xAuditoria.metodo = 'Salio del Sistema'
-        this.xAuditoria.fecha = Date()
-        this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
-        // FIN AGREGAR AUDITORIA //
-
+                // INICIO AGREGAR AUDITORIA //
+                this.token = jwt_decode(sessionStorage.getItem('token'));
+                this.xAuditoria.id = this.utilservice.GenerarUnicId()
+                this.xAuditoria.usuario = this.token.Usuario[0]
+                this.xAuditoria.funcion = 'IPOSTEL_R_Desconexion'
+                this.xAuditoria.metodo = 'Salio del Sistema'
+                this.xAuditoria.fecha = Date()
+                this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+                // FIN AGREGAR AUDITORIA //
+      
 
         this.router.navigate(['login']);
         sessionStorage.clear();
