@@ -84,6 +84,15 @@ export const menu: CoreMenu[] = [
     role: [1],
     url: 'dupven/opp',
   },
+      // AUDITORIA
+      {
+        id: 'audit',
+        nombre: 'Auditoria',
+        role: [3, 4],
+        icono: 'database',
+        type: 'item',
+        url: 'audit/audit',
+      },
   // OPERADORES POSTALES PRIVADOS Y SUBCONTRATISTAS
   {
     id: 'list-opp',
