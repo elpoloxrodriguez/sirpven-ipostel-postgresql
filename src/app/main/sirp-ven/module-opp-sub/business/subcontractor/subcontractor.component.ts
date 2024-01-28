@@ -179,6 +179,8 @@ export class SubcontractorComponent implements OnInit {
   public IdOPP
   public CargarSub
 
+  public MontoPetro
+
   public title_modal
   public idOPPSelected
   public ConfirmNewPassword
@@ -245,7 +247,7 @@ export class SubcontractorComponent implements OnInit {
           this.DolarDia = parseFloat(e.dolar)
           this.pDolar = e.dolar
           this.pPetro = e.petro_bolivares
-          // console.log(e)
+          this.MontoPetro = e.petro
           this.ListaMantenimientoSeguidad(this.DolarDia)
           return e
         });
@@ -300,7 +302,10 @@ export class SubcontractorComponent implements OnInit {
         this.ListaTipoObligacion = data.Cuerpo.map(e => {
          if (e.id_tipo_pagos == 5) {
           this.nombreObligacionUsoContratoSub = e.nombre_tipo_pagos
-          this.MontoObligacionUsoContratoSub = e.tasa_petro
+          let petro = e.tasa_petro * this.MontoPetro
+          let monto = petro * this.pDolar
+          this.MontoObligacionUsoContratoSub = monto
+          console.log(this.MontoObligacionUsoContratoSub)
          }
           return e
         });
