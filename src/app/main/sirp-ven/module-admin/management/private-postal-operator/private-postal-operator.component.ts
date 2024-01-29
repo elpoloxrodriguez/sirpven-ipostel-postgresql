@@ -135,7 +135,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     twitter_delegado: undefined
   }
 
-  public IUpdateStatusEmpresa : IPOSTEL_U_CambiarStatusOPPSUB = {
+  public IUpdateStatusEmpresa: IPOSTEL_U_CambiarStatusOPPSUB = {
     status_empresa: undefined,
     observacion: '',
     id_opp: 0
@@ -153,7 +153,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   public DatosEmpresa = []
   public DatosSub_OPP = []
-  
+
 
   public CrearCert: ICrearCertificados = {
     usuario: 0,
@@ -162,25 +162,27 @@ export class PrivatePostalOperatorComponent implements OnInit {
     created_user: 0
   }
 
+  public loadingIndicator: boolean = true;
+
   public IdUser
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
   public searchValue = '';
   public searchValueCOMBINACION = ''
-public searchValueListaSubC = ''
+  public searchValueListaSubC = ''
 
   public passwordTextType: boolean;
   public passwordTextTypeX: boolean;
 
   public SelectStatus = [
-    { id: 0, name: 'Inactivo'},
-    { id: 1, name: 'Activo'},
-    { id: 2, name: 'Revocatoria'},
-    { id: 3, name: 'Finiquito'},
-    { id: 4, name: 'No Movilización de Piezas'},
+    { id: 0, name: 'Inactivo' },
+    { id: 1, name: 'Activo' },
+    { id: 2, name: 'Revocatoria' },
+    { id: 3, name: 'Finiquito' },
+    { id: 4, name: 'No Movilización de Piezas' },
   ]
 
-  public cantidadCombinacion : number
+  public cantidadCombinacion: number
 
 
   public rowsCOMBINACION
@@ -208,7 +210,7 @@ public searchValueListaSubC = ''
   public TipoRegistro
 
   public title_modal
-  
+
   public valorPosicion
 
   public arregloSubcontratistas = []
@@ -229,7 +231,7 @@ public searchValueListaSubC = ''
     this.IdUser = this.token.Usuario[0].id_user
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
     // console.log(this.IdUser)
-    await this.ListaOPP_SUB()
+    await this.ListaOPP_SUB(1)
   }
 
   filterUpdate(event) {
@@ -245,43 +247,48 @@ public searchValueListaSubC = ''
     this.table.offset = 0;
   }
 
-  async CapturarNav(event) {
+  CapturarNav(event) {
     switch (event.target.id) {
       case 'ngb-nav-0':
         this.List_OPP_SUB = []
         this.rowsOPP_SUB = []
         this.n_opp = '1'
-        await this.ListaOPP_SUB()
+        this.ListaOPP_SUB(1)
         break;
       case 'ngb-nav-1':
         this.List_OPP_SUB = []
         this.rowsOPP_SUB = []
         this.n_opp = '2'
-        await this.ListaOPP_SUB()
+        this.ListaOPP_SUB(2)
         break;
-        case 'ngb-nav-2':
-          this.List_COMBINACION = []
-          this.List_ListaSubC = []
-          await this.ListaCOMBINACION()
-          break;
+      case 'ngb-nav-2':
+        this.List_COMBINACION = []
+        this.List_ListaSubC = []
+        this.ListaCOMBINACION()
+        break;
       default:
         break;
     }
   }
 
-  async ListaOPP_SUB() {
+  async ListaOPP_SUB(n_opp : any) {
+    this.loadingIndicator = true
+    this.List_OPP_SUB = []
+    this.rowsOPP_SUB = []
     this.xAPI.funcion = "IPOSTEL_R_OPP_SUB"
-    this.xAPI.parametros = this.n_opp
+    this.xAPI.parametros = n_opp.toString()
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.List_OPP_SUB = []
         data.Cuerpo.map(e => {
-          if (this.n_opp != '2') {
+          if (n_opp != '2') {
             this.List_OPP_SUB.push(e)
+            this.loadingIndicator = false
           } else {
             if (e.status_empresa == 1) {
               this.List_OPP_SUB.push(e)
+              this.loadingIndicator = false
             }
           }
         });
@@ -294,7 +301,7 @@ public searchValueListaSubC = ''
     )
   }
 
-  async EliminarOPP(data: any){
+  async EliminarOPP(data: any) {
     this.xAPI.funcion = "IPOSTEL_D_EliminarOPP"
     this.xAPI.parametros = `${data.id_opp}`
     this.xAPI.valores = ''
@@ -319,7 +326,7 @@ public searchValueListaSubC = ''
             this.rowsOPP_SUB.push(this.List_OPP_SUB)
             if (data.tipo === 1) {
               this.List_OPP_SUB = []
-              this.ListaOPP_SUB()
+              this.ListaOPP_SUB(1)
               this.modalService.dismissAll('Close')
               this.sectionBlockUI.stop()
               this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente!')
@@ -349,11 +356,11 @@ public searchValueListaSubC = ''
     )
   }
 
-  EmpresaOppSub(id: any){
+  EmpresaOppSub(id: any) {
     this.xAPI.funcion = "IPOSTEL_R_EmpresaOppSub";
     this.xAPI.parametros = `${id}`
     this.xAPI.valores = ''
-     this.apiService.Ejecutar(this.xAPI).subscribe(
+    this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.forEach(e => {
           this.DatosSub_OPP.push(e)
@@ -362,7 +369,7 @@ public searchValueListaSubC = ''
       (err) => {
         console.log(err)
       }
-     )
+    )
   }
 
   async GenerarCertificadoInscripcion(data) {
@@ -529,6 +536,7 @@ public searchValueListaSubC = ''
   }
 
   async ListaCOMBINACION() {
+    this.loadingIndicator = true
     this.List_COMBINACION = []
     this.xAPI.funcion = "IPOSTEL_R_ListaOpp_Sub_Combinada"
     this.xAPI.parametros = ''
@@ -536,21 +544,13 @@ public searchValueListaSubC = ''
       (data) => {
         data.Cuerpo.map(e => {
           this.arregloSubcontratistas.push(JSON.parse(e.subcontratistas))
-          this.List_COMBINACION.push(e)  
-          // this.List_ListaSubC.push(JSON.parse(e.sub))
-          // console.log(JSON.parse(e.sub))
+          this.List_COMBINACION.push(e)
+          this.loadingIndicator = false
         });
         const sumaCantidad = this.List_COMBINACION.reduce((total, item) => total + item.cantidad, 0);
-        // console.log(sumaCantidad); // Esto mostrará la suma de la propiedad "cantidad" en el array          // this.cantidadCombinacion = 
         this.cantidadCombinacion = sumaCantidad
-        // console.log(this.List_COMBINACION)
-        // console.log(this.List_ListaSubC[this.valorPosicion])
-        // this.rowsListaSubC = this.rowsListaSubC
-        // this.tempDataListaSubC = this.rowsListaSubC
-        // 
         this.rowsCOMBINACION = this.List_COMBINACION
         this.tempDataCOMBINACION = this.rowsCOMBINACION
-        // console.log(this.cantidadCombinacion)
       },
       (error) => {
         console.log(error)
@@ -697,7 +697,7 @@ public searchValueListaSubC = ''
         this.rowsOPP_SUB.push(this.List_OPP_SUB)
         if (data.tipo === 1) {
           this.List_OPP_SUB = []
-          this.ListaOPP_SUB()
+          this.ListaOPP_SUB(1)
           this.modalService.dismissAll('Close')
           this.sectionBlockUI.stop()
           this.utilService.alertConfirmMini('success', 'Concesión Generada Exitosamente!')
@@ -713,9 +713,9 @@ public searchValueListaSubC = ''
 
   }
 
-  CalcularFecha(event : any){
+  CalcularFecha(event: any) {
     var enero = new Date(this.ICrearConcesion.fecha_archivo_curp);
-    var febrero  = new Date(enero.setFullYear(enero.getFullYear()+event));
+    var febrero = new Date(enero.setFullYear(enero.getFullYear() + event));
     this.ICrearConcesion.periodo_contrato_curp = this.utilService.FechaMomentL(febrero)
   }
 
@@ -744,7 +744,7 @@ public searchValueListaSubC = ''
             this.rowsOPP_SUB.push(this.List_OPP_SUB)
             if (data.tipo === 1) {
               this.List_OPP_SUB = []
-              this.ListaOPP_SUB()
+              this.ListaOPP_SUB(1)
               this.modalService.dismissAll('Close')
               // this.sectionBlockUI.stop()
               this.utilService.alertConfirmMini('success', 'Concesión Revocada Exitosamente!')
@@ -833,7 +833,7 @@ public searchValueListaSubC = ''
     });
   }
 
-  async ResetStatus(){
+  async ResetStatus() {
     Swal.fire({
       title: 'Esta seguro de cambiar el estatus ?',
       text: "Tenga en cuenta que este cambio afectara al usuario!",
@@ -848,28 +848,28 @@ public searchValueListaSubC = ''
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-    this.IUpdateStatusEmpresa.id_opp = this.IDResetStatus
-    this.xAPI.funcion = 'IPOSTEL_U_CambiarStatusOPPSUB'
-    this.xAPI.parametros = ''
-    this.xAPI.valores = JSON.stringify(this.IUpdateStatusEmpresa)
-     this.apiService.EjecutarDev(this.xAPI).subscribe(
-      (data) => {
-          this.rowsOPP_SUB.push(this.List_OPP_SUB)
-          if (data.tipo == 1) {
-          this.List_OPP_SUB = []
-          this.ListaOPP_SUB()
-          this.modalService.dismissAll('Close')
-          this.utilService.alertConfirmMini('success','Felicidades<br>El Estatus fue actualizada satisfactoriamente!')
-        } else {
-          this.utilService.alertConfirmMini('error','<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
-        }
-      },
-      (error) => {
-        console.error(error)
+        this.IUpdateStatusEmpresa.id_opp = this.IDResetStatus
+        this.xAPI.funcion = 'IPOSTEL_U_CambiarStatusOPPSUB'
+        this.xAPI.parametros = ''
+        this.xAPI.valores = JSON.stringify(this.IUpdateStatusEmpresa)
+        this.apiService.EjecutarDev(this.xAPI).subscribe(
+          (data) => {
+            this.rowsOPP_SUB.push(this.List_OPP_SUB)
+            if (data.tipo == 1) {
+              this.List_OPP_SUB = []
+              this.ListaOPP_SUB(1)
+              this.modalService.dismissAll('Close')
+              this.utilService.alertConfirmMini('success', 'Felicidades<br>El Estatus fue actualizada satisfactoriamente!')
+            } else {
+              this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+            }
+          },
+          (error) => {
+            console.error(error)
+          }
+        )
       }
-    )
-      }
-     })
+    })
   }
 
   async CambiarContrasena(modal, data) {
@@ -884,36 +884,36 @@ public searchValueListaSubC = ''
     });
   }
 
-  async ResetPassword(){
+  async ResetPassword() {
     this.rowsOPP_SUB.push(this.List_OPP_SUB)
     if (this.ConfirmNewPassword != this.NewPassword) {
-      this.utilService.alertConfirmMini('error','<font color="red">Oops Lo sentimos!</font> <br> Las Contraseñas deben ser iguales!, Verifique e intente de nuevo')
+      this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Las Contraseñas deben ser iguales!, Verifique e intente de nuevo')
       this.List_OPP_SUB = []
-      this.ListaOPP_SUB()
+      this.ListaOPP_SUB(1)
     } else {
       const pwd = this.NewPassword
       this.xAPI.funcion = 'IPOSTEL_U_CambiarPasswordOPPSUB'
-      this.xAPI.parametros = `${this.idOPPSelected}`+','+this.utilService.md5(pwd)
+      this.xAPI.parametros = `${this.idOPPSelected}` + ',' + this.utilService.md5(pwd)
       this.xAPI.valores = ''
       await this.apiService.EjecutarDev(this.xAPI).subscribe(
         (data) => {
           if (data.tipo == 1) {
-          this.List_OPP_SUB = []
-          this.ListaOPP_SUB()
-          this.modalService.dismissAll('Close')
-          this.utilService.alertConfirmMini('success','Felicidades<br>La Contraseña fue actualizada satisfactoriamente!')
-        } else {
-          this.utilService.alertConfirmMini('error','<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+            this.List_OPP_SUB = []
+            this.ListaOPP_SUB(1)
+            this.modalService.dismissAll('Close')
+            this.utilService.alertConfirmMini('success', 'Felicidades<br>La Contraseña fue actualizada satisfactoriamente!')
+          } else {
+            this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+          }
+        },
+        (error) => {
+          console.error(error)
         }
-      },
-      (error) => {
-        console.error(error)
-      }
-    )
+      )
     }
   }
 
-  
+
 
 
 }

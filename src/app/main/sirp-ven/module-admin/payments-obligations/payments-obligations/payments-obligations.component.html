@@ -43,6 +43,14 @@
           </div>
         </div>
 
+        <ng-container *ngIf="loadingIndicator">
+          <div class="loading-overlay">
+            <div class="spinner-border" role="status"></div>
+            <div class="loading-message">Cargando datos por favor espere!..</div>
+          </div>
+        </ng-container>
+
+
         <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
           [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50">
 

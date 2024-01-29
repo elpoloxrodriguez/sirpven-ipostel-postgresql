@@ -58,6 +58,9 @@ export class ListPaymentsComponent implements OnInit {
   public ColumnMode = ColumnMode;
   public searchValue = '';
 
+  public loadingIndicator: boolean = true;
+
+
   public token
   public n_opp = 0
   public rowsPagosConciliacion
@@ -87,7 +90,7 @@ export class ListPaymentsComponent implements OnInit {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOPP = this.token.Usuario[0].id_opp
     await this.ListaBancosVzla()
-    await this.ListaPagosRecaudacion()
+    await this.ListaPagosRecaudacion(0)
   }
 
   async CapturarNav(event) {
@@ -95,39 +98,42 @@ export class ListPaymentsComponent implements OnInit {
       case 'ngb-nav-0':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
-        this.n_opp = 0
-        await this.ListaPagosRecaudacion()
+        // this.n_opp = 0
+        await this.ListaPagosRecaudacion(0)
         break;
       case 'ngb-nav-1':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
-        this.n_opp = 1
-        await this.ListaPagosRecaudacion()
+        // this.n_opp = 1
+        await this.ListaPagosRecaudacion(1)
         break;
       case 'ngb-nav-2':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
-        this.n_opp = 3
-        await this.ListaPagosRecaudacion()
+        // this.n_opp = 3
+        await this.ListaPagosRecaudacion(3)
         break;
       case 'ngb-nav-3':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
-        this.n_opp = 2
-        await this.ListaPagosRecaudacion()
+        // this.n_opp = 2
+        await this.ListaPagosRecaudacion(2)
         break;
       default:
         break;
     }
   }
 
-  async ListaPagosRecaudacion() {
+  async ListaPagosRecaudacion(n_opp : any) {
+    this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+    this.MontoTotalAdeudado = '0'
+    this.loadingIndicator = true;
     this.xAPI.funcion = "IPOSTEL_R_Pagos_Conciliacion"
-    this.xAPI.parametros = this.n_opp.toString()
+    this.xAPI.parametros = n_opp.toString()
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.List_Pagos_Recaudacion = []
         data.Cuerpo.map(e => {
           e.anioC = new Date(e.fecha_pc)
           e.anio = e.anioC.getFullYear()
@@ -137,6 +143,7 @@ export class ListPaymentsComponent implements OnInit {
           e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
           e.fecha = e.fecha_pc ? this.utilService.FechaMomentLL(e.fecha_pc) : ''
           this.List_Pagos_Recaudacion.push(e)
+          this.loadingIndicator = false;
         });
         // console.log(this.List_Pagos_Recaudacion)
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion;
@@ -145,6 +152,7 @@ export class ListPaymentsComponent implements OnInit {
         this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA)
       },
       (error) => {
+        this.loadingIndicator = false;
         console.log(error)
       }
     )
@@ -263,7 +271,7 @@ export class ListPaymentsComponent implements OnInit {
     await this.updateConciliacion.UpdateCreacionRecaudacionIndividual(this.ActualizarPago)
       .then((resultado) => {
         // Manejar el resolve
-        console.log('Operación exitosa:', resultado);
+        // console.log('Operación exitosa:', resultado);
         this.List_Pagos_Recaudacion = []
         this.modalService.dismissAll('Cerrar Modal')
         // this.LimpiarModal()
@@ -271,13 +279,16 @@ export class ListPaymentsComponent implements OnInit {
       })
       .catch((error) => {
         // Manejar el reject
-        console.error('Error en la operación:', error);
+        // console.error('Error en la operación:', error);
         this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
       })
       .finally(() => {
         // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
         // console.log('Procesamiento finalizado');
-        this.ListaPagosRecaudacion()
+        this.List_Pagos_Recaudacion = []
+        this.rowsPagosConciliacion = []
+        this.MontoTotalAdeudado = '0'    
+        this.ListaPagosRecaudacion(0)
         this.sectionBlockUI.stop()
       })
   }

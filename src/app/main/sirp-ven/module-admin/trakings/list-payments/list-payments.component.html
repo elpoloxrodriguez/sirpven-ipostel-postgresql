@@ -1,9 +1,9 @@
 <div class="card content-wrapper container-xxl p-0">
   <div class="card-body">
 
-    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
+    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-primary my-2 justify-content-center">
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Por Liquidar</a>
+        <a ngbNavLink (click)="CapturarNav($event)">PAGOS POR LIQUIDAR</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-primary" rippleEffect>
+                    <button type="button" class="btn btn-info" rippleEffect>
                       Monto por Liquidar <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                   </div>
                 </div>
@@ -34,6 +34,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50">
@@ -64,9 +71,8 @@
 
                 <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-primary">
-                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
-                    </div>
+                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 1" ngClass="badge-light-success"> <font size="1"> {{row.nombre_tipo_pagos}} </font> </div>
+                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 5" ngClass="badge-light-primary"> <font size="1"> {{row.nombre_tipo_pagos}} </font> </div>
                   </ng-template>
                 </ngx-datatable-column>
 
@@ -121,7 +127,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos No Liquidados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">PAGOS NO LIQUIDADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -225,7 +231,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Rechazados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">PAGOS RECHAZADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -329,7 +335,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Aprobados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">PAGOS APROBADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">

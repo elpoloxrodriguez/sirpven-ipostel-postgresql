@@ -1,9 +1,9 @@
 <div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
   <div class="card-body">
 
-    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
+    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-primary my-2 justify-content-center">
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Operadores Postales Privados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">OPERADOR POSTAL PRIVADO</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -28,6 +28,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsOPP_SUB" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
@@ -132,7 +139,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Subcontratistas</a>
+        <a ngbNavLink (click)="CapturarNav($event)">SUBCONTRATISTAS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -157,6 +164,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsOPP_SUB" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
@@ -234,7 +248,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Combinación  OPP - SUB - AGENCIAS</a>
+        <a ngbNavLink (click)="CapturarNav($event)">COMBINACIÓN  OPP - SUB - AGENCIAS</a>
         <ng-template ngbNavContent>
           <h4 align="center"><font color="red">Lista de <strong>Operadores Postales Privados</strong> con sus respectivos <strong>Subcontratistas</strong></font></h4>
           <section class="users-list-wrapper">
@@ -260,6 +274,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsCOMBINACION"  rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"

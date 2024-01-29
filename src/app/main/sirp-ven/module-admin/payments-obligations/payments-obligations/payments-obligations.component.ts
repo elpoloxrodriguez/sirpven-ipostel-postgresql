@@ -86,7 +86,9 @@ export class PaymentsObligationsComponent implements OnInit {
 
   public List_incumplimiento
 
-  resultadoOperacion: string;
+  public resultadoOperacion: string;
+
+  public loadingIndicator = true
 
   constructor(
     private apiService: ApiService,
@@ -108,6 +110,9 @@ export class PaymentsObligationsComponent implements OnInit {
 
 
   async ListaPagosObligaciones() {
+    this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+    this.loadingIndicator = true
     this.xAPI.funcion = "IPOSTEL_R_Pagos_Conciliacion_Status"
     this.xAPI.parametros = ''
     this.xAPI.valores = ''
@@ -123,6 +128,7 @@ export class PaymentsObligationsComponent implements OnInit {
           e.anioC = new Date(e.fecha_pc)
           e.anio = e.anioC.getFullYear()
           this.List_Pagos_Recaudacion.push(e)
+          this.loadingIndicator = false
         });
         // console.log(this.List_Pagos_Recaudacion)
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion;
