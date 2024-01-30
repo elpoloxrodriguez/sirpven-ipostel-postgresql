@@ -610,7 +610,6 @@
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
       <!-- Header Starts -->
-      <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
       <!-- <form method="post" enctype="multipart/form-data"  id="forma" name="forma"> -->
       <!-- <form class="form" method="post" enctype="multipart/form-data" id="forma" name="forma"
         (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
@@ -627,11 +626,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of MantenimientoYSeguridad; index as i">
+              <tr *ngFor="let item of ListaMantenimientoYSeguridad; index as i">
                 <th scope="row">{{ i + 1 }}</th>
                 <td> {{ item.iniciales_tipo_pagos }} </td>
                 <td>{{ item.nombre_tipo_pagos }}</td>
-                <td>{{ item.tasa_petro }}</td>
+                <td>{{ item.dolitar }}</td>
                 <td>{{item.bolivaresx}}</td>
               </tr>
             </tbody>
@@ -643,16 +642,15 @@
                   <font color="red">TOTAL</font>
                 </th>
                 <th>
-                  <font color="red">$ {{ totalPetros.toFixed(2) }}</font>
+                  <font color="red">{{ totalPetros }}</font>
                 </th>
                 <th>
-                  <font color="red">{{ convertirTotalBolivares }}</font>
+                  <font color="red">{{ montoPagar }}</font>
                 </th>
               </tr>
             </tfoot>
           </table>
 
-          <input type="hidden" name="identificador" value="{{hashcontrol}}" readonly="readonly">
           <div class="col-md-6 col-12">
             <div class="form-group">
               <label for=" itempmvp">Monto</label>
@@ -665,7 +663,7 @@
             <div class="form-group">
               <label for=" itempmvp">Fecha</label>
               <input type="text" name="fechaNO" class="form-control" readonly [value]="fechaActual" autocomplete="off"
-                [(ngModel)]="fechaActual" [ngModelOptions]="{standalone: true}" placeholder="Mes" />
+                [(ngModel)]="fechaActualPago" [ngModelOptions]="{standalone: true}" placeholder="Mes" />
             </div>
           </div>
 
@@ -679,7 +677,7 @@
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+    <button type="button" class="btn btn-danger" (click)="cerrarModal()" rippleEffect>
       Cerrar
     </button>
   </div>

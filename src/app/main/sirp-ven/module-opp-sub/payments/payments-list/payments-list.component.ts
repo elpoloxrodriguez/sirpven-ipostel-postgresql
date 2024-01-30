@@ -101,7 +101,9 @@ export class PaymentsListComponent implements OnInit {
   public monto: number = 0
   public conversion: number = 0
 
+  public fechaActualPago
 
+  public ListaMantenimientoYSeguridad = []
 
   public MontoRealPagar
   public token
@@ -123,6 +125,12 @@ export class PaymentsListComponent implements OnInit {
   public formattedDate = this.datePipe.transform(this.currentDate, 'MM-dd');
 
   public loadingIndicator = true
+
+  public montoPagar
+  public totalPetros
+  public manNuevo 
+
+  public rowMantenimiento = []
 
   constructor(
     private apiService: ApiService,
@@ -287,6 +295,7 @@ export class PaymentsListComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
+          e.mantenimiento = JSON.parse(e.mantenimiento)
           e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
           e.montoReal = e.monto_pagar
           e.monto_pcx = e.monto_pc
@@ -368,8 +377,61 @@ export class PaymentsListComponent implements OnInit {
     });
   }
 
+  cerrarModal(){
+    this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+
+    this.ListaPagosRecaudacion(0)
+
+    this.ListaMantenimientoYSeguridad = []
+    this.montoPagar = 0
+    this.totalPetros = 0
+    this.rowMantenimiento = []
+    this.fechaActualPago = ''
+    this.manNuevo = []
+    this.modalService.dismissAll('Accept click')
+  }
+
+  mostarDatosDetalles(row: any, nuevo: any){
+    
+    
+    this.rowMantenimiento = row.mantenimiento
+    this.fechaActualPago = row.fecha
+    const dolar = row.dolar_dia
+    
+    this.rowMantenimiento.push(nuevo)
+    
+
+    this.rowMantenimiento.map(e => {
+      e.dolitar = this.utilService.ConvertirMoneda$(parseFloat(e.tasa_petro).toFixed(2))
+      e.bolivares = (parseFloat(e.tasa_petro) * parseFloat(dolar)).toFixed(2)
+      e.bolivaresx = this.utilService.ConvertirMoneda(e.bolivares)
+      this.ListaMantenimientoYSeguridad.push(e)
+    });
+    let MontoTotalA = this.ListaMantenimientoYSeguridad.map(item => item.bolivares).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA)
+   
+    let MontoTotalB = this.ListaMantenimientoYSeguridad.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB)
+
+  }
 
   VerDetalle(modal:any, row:any){
+    // console.log(row)
+
+    let nuevo = {
+      bolivares : 0,
+      bolivaresx:  "VEF 0,00",
+      id_tipo_pagos : 0,
+      iniciales_tipo_pagos : row.iniciales_tipo_pagos,
+      nombre_tipo_pagos : row.nombre_tipo_pagos,
+      tasa_petro : (parseFloat(row.montoReal) / parseFloat(row.dolar_dia)).toFixed(2) ,
+      tipo_pago : row.tipo_pago_pc
+    }
+
+    this.mostarDatosDetalles(row, nuevo)
+
+
     this.modalService.open(modal, {
       centered: true,
       size: 'xl',
