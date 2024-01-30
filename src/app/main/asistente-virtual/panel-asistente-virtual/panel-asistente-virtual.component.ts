@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 import jwt_decode from "jwt-decode";
 import { PdfService } from '@core/services/pdf/pdf.service';
 import { CHATBOOT_C_AsistenteVirtual, CHATBOOT_U_AsistenteVirtual } from '@core/services/empresa/form-opp.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+
+
 
 @Component({
   selector: 'app-panel-asistente-virtual',
@@ -18,6 +21,10 @@ import { CHATBOOT_C_AsistenteVirtual, CHATBOOT_U_AsistenteVirtual } from '@core/
 
 })
 export class PanelAsistenteVirtualComponent implements OnInit {
+
+  @BlockUI() blockUI: NgBlockUI;
+  @BlockUI('section-block') sectionBlockUI: NgBlockUI;
+
 
   public xAPI: IAPICore = {
     funcion: '',
@@ -78,6 +85,8 @@ export class PanelAsistenteVirtualComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.sectionBlockUI.start('Sin Inicializar !!!');
+    // this.sectionBlockUI.stop();
     await this.ListaAsistenteVirtual()
   }
 

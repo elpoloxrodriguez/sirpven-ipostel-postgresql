@@ -1,9 +1,9 @@
 <div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
   <div class="card-body">
 
-    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
+    <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-primary my-2 justify-content-center">
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Pendientes</a>
+        <a ngbNavLink (click)="CapturarNav($event)">PENDIENTES</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -23,7 +23,7 @@
                 <div class="col-md-3 col-12">
                   <div class="d-flex justify-content-between align-items-center m-1">
                     <button type="button" class="btn btn-success" *ngIf="RowsLengthConciliacion >= 2" rippleEffect>
-                      Realizar Pagos Seleccionados <small>({{ selected.length }})</small></button>
+                      Realizar Seleccionados <small>({{ selected.length }})</small></button>
                   </div>
                 </div>
                 <div class="col-md-3 col-12">
@@ -40,6 +40,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" [rowHeight]="58" class="bootstrap core-bootstrap"
                 [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
@@ -149,7 +156,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Aprobados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">APROBADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -175,6 +182,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
@@ -254,7 +268,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos Rechazados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">RECHAZADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -280,6 +294,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
@@ -361,7 +382,7 @@
         </ng-template>
       </li>
       <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Pagos No Liquidados</a>
+        <a ngbNavLink (click)="CapturarNav($event)">NO LIQUIDADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -387,6 +408,13 @@
                   </div>
                 </div>
               </div>
+
+              <ng-container *ngIf="loadingIndicator">
+                <div class="loading-overlay">
+                  <div class="spinner-border" role="status"></div>
+                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsPagosConciliacion" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"

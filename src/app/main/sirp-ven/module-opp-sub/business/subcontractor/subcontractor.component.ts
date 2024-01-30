@@ -218,6 +218,8 @@ export class SubcontractorComponent implements OnInit {
   public totalBolivares = 0
   public convertirTotalBolivares
 
+  public loadingIndicator = true
+
   public item = []
   constructor(
     private apiService: ApiService,
@@ -296,6 +298,8 @@ export class SubcontractorComponent implements OnInit {
   }
 
   async LstObligaciones() {
+    this.loadingIndicator = true
+    this.ListaTipoObligacion = []
     this.xAPI.funcion = "IPOSTEL_R_Tipo_Pagos_Obligaciones";
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
@@ -305,7 +309,8 @@ export class SubcontractorComponent implements OnInit {
           let petro = e.tasa_petro * this.MontoPetro
           let monto = petro * this.pDolar
           this.MontoObligacionUsoContratoSub = monto
-          console.log(this.MontoObligacionUsoContratoSub)
+          this.loadingIndicator = false
+          // console.log(this.MontoObligacionUsoContratoSub)
          }
           return e
         });

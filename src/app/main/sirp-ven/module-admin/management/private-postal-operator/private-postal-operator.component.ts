@@ -538,6 +538,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
   async ListaCOMBINACION() {
     this.loadingIndicator = true
     this.List_COMBINACION = []
+    this.rowsCOMBINACION = []
     this.xAPI.funcion = "IPOSTEL_R_ListaOpp_Sub_Combinada"
     this.xAPI.parametros = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(

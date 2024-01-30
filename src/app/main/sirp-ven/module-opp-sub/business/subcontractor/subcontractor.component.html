@@ -26,6 +26,13 @@
           </div>
         </div>
 
+        <ng-container *ngIf="loadingIndicator">
+          <div class="loading-overlay">
+            <div class="spinner-border" role="status"></div>
+            <div class="loading-message">Cargando datos por favor espere!..</div>
+          </div>
+        </ng-container>
+
         <ngx-datatable [rows]="rowsSubcontratistas" rowHeight="auto" class="bootstrap core-bootstrap"
           [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
           [scrollbarH]="true">
@@ -42,6 +49,39 @@
             <ng-template let-rif_empresa="value" ngx-datatable-cell-template>
               <div>
                 {{ rif_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+          <ngx-datatable-column name="Estado" prop="estado_empresa" [width]="100">
+            <ng-template let-estado_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ estado_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Ciudad" prop="ciudad_empresa" [width]="100">
+            <ng-template let-ciudad_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ ciudad_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Municipio" prop="municipio_empresa" [width]="100">
+            <ng-template let-municipio_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ municipio_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Parroquia" prop="parroquia_empresa" [width]="100">
+            <ng-template let-parroquia_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ parroquia_empresa }}
               </div>
             </ng-template>
           </ngx-datatable-column>

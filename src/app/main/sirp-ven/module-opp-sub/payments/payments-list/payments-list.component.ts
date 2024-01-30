@@ -122,6 +122,7 @@ export class PaymentsListComponent implements OnInit {
   public currentDate = new Date();
   public formattedDate = this.datePipe.transform(this.currentDate, 'MM-dd');
 
+  public loadingIndicator = true
 
   constructor(
     private apiService: ApiService,
@@ -141,7 +142,7 @@ export class PaymentsListComponent implements OnInit {
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
 
     this.Precio_Dolar_Petro()
-    await this.ListaPagosRecaudacion()
+    await this.ListaPagosRecaudacion(0)
     await this.ListaBancosVzla()
     await this.ListaTiposPagos()
   }
@@ -250,35 +251,38 @@ export class PaymentsListComponent implements OnInit {
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
         this.n_opp = 0
-        await this.ListaPagosRecaudacion()
+        await this.ListaPagosRecaudacion(0)
         break;
       case 'ngb-nav-1':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
         this.n_opp = 2
-        await this.ListaPagosRecaudacion()
+        await this.ListaPagosRecaudacion(2)
         break;
       case 'ngb-nav-2':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
         this.n_opp = 3
-        await this.ListaPagosRecaudacion()
+        await this.ListaPagosRecaudacion(3)
         break;
       case 'ngb-nav-3':
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
         this.n_opp = 1
-        await this.ListaPagosRecaudacion()
+        await this.ListaPagosRecaudacion(1)
         break;
       default:
         break;
     }
   }
 
-  async ListaPagosRecaudacion() {
+  async ListaPagosRecaudacion(n_opp : any) {
+    this.loadingIndicator = true
     this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+    this.RowsLengthConciliacion = 0
     this.xAPI.funcion = "IPOSTEL_R_Pagos_Conciliacion_IDOPP"
-    this.xAPI.parametros = this.idOPP + ',' + this.n_opp
+    this.xAPI.parametros = this.idOPP + ',' + n_opp
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
@@ -291,6 +295,7 @@ export class PaymentsListComponent implements OnInit {
           e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
           this.List_Pagos_Recaudacion.push(e)
           // console.log(e)
+          this.loadingIndicator = false
         });
         // console.log(this.List_Pagos_Recaudacion)
         let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
@@ -384,7 +389,7 @@ export class PaymentsListComponent implements OnInit {
         this.rowsPagosConciliacion.push(this.List_Pagos_Recaudacion)
         if (data.tipo === 1) {
           this.List_Pagos_Recaudacion = []
-          this.ListaPagosRecaudacion()
+          this.ListaPagosRecaudacion(0)
           this.modalService.dismissAll('Close')
           this.sectionBlockUI.stop()
           this.utilService.alertConfirmMini('success', 'Pago Modificado Exitosamente!')
@@ -426,7 +431,7 @@ export class PaymentsListComponent implements OnInit {
               .finally(() => {
                 // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
                 // console.log('Procesamiento finalizado');
-                this.ListaPagosRecaudacion()
+                this.ListaPagosRecaudacion(0)
                 this.sectionBlockUI.stop()
               })
           } else {
