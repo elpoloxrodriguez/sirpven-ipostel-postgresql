@@ -277,7 +277,7 @@ export class SubcontractorComponent implements OnInit {
           e.bolivaresx = this.utilService.ConvertirMoneda(mon)
           this.MantenimientoYSeguridad.push(e)
         });
-        console.log(this.MantenimientoYSeguridad[0])
+        // console.log(this.MantenimientoYSeguridad[0])
         //Calculamos el TOTAL 
         this.totalPetros = this.MantenimientoYSeguridad.reduce((
           acc,
@@ -426,6 +426,8 @@ export class SubcontractorComponent implements OnInit {
         this.sectionBlockUI.stop()
       });
   }
+
+
 
 
 }

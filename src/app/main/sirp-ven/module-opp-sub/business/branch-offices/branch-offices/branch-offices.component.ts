@@ -62,6 +62,8 @@ export class BranchOfficesComponent implements OnInit {
 
   public ListaCompletaOPP = [];
 
+  public loadingIndicatorOPP : boolean = true
+
   public idSUB
   public SelectOPP = []
   public idOPPSubcontrato: []
@@ -74,6 +76,10 @@ export class BranchOfficesComponent implements OnInit {
   public tempDataSucursales = []
 
   public TitleModal
+
+  public OPPSub = []
+  public rowsOPPSub = []
+  public tempDataOPPSub = []
 
   public item = []
   constructor(
@@ -187,6 +193,40 @@ export class BranchOfficesComponent implements OnInit {
   }
 
 
+  async ListaOPPSUB(id:any){
+    this.loadingIndicatorOPP = true
+    this.xAPI.funcion = "IPOSTEL_R_SubcontratistaVerOpp"
+    this.xAPI.parametros = `${id}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          // console.log(e)
+          this.OPPSub.push(e)
+        });
+        this.rowsOPPSub = this.OPPSub;
+        this.tempDataOPPSub = this.rowsOPPSub
+        this.loadingIndicatorOPP = false
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  VerSubContratistas(modal:any, row:any){
+    // console.log(row)
+    this.ListaOPPSUB(row.id_suc)
+    this.TitleModal = row.nombre_empresa
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+
   async filterUpdateSubcontratistas(event) {
     // Reset ng-select on search
     const val = event.target.value.toLowerCase();
@@ -198,6 +238,21 @@ export class BranchOfficesComponent implements OnInit {
     this.rowsSucursales = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
+  }
+
+
+  filterOPPSUB(event){
+    // Reset ng-select on search
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
+    const temp = this.tempDataOPPSub.filter(function (d) {
+      return d.opp_nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // Update The Rows
+    this.rowsOPPSub = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
+
   }
 
   ModalAgregarSucursal(modal) {

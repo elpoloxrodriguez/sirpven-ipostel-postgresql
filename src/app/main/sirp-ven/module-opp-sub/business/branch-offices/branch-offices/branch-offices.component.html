@@ -111,9 +111,11 @@
                 <div ngbDropdownMenu>
                   <div>
                     <a (click)="AgregarContrato(AgregarSubcontrato,row)" ngbDropdownItem><span
-                        [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span> Agregar Subcontrato</a>
-                    <a (click)="EliminarContrato(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                        [size]="16" [class]="'mr-50'"></span> Eliminar Subcontrato</a>
+                        [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span> Agregar OPP</a>
+                    <a (click)="VerSubContratistas(ModalVerSubContratistas,row)" ngbDropdownItem><span
+                        [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Ver Subcontratistas</a>
+                    <a (click)="EliminarContrato(row)" ngbDropdownItem><span [data-feather]="'trash'" [size]="16"
+                        [class]="'mr-50'"></span> Eliminar Agencia</a>
                   </div>
                 </div>
               </div>
@@ -262,8 +264,8 @@
             <div class="form-group">
               <label for="estado">Seleccione OPP</label>
               <ng-select [items]="SelectOPP" [multiple]="true" [(ngModel)]="idcontrato"
-                [ngModelOptions]="{standalone: true}" (ngModelChange)="onSelectChange($event)" bindLabel="name" placeholder="Seleccione OPP" required
-                autocomplete="off">
+                [ngModelOptions]="{standalone: true}" (ngModelChange)="onSelectChange($event)" bindLabel="name"
+                placeholder="Seleccione OPP" required autocomplete="off">
               </ng-select>
             </div>
           </div>
@@ -282,6 +284,103 @@
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
     <button type="submit" (click)="GuardarSubcontrato()" rippleEffect class="btn btn-success mr-1">Agregar
       Subcontrato</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #ModalVerSubContratistas let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Lista de Operadores Postales Privado de <strong>{{ TitleModal
+        }}</strong></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+
+
+      <section class="users-list-wrapper">
+        <div class="card">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="d-flex justify-content-between align-items-center m-1">
+                <label class="d-flex align-items-center">Mostrar
+                  <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                  Registros</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValueListaSubC"
+                    autocomplete="off" name="searchValue" type="search" class="form-control ml-25"
+                    placeholder="Nombre Operador" (keyup)="filterOPPSUB($event)"
+                    (search)="filterOPPSUB($event)" /></label>
+              </div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="loadingIndicatorOPP">
+            <div class="loading-overlay">
+              <div class="spinner-border" role="status"></div>
+              <div class="loading-message">Cargando datos por favor espere!..</div>
+            </div>
+          </ng-container>
+
+          <ngx-datatable [rows]="rowsOPPSub" rowHeight="auto" class="bootstrap core-bootstrap" [limit]="selectedOption"
+            [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true">
+
+            <ngx-datatable-column name="Empresa" prop="opp_nombre_empresa" [width]="300">
+              <ng-template let-opp_nombre_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold">{{ opp_nombre_empresa }} </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="RIF" prop="opp_rif" [width]="100">
+              <ng-template let-opp_rif="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ opp_rif }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+
+            <ngx-datatable-column name="Status Empresa" prop="opp_status_empresa" [width]="100">
+              <ng-template let-opp_status_empresa="value" ngx-datatable-cell-template>
+                <div *ngIf="opp_status_empresa == 1" class="badge badge-pill" ngClass="badge-light-success">
+                  Activa
+                </div>
+                <div *ngIf="opp_status_empresa == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                  Inactiva
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+
+          </ngx-datatable>
+
+
+          <!--/ Invoice List -->
+        </div>
+      </section>
+
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>
