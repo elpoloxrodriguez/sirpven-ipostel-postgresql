@@ -164,6 +164,8 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   public loadingIndicator: boolean = true;
 
+  public loadingIndicatorSub : boolean = true
+
   public IdUser
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
@@ -214,6 +216,8 @@ export class PrivatePostalOperatorComponent implements OnInit {
   public valorPosicion
 
   public arregloSubcontratistas = []
+
+  public ListaSubcontratistasCombinacion = []
 
   constructor(
     private apiService: ApiService,
@@ -801,13 +805,33 @@ export class PrivatePostalOperatorComponent implements OnInit {
     });
   }
 
-  async ModalVerSubContratistas(modal, data) {
-    // console.log(JSON.parse(data.sub));
+  async VerSubContratistas(opp:any){
+    this.ListaSubcontratistasCombinacion = []
     this.rowsListaSubC = []
-    this.rowsListaSubC = JSON.parse(data.sub)
-    this.rowsListaSubC = this.rowsListaSubC
-    this.tempDataListaSubC = this.rowsListaSubC
+    this.tempDataListaSubC = []
+    this.loadingIndicatorSub = true
+    // console.log(opp)
+    this.xAPI.funcion = "IPOSTEL_R_VerSubContratistasCombinacion"
+    this.xAPI.parametros = `${opp}`
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          this.ListaSubcontratistasCombinacion.push(e)
+          this.loadingIndicatorSub = false
+        });
+        console.log(this.ListaSubcontratistasCombinacion)
+        this.rowsListaSubC = this.ListaSubcontratistasCombinacion
+        this.tempDataListaSubC =  this.rowsListaSubC
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
 
+  async ModalVerSubContratistas(modal, data) {
+    this.VerSubContratistas(data.id_opp)
     this.title_modal = data.nombre_empresa
     this.modalService.open(modal, {
       centered: true,

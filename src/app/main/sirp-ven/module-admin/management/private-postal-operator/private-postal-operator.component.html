@@ -860,44 +860,94 @@
             </div>
           </div>
 
+          <ng-container *ngIf="loadingIndicatorSub">
+            <div class="loading-overlay">
+              <div class="spinner-border" role="status"></div>
+              <div class="loading-message">Cargando datos por favor espere!..</div>
+            </div>
+          </ng-container>
+
           <ngx-datatable [rows]="rowsListaSubC" rowHeight="auto" class="bootstrap core-bootstrap"
             [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
             [scrollbarH]="true">
 
-            <ngx-datatable-column name="Empresa" prop="nombre_empresa" width="auto">
-              <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+            <ngx-datatable-column name="Empresa" prop="oss_nombre_empresa" [width]="300">
+              <ng-template let-oss_nombre_empresa="value" ngx-datatable-cell-template>
                 <div>
-                  <span class="font-weight-bold">{{ nombre_empresa }} </span>
+                  <span class="font-weight-bold">{{ oss_nombre_empresa }} </span>
                 </div>
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column name="RIF" prop="rif"  [width]="5">
-              <ng-template let-rif="value" ngx-datatable-cell-template>
+            <ngx-datatable-column name="RIF" prop="oss_rif_empresa"  [width]="100">
+              <ng-template let-oss_rif_empresa="value" ngx-datatable-cell-template>
                 <div>
-                  <span class="font-weight-bold"> {{ rif }}</span>
+                  <span class="font-weight-bold"> {{ oss_rif_empresa }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Estado" prop="oss_estado_empresa"  [width]="100">
+              <ng-template let-oss_estado_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ oss_estado_empresa }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Ciudad" prop="oss_ciudad_empresa"  [width]="5">
+              <ng-template let-oss_ciudad_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ oss_ciudad_empresa }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Municipio" prop="oss_municipio_empresa"  [width]="100">
+              <ng-template let-oss_municipio_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ oss_municipio_empresa }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Parroquia" prop="oss_parroquia_empresa"  [width]="100">
+              <ng-template let-oss_parroquia_empresa="value" ngx-datatable-cell-template>
+                <div>
+                  <span class="font-weight-bold"> {{ oss_parroquia_empresa }}</span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Tipo" prop="oss_tipo_sub" [width]="100">
+              <ng-template let-oss_tipo_sub="value" ngx-datatable-cell-template>
+                <div *ngIf="oss_tipo_sub == 0" class="badge badge-pill" ngClass="badge-light-info">
+                  Principal
+                </div>
+                <div *ngIf="oss_tipo_sub == 1" class="badge badge-pill" ngClass="badge-light-primary">
+                  Agencia
                 </div>
               </ng-template>
             </ngx-datatable-column>
 
 
-            <ngx-datatable-column name="STATUS" prop="status_empresa"  [width]="5">
-              <ng-template let-status_empresa="value" ngx-datatable-cell-template>
-                <div *ngIf="status_empresa == 1" class="badge badge-pill" ngClass="badge-light-success">
+            <ngx-datatable-column name="Agencia" prop="os_status_agencia"  [width]="100">
+              <ng-template let-os_status_agencia="value" ngx-datatable-cell-template>
+                <div *ngIf="os_status_agencia == 1" class="badge badge-pill" ngClass="badge-light-success">
                   Activa
                 </div>
-                <div *ngIf="status_empresa == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                <div *ngIf="os_status_agencia == 0" class="badge badge-pill" ngClass="badge-light-danger">
                   Inactiva
                 </div>
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column name="Concesion" prop="status_curp" [width]="5">
-              <ng-template let-status_curp="value" ngx-datatable-cell-template>
-                <div *ngIf="status_curp == 1" class="badge badge-pill" ngClass="badge-light-success">
+            <ngx-datatable-column name="Autorización" prop="oss_status_agencia" [width]="100">
+              <ng-template let-oss_status_agencia="value" ngx-datatable-cell-template>
+                <div *ngIf="oss_status_agencia == 1" class="badge badge-pill" ngClass="badge-light-success">
                   Aprobada
                 </div>
-                <div *ngIf="status_curp == 0" class="badge badge-pill" ngClass="badge-light-danger">
+                <div *ngIf="oss_status_agencia == 0" class="badge badge-pill" ngClass="badge-light-danger">
                   En Espera
                 </div>
               </ng-template>
