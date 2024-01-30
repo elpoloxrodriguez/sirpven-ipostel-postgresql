@@ -662,12 +662,28 @@ export class PrivatePostalOperatorComponent implements OnInit {
     this.table.offset = 0;
   }
 
+  
+
+  filterUpdateListaSubC(event) {
+    // Reset ng-select on search
+    const val = event.target.value.toLowerCase();
+    // Filter Our Data
+    const temp = this.tempDataListaSubC.filter(function (d) {
+      return d.oss_nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // Update The Rows
+    this.rowsListaSubC = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
+  }
+  
+
   filterUpdateCOMBINACION(event) {
     // Reset ng-select on search
     const val = event.target.value.toLowerCase();
     // Filter Our Data
     const temp = this.tempDataCOMBINACION.filter(function (d) {
-      return d.nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.operador.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // Update The Rows
     this.rowsCOMBINACION = temp;
@@ -820,7 +836,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
           this.ListaSubcontratistasCombinacion.push(e)
           this.loadingIndicatorSub = false
         });
-        console.log(this.ListaSubcontratistasCombinacion)
+        // console.log(this.ListaSubcontratistasCombinacion)
         this.rowsListaSubC = this.ListaSubcontratistasCombinacion
         this.tempDataListaSubC =  this.rowsListaSubC
       },
@@ -830,9 +846,10 @@ export class PrivatePostalOperatorComponent implements OnInit {
     )
   }
 
-  async ModalVerSubContratistas(modal, data) {
+  async ModalVerSubContratistas(modal:any, data:any) {
+    // console.log(data)
     this.VerSubContratistas(data.id_opp)
-    this.title_modal = data.nombre_empresa
+    this.title_modal = data.operador
     this.modalService.open(modal, {
       centered: true,
       size: 'xl',

@@ -69,6 +69,26 @@
             </ng-template>
           </ngx-datatable-column>
 
+          <ngx-datatable-column name="Municipio" prop="municipio_empresa" [width]="100">
+            <ng-template let-municipio_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ municipio_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+          <ngx-datatable-column name="Parroquia" prop="parroquia_empresa" [width]="100">
+            <ng-template let-parroquia_empresa="value" ngx-datatable-cell-template>
+              <div>
+                {{ parroquia_empresa }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+
+
           <ngx-datatable-column name="Tipo" prop="tipo_sub" [width]="20">
             <ng-template let-tipo_sub="value" ngx-datatable-cell-template>
               <div *ngIf="tipo_sub == 0" class="badge badge-pill" ngClass="badge-light-success">
