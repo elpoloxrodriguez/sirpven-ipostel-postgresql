@@ -67,13 +67,11 @@
             <!-- Header Ends -->
           </div>
           <hr class="invoice-spacing" />
-          <div class="card-body invoice-padding pt-0">
+          <!-- <div class="card-body invoice-padding pt-0">
             <div class="row invoice-spacing">
               <div class="col-xl-4 p-0 mt-xl-0 mt-2">
                 <h6 class="mb-2" align="center"><strong>Tipo Servicio</strong></h6>
-                <!-- <li *ngFor="let item of DataEmpresa.tipo_servicio; index as i; trackBy: trackByFn">
-        {{ item.nombre_tipo_servicio }}
-      </li> -->
+
                 <table class="table responsive">
                   <thead>
                     <tr>
@@ -91,9 +89,7 @@
               </div>
               <div class="col-xl-4 p-0 mt-xl-0 mt-2">
                 <h6 class="mb-2" align="center"><strong>Flota Utilizada</strong></h6>
-                <!-- <li *ngFor="let item of DataEmpresa.flota_utilizada; index as i; trackBy: trackByFn">
-      {{ item.nombre_flota_utilizada }}
-    </li> -->
+
                 <table class="table responsive">
                   <thead>
                     <tr>
@@ -120,82 +116,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <!-- <tr *ngFor="let item of arrayFlotaUtilizada; index as i; trackBy: trackByFn"> -->
                     <tr *ngFor="let item of arrayFlotaUtilizada; let i = index">
                       <th scope="row"> {{ i+1 }}</th>
                       <td>{{ item.name }}</td>
                       <td>{{ item.valor }}</td>
                     </tr>
-                    <!-- <tr>
-          <th scope="row">2</th>
-          <td>Camionetas</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Camion 350</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">4</th>
-          <td>Camion 750</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">5</th>
-          <td>Camion 3 Ejes</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">6</th>
-          <td>Camion 4 Ejes</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">7</th>
-          <td>Camion 5 Ejes</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">8</th>
-          <td>Camion 6 Ejes</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">9</th>
-          <td>Buques</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">10</th>
-          <td>Aviones</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">11</th>
-          <td>Avionetas</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">12</th>
-          <td>Container's</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">13</th>
-          <td>Motos</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <th scope="row">14</th>
-          <td>Bicicletas</td>
-          <td>0</td>
-        </tr> -->
                   </tbody>
                 </table>
               </div>
             </div>
-          </div>
+          </div> -->
         </ng-template>
       </li>
       <li ngbNavItem>
@@ -219,14 +149,14 @@
                 <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
                   <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
                     <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre Empresa"
+                        name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre Flota"
                         (keyup)="filterUpdateSubcontratistas($event)"
                         (search)="filterUpdateSubcontratistas($event)" /></label>
                   </div>
                 </div>
               </div>
 
-              <ngx-datatable [rows]="rowsSubcontratistas" rowHeight="auto" class="bootstrap core-bootstrap"
+              <!-- <ngx-datatable [rows]="rowsSubcontratistas" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
                 [scrollbarH]="true">
 
@@ -279,10 +209,8 @@
                 </ngx-datatable-column>
 
 
-              </ngx-datatable>
+              </ngx-datatable> -->
 
-
-              <!--/ Invoice List -->
             </div>
           </section>
         </ng-template>
@@ -325,13 +253,13 @@
 
               <div class="mt-md-0 mt-2">
                 <div class="invoice-date-wrapper">
-                  <button type="button" *ngIf="ShowBtnWarningRepresentanteLegal === true"
+                  <button type="button" *ngIf="!btnShowRepresentante"
                     class="btn btn-icon btn-warning" rippleEffect
                     (click)="ModalEditarRepresentanteLegal(EditarRepresentanteLegal)">
                     <span [data-feather]="'edit'"></span>
                     Actualizar Representante Legal
                   </button>
-                  <button type="button" *ngIf="ShowBtnPrimaryRepresentanteLegal === true"
+                  <button type="button" *ngIf="btnShowRepresentante"
                     class="btn btn-icon btn-primary" rippleEffect
                     (click)="ModalAddRepresentanteLegal(AddRepresentanteLegal)">
                     <span [data-feather]="'user'"></span>
@@ -371,12 +299,12 @@
 
               <div class="mt-md-0 mt-2">
                 <div class="invoice-date-wrapper">
-                  <button type="button" *ngIf="ShowBtnWarningDelegado === true" class="btn btn-icon btn-warning"
+                  <button type="button" *ngIf="!btnShowDelegado" class="btn btn-icon btn-warning"
                     rippleEffect (click)="ModalEditarDelegado(EditarDelegado)">
                     <span [data-feather]="'edit'"></span>
                     Actualizar Delegado
                   </button>
-                  <button type="button" *ngIf="ShowBtnPrimaryDelegado === true" class="btn btn-icon btn-primary"
+                  <button type="button" *ngIf="btnShowDelegado" class="btn btn-icon btn-primary"
                     rippleEffect (click)="ModalAddDelegado(AddDelegado)">
                     <span [data-feather]="'user'"></span>
                     Agregar Delegado
@@ -423,7 +351,7 @@
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
                 [scrollbarH]="true">
 
-                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="20">
+                <ngx-datatable-column name="Empresa" prop="nombre_empresa" [width]="300">
                   <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
                     <div>
                       <span class="font-weight-bold">{{ nombre_empresa }} </span>
@@ -431,42 +359,67 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Rif" prop="rif" [width]="20">
-                  <ng-template let-rif="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Rif" prop="rif_empresa" [width]="100">
+                  <ng-template let-rif_empresa="value" ngx-datatable-cell-template>
                     <div>
-                      {{ rif }}
+                      {{ rif_empresa }}
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Tipología Empresa" prop="nombre_tipologia" [width]="20">
-                  <ng-template let-nombre_tipologia="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Estado" prop="estado_empresa" [width]="20">
+                  <ng-template let-estado_empresa="value" ngx-datatable-cell-template>
                     <div>
-                      {{ nombre_tipologia }}
+                      {{ estado_empresa }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Ciudad" prop="ciudad_empresa" [width]="20">
+                  <ng-template let-ciudad_empresa="value" ngx-datatable-cell-template>
+                    <div>
+                      {{ ciudad_empresa }}
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
 
 
-                <ngx-datatable-column name="Correo Electronico" prop="correo_electronico" [width]="20">
-                  <ng-template let-correo_electronico="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Municipio" prop="municipio_empresa" [width]="20">
+                  <ng-template let-municipio_empresa="value" ngx-datatable-cell-template>
                     <div>
-                      {{ correo_electronico }}
+                      {{ municipio_empresa }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Parroquia" prop="parroquia_empresa" [width]="20">
+                  <ng-template let-parroquia_empresa="value" ngx-datatable-cell-template>
+                    <div>
+                      {{ parroquia_empresa }}
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
 
 
-                <ngx-datatable-column name="Status" prop="status_empresa" [width]="20">
-                  <ng-template let-status_empresa="value" ngx-datatable-cell-template>
-                    <div *ngIf="status_empresa === 0" class="badge badge-pill" ngClass="badge-light-warning">
+
+                <ngx-datatable-column name="Tipo" prop="tipo_sub" [width]="100">
+                  <ng-template let-tipo_sub="value" ngx-datatable-cell-template>
+                    <div *ngIf="tipo_sub === 0" class="badge badge-pill" ngClass="badge-light-success">
+                      Principal
+                    </div>
+                    <div *ngIf="tipo_sub === 1" class="badge badge-pill" ngClass="badge-light-primary">
+                      Agencia
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Status" prop="status_agencia" [width]="100">
+                  <ng-template let-status_agencia="value" ngx-datatable-cell-template>
+                    <div *ngIf="status_agencia === 0" class="badge badge-pill" ngClass="badge-light-warning">
                       En Espera
                     </div>
-                    <div *ngIf="status_empresa === 1" class="badge badge-pill" ngClass="badge-light-success">
-                      Aprobado
-                    </div>
-                    <div *ngIf="status_empresa === 2" class="badge badge-pill" ngClass="badge-light-danger">
-                      Rechazado
+                    <div *ngIf="status_agencia === 1" class="badge badge-pill" ngClass="badge-light-success">
+                      Activa
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
@@ -595,9 +548,8 @@
 
           <div class="form-group">
             <label for="basicInputFile">Seleccionar Archivo</label>
-            <div >
-              <input (change)="fileSelected($event)" class="form-control" name="archivos" type="file"
-                accept=".pdf">
+            <div>
+              <input (change)="fileSelected($event)" class="form-control" name="archivos" type="file" accept=".pdf">
             </div>
           </div>
 
@@ -658,7 +610,7 @@
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label class="form-label">Numero de RIF</label>
-            <input required type="text" [(ngModel)]="DataEmpresa.rif"  [ngModelOptions]="{standalone: true}"
+            <input required type="text" [(ngModel)]="DataEmpresa.rif" [ngModelOptions]="{standalone: true}"
               class="form-control" placeholder="Numero de RIF" />
           </div>
         </div>
@@ -671,14 +623,14 @@
 
           </div>
         </div>
-        
+
         <div class="col-md-3 col-12">
           <div class="form-group">
             <label class="form-label" for="email">Estado</label>
             <ng-select [items]="SelectEstado" bindLabel="estado" placeholder="Seleccione Estado"
-            [(ngModel)]="DataEmpresa.estado_empresa" [ngModelOptions]="{standalone: true}" required autocomplete="off"
-            (ngModelChange)="Select_Ciudad($event.id_estado)">
-          </ng-select>
+              [(ngModel)]="DataEmpresa.estado_empresa" [ngModelOptions]="{standalone: true}" required autocomplete="off"
+              (ngModelChange)="Select_Ciudad($event.id_estado)">
+            </ng-select>
           </div>
         </div>
 
@@ -1052,6 +1004,7 @@
     </button>
   </div>
 </ng-template>
+
 <ng-template #EditarDelegado let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="myModalLabel160">Actualizar Datos del Delegado</h5>
@@ -1143,6 +1096,7 @@
     </button>
   </div>
 </ng-template>
+
 <ng-template #EditarRepresentanteLegal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="myModalLabel160">Actualizar Datos del Representante Legal</h5>
@@ -1296,6 +1250,7 @@
     </button>
   </div>
 </ng-template>
+
 <ng-template #AddDelegado let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="myModalLabel160">Agregar Datos del Delegado</h5>
@@ -1387,6 +1342,7 @@
     </button>
   </div>
 </ng-template>
+
 <ng-template #AddRepresentanteLegal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="myModalLabel160">Agregar Datos del Representante Legal</h5>

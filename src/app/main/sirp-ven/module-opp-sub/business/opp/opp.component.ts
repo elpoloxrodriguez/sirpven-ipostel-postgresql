@@ -305,6 +305,9 @@ export class OppComponent implements OnInit {
   public lengthRepresentanteLegal
   public lengthDelegado
 
+  public btnShowDelegado : boolean = true
+  public btnShowRepresentante : boolean = true
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -318,6 +321,7 @@ export class OppComponent implements OnInit {
     this.IdOPP = this.token.Usuario[0].id_opp
     this.idDelegado = this.token.Usuario[0].id_delegado
     this.idRepresentanteLegal = this.token.Usuario[0].id_representante_legal
+
 
     await this.EmpresaOPP(this.IdOPP)
     await this.Subcontratistas(this.IdOPP)
@@ -736,6 +740,8 @@ export class OppComponent implements OnInit {
   }
 
   async Subcontratistas(id: any) {
+    this.Subcontratista = []
+    this.rowsSubcontratistas = []
     this.xAPI.funcion = "IPOSTEL_R_Subcontratista_ID"
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
@@ -848,9 +854,12 @@ export class OppComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.lengthRepresentanteLegal = data.Cuerpo.length
-        // console.log(this.lengthRepresentanteLegal)
+        if (data.Cuerpo.length > 0) {
+          this.btnShowRepresentante = false
+        } else {
+          this.btnShowRepresentante = true
+        }
         data.Cuerpo.map(e => {
-          // console.log(e)
           this.DataRepresentanteLegal.apellidos_representante_legal = e.apellidos_representante_legal
           this.DataRepresentanteLegal.cargo_representante_legal = e.cargo_representante_legal
           this.DataRepresentanteLegal.cedula_representante_legal = e.cedula_representante_legal
@@ -878,12 +887,18 @@ export class OppComponent implements OnInit {
     )
   }
 
+
   async Delegado(id: any) {
     this.xAPI.funcion = "IPOSTEL_R_Delegado_ID"
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.lengthDelegado = data.Cuerpo.length
+        if (data.Cuerpo.length > 0) {
+          this.btnShowDelegado = false
+        } else {
+          this.btnShowDelegado = true
+        }
         data.Cuerpo.map(e => {
           this.DataDelegado.apellidos_delegado = e.apellidos_delegado
           this.DataDelegado.cargo_delegado = e.cargo_delegado
