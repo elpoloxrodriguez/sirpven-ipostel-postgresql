@@ -134,7 +134,7 @@ export class UtilService {
       title: title,
       html: html,
       timer: timer,
-      imageUrl: '../../../../assets/images/logos/ipostel.png',
+      imageUrl: 'assets/images/logos/ipostel.png',
       imageWidth: 250,
       imageHeight: 100,
       allowEscapeKey: false,

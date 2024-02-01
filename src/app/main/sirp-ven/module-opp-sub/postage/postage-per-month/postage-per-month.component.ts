@@ -93,7 +93,7 @@ export class PostagePerMonthComponent implements OnInit {
     this.idOpp = this.token.Usuario[0].id_opp
     this.generarListaAños();
 
-    this.fechaActual.setMonth(this.fechaActual.getMonth()  );
+    this.fechaActual.setMonth(this.fechaActual.getMonth() -1 );
     this.mesAnterior = this.fechaActual.getMonth(); 
     this.anioAnterior = this.fechaActual.getFullYear()
 

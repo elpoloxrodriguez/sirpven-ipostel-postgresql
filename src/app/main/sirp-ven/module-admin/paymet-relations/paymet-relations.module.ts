@@ -24,16 +24,21 @@ import { CoreSidebarModule } from '@core/components';
 
 
 import { AngularFileUploaderModule } from "angular-file-uploader";
-
-
 import { PaymetRelationsRoutingModule } from './paymet-relations-routing.module';
+import { PaymetRelationsComponent } from './paymet-relations/paymet-relations.component';
+
+import { BlockUIModule } from 'ng-block-ui';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PaymetRelationsComponent
+  ],
   imports: [
     CommonModule,
-    FormsModule, 
+    PaymetRelationsRoutingModule,
+    BlockUIModule,
+    FormsModule,
     AngularFileUploaderModule,
     ReactiveFormsModule,
     RouterModule,
@@ -46,9 +51,8 @@ import { PaymetRelationsRoutingModule } from './paymet-relations-routing.module'
     CardSnippetModule,
     Ng2FlatpickrModule,
     CoreDirectivesModule,
-  CorePipesModule,
-  CoreSidebarModule,
-    PaymetRelationsRoutingModule
+    CorePipesModule,
+    CoreSidebarModule,
   ]
 })
 export class PaymetRelationsModule { }

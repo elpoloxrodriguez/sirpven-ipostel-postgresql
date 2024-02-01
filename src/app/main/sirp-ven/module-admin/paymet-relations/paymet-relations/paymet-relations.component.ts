@@ -57,13 +57,17 @@ export class PaymetRelationsComponent implements OnInit {
   public BtnPago: boolean = false
 
 
-  public nuevafechaActual = new Date().getFullYear()
+  public nuevafechaActual
 
   public meses = []
+
+  public listIdOPP = []
 
   public anios: number[] = [];
 
   public idOpp
+
+  public itemIdOpp
 
   public token
 
@@ -93,11 +97,12 @@ export class PaymetRelationsComponent implements OnInit {
     this.idOpp = this.token.Usuario[0].id_opp
     this.generarListaAños();
 
-    this.fechaActual.setMonth(this.fechaActual.getMonth()  );
+    this.fechaActual.setMonth(this.fechaActual.getMonth() -1 );
     this.mesAnterior = this.fechaActual.getMonth(); 
     this.anioAnterior = this.fechaActual.getFullYear()
 
-    // await this.ConsultarDeclaracion(this.idOpp, this.anioAnterior,this.mesAnterior)
+    await this.ListaOPP_SUB()
+    // await this.ConsultarDeclaracion(2, this.anioAnterior,this.mesAnterior)
   }
 
   generarListaAños() {
@@ -107,13 +112,15 @@ export class PaymetRelationsComponent implements OnInit {
     }
   }
 
-  async validar(event: any) {
-    if (event != null) {
-      if (event != this.anioAnterior) {
-        await this.ConsultarDeclaracion(this.idOpp, event, 11)
+  async validar(idopp: any, anio: any) {
+    if (idopp != undefined && anio != undefined) {
+      if (anio != this.anioAnterior) {
+        await this.ConsultarDeclaracion(idopp, anio, 11)
       } else {
-        await this.ConsultarDeclaracion(this.idOpp, event,this.mesAnterior)
+        await this.ConsultarDeclaracion(idopp, anio,this.mesAnterior)
       }
+    } else {
+      this.utilService.alertConfirmMini('warning', 'Oops!, lo sentimos, Seleccione Operador Postal y Año')
     }
 
   }
@@ -121,7 +128,7 @@ export class PaymetRelationsComponent implements OnInit {
   async ConsultarDeclaracion(id: any, anio:any, mes:any) {
     this.Xdata = []
     this.meses = []
-    // this.sectionBlockUI.start('Cargando datos, por favor Espere!!!');
+    this.sectionBlockUI.start('Cargando datos, por favor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_MovimientosPiezasMeses"
     this.xAPI.parametros = `${id}`
     this.xAPI.valores = ''
@@ -165,20 +172,35 @@ export class PaymetRelationsComponent implements OnInit {
             return e
           });
         });
-        // this.sectionBlockUI.stop()
+        this.sectionBlockUI.stop()
       },
       (error) => {
         console.log(error)
       })
   }
 
-  rutaDeclarar(mes: any) {
-    this.router.navigate([`/postage/movement-of-parts/${mes}`]);
+  async ListaOPP_SUB() {
+    this.listIdOPP = []
+    this.xAPI.funcion = "IPOSTEL_R_OPP_SUB"
+    this.xAPI.parametros = '1'
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.listIdOPP =  data.Cuerpo.map(e => {
+          e.id = e.id_opp
+          e.name = `${e.nombre_empresa} (${e.rif})`
+          return e
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
 
 
-  async rutaVisualizar(modal: any, mes: any) {
-    await this.consultarMovilizacion(mes)
+  async rutaVisualizar(modal: any, opp:any,  mes: any) {
+    await this.consultarMovilizacion(opp,mes)
     this.modalService.open(modal, {
       centered: true,
       size: 'xl',
@@ -200,11 +222,11 @@ export class PaymetRelationsComponent implements OnInit {
     return meses[date.getMonth()];
   }
 
-  async consultarMovilizacion(mes: any) {
+  async consultarMovilizacion(idopp: any,mes: any) {
     this.DeclaracionPiezas = []
     this.rowsDeclaracionPiezas = []
     this.xAPI.funcion = "IPOSTEL_R_MovilizacionPiezas_visualizar"
-    this.xAPI.parametros = this.idOpp + ',' + mes
+    this.xAPI.parametros = idopp + ',' + mes
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {

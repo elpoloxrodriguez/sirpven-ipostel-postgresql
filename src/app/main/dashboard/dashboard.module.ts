@@ -57,8 +57,8 @@ import { BranchOfficesModule } from '../sirp-ven/module-opp-sub/business/branch-
 import { ReportsRankingComponent } from '../sirp-ven/module-opp-sub/opp-reports/reports-ranking/reports-ranking.component';
 import { UsersModule } from '../sirp-ven/users/users.module';
 import { AuditModule } from '../audit/audit.module';
-import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations/paymet-relations.module';
 import { PaymetRelationsRoutingModule } from '../sirp-ven/module-admin/paymet-relations/paymet-relations-routing.module';
+import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations/paymet-relations.module';
 
 
 

@@ -4,18 +4,25 @@
       <div class="row">
 
 
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-6">
           <fieldset class="form-group">
-            <input type="text" class="form-control" id="icons-search" [(ngModel)]="searchText"
-              placeholder="Busqueda..." />
+            <ng-select [items]="listIdOPP" [(ngModel)]="itemIdOpp" [ngModelOptions]="{standalone: true}"
+              bindLabel="name" bindValue="id" placeholder="Seleccionar Operador Postal Privado"
+             ></ng-select>
           </fieldset>
         </div>
 
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <fieldset class="form-group">
             <ng-select [items]="anios" [(ngModel)]="nuevafechaActual" [ngModelOptions]="{standalone: true}"
               bindLabel="name" bindValue="id" placeholder="Seleccionar Año"
-              (ngModelChange)="validar($event)"></ng-select>
+              ></ng-select>
+          </fieldset>
+        </div>
+
+        <div class="col-12 col-md-3">
+          <fieldset class="form-group">
+           <button class="btn btn-success" (click)="validar(itemIdOpp,nuevafechaActual)">Generar Relación de Pagos</button>
           </fieldset>
         </div>
 
@@ -34,9 +41,7 @@
                   <p class="card-text">
                     <strong>{{ dat.name }} - {{ dat.fecha }}</strong>
                     &nbsp;
-                    <button type="submit" class="btn btn-warning btn-sm" *ngIf="dat.monto == 0" (click)="rutaDeclarar(dat.mes)">Declarar</button>
-                    &nbsp;
-                    <button type="submit" class="btn btn-success btn-sm" *ngIf="dat.monto != 0" (click)="rutaVisualizar(ModalVisualizar,dat.value)">Visualizar</button>
+                    <button type="submit" class="btn btn-success btn-sm" *ngIf="dat.monto != 0" (click)="rutaVisualizar(ModalVisualizar,itemIdOpp,dat.value)">Visualizar</button>
                   </p>
                   <small>
                     <strong>

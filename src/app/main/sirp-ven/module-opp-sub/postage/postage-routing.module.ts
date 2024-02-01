@@ -19,21 +19,21 @@ const routes: Routes = [
     component: PriceTableComponent,
     // canActivate:[AuthGuardGuard],
     canActivate: [AuthGuard,AuthGuardGuard],
-    // data: { roles: ['0','1','2','3','4','5','6','7','8','9'] },
+    data: { roles: [1] },
   },
   {
     path: 'postage/postage-per-month',
     component: PostagePerMonthComponent,
     // canActivate:[AuthGuardGuard],
     canActivate: [AuthGuard,AuthGuardGuard],
-    // data: { roles: ['0','1','2','3','4','5','6','7','8','9'] },
+    data: { roles: [1] },
   },
   {
     path: 'postage/movement-of-parts/:id',
     component: StatementOfPartiesComponent,
     // canActivate:[AuthGuardGuard],
     canActivate: [AuthGuard,AuthGuardGuard],
-    // data: { roles: ['0','1','2','3','4','5','6','7','8','9'] },
+    data: { roles: [1] },
   },
 ];
 

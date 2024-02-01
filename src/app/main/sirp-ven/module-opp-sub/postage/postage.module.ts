@@ -30,12 +30,12 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
 
 @NgModule({
   declarations: [
-    
+
   ],
   imports: [
     CommonModule,
     PostageRoutingModule,
-    FormsModule, 
+    FormsModule,
     AngularFileUploaderModule,
     ReactiveFormsModule,
     RouterModule,
@@ -48,8 +48,8 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
     CardSnippetModule,
     Ng2FlatpickrModule,
     CoreDirectivesModule,
-  CorePipesModule,
-  CoreSidebarModule,
+    CorePipesModule,
+    CoreSidebarModule,
   ]
 })
 export class PostageModule { }
