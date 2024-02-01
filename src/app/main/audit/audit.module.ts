@@ -34,8 +34,6 @@ const routes = [
     component: AuditComponent,
     canActivate: [AuthGuard,AuthGuardGuard],
     data: { roles: [3, 4],  },
-    
- 
   },
 ]
 

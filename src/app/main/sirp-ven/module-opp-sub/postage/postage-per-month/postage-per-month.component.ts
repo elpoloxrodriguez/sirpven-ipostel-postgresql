@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
+
 @Component({
   selector: 'app-postage-per-month',
   templateUrl: './postage-per-month.component.html',
@@ -55,7 +56,6 @@ export class PostagePerMonthComponent implements OnInit {
 
   public BtnPago: boolean = false
 
-  public mesActual = new Date().getMonth()
 
   public nuevafechaActual = new Date().getFullYear()
 
@@ -67,6 +67,9 @@ export class PostagePerMonthComponent implements OnInit {
 
   public token
 
+  public mesAnterior
+  public anioAnterior
+
   public color = ''
 
   public MontoCausadoX
@@ -74,7 +77,8 @@ export class PostagePerMonthComponent implements OnInit {
   public TotalPiezas: number = 0
   public MontoPetroTotalSumaServicio: number = 0
 
-
+  public selectedYear: number;
+  public formattedDate
   // Private
 
   constructor(
@@ -88,7 +92,12 @@ export class PostagePerMonthComponent implements OnInit {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOpp = this.token.Usuario[0].id_opp
     this.generarListaAños();
-    await this.ConsultarDeclaracion(this.token.Usuario[0].id_opp)
+
+    this.fechaActual.setMonth(this.fechaActual.getMonth()  );
+    this.mesAnterior = this.fechaActual.getMonth(); 
+    this.anioAnterior = this.fechaActual.getFullYear()
+
+    await this.ConsultarDeclaracion(this.idOpp, this.anioAnterior,this.mesAnterior)
   }
 
   generarListaAños() {
@@ -98,45 +107,51 @@ export class PostagePerMonthComponent implements OnInit {
     }
   }
 
-  validar(event: any) {
-    console.log(event)
+  async validar(event: any) {
+    if (event != null) {
+      if (event != this.anioAnterior) {
+        await this.ConsultarDeclaracion(this.idOpp, event, 11)
+      } else {
+        await this.ConsultarDeclaracion(this.idOpp, event,this.mesAnterior)
+      }
+    }
+
   }
 
-  async ConsultarDeclaracion(id: any) {
+  async ConsultarDeclaracion(id: any, anio:any, mes:any) {
+    this.Xdata = []
+    this.meses = []
     this.sectionBlockUI.start('Cargando datos, por favor Espere!!!');
     this.xAPI.funcion = "IPOSTEL_R_MovimientosPiezasMeses"
     this.xAPI.parametros = `${id}`
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.fechaActual.setMonth(this.fechaActual.getMonth() - 1);
-        var mesAnterior = this.fechaActual.getMonth(); // Ten en cuenta que los meses en JavaScript comienzan desde 0 (enero) hasta 11 (diciembre)
-        var anioAnterior = this.fechaActual.getFullYear()
-        this.mesEncode64 = btoa(anioAnterior + '-' + mesAnterior)
-        this.mesDecode64 = anioAnterior + '-' + mesAnterior
+        this.mesEncode64 = btoa(anio+ '-' + mes)
+        this.mesDecode64 = anio+ '-' + mes
         this.meses = [
-          { name: "ENERO", fecha: anioAnterior, btn: this.BtnPago, mesx: 0, value: anioAnterior + '-' + '01', mes: btoa(anioAnterior + '-' + '01') },
-          { name: "FEBRERO", fecha: anioAnterior, btn: this.BtnPago, mesx: 1, value: anioAnterior + '-' + '02', mes: btoa(anioAnterior + '-' + '02') },
-          { name: "MARZO", fecha: anioAnterior, btn: this.BtnPago, mesx: 2, value: anioAnterior + '-' + '03', mes: btoa(anioAnterior + '-' + '03') },
-          { name: "ABRIL", fecha: anioAnterior, btn: this.BtnPago, mesx: 3, value: anioAnterior + '-' + '04', mes: btoa(anioAnterior + '-' + '04') },
-          { name: "MAYO", fecha: anioAnterior, btn: this.BtnPago, mesx: 4, value: anioAnterior + '-' + '05', mes: btoa(anioAnterior + '-' + '05') },
-          { name: "JUNIO", fecha: anioAnterior, btn: this.BtnPago, mesx: 5, value: anioAnterior + '-' + '06', mes: btoa(anioAnterior + '-' + '06') },
-          { name: "JULIO", fecha: anioAnterior, btn: this.BtnPago, mesx: 6, value: anioAnterior + '-' + '07', mes: btoa(anioAnterior + '-' + '07') },
-          { name: "AGOSTO", fecha: anioAnterior, btn: this.BtnPago, mesx: 7, value: anioAnterior + '-' + '08', mes: btoa(anioAnterior + '-' + '08') },
-          { name: "SEPTIEMBRE", fecha: anioAnterior, btn: this.BtnPago, mesx: 8, value: anioAnterior + '-' + '09', mes: btoa(anioAnterior + '-' + '09') },
-          { name: "OCTUBRE", fecha: anioAnterior, btn: this.BtnPago, mesx: 9, value: anioAnterior + '-' + '10', mes: btoa(anioAnterior + '-' + '10') },
-          { name: "NOVIEMBRE", fecha: anioAnterior, btn: this.BtnPago, mesx: 10, value: anioAnterior + '-' + '11', mes: btoa(anioAnterior + '-' + '11') },
-          { name: "DICIEMBRE", fecha: anioAnterior, btn: this.BtnPago, mesx: 11, value: anioAnterior + '-' + '12', mes: btoa(anioAnterior + '-' + '12') }
+          { name: "ENERO", fecha: anio, btn: this.BtnPago, mesx: 0, value: anio+ '-' + '01', mes: btoa(anio+ '-' + '01') },
+          { name: "FEBRERO", fecha: anio, btn: this.BtnPago, mesx: 1, value: anio+ '-' + '02', mes: btoa(anio+ '-' + '02') },
+          { name: "MARZO", fecha: anio, btn: this.BtnPago, mesx: 2, value: anio+ '-' + '03', mes: btoa(anio+ '-' + '03') },
+          { name: "ABRIL", fecha: anio, btn: this.BtnPago, mesx: 3, value: anio+ '-' + '04', mes: btoa(anio+ '-' + '04') },
+          { name: "MAYO", fecha: anio, btn: this.BtnPago, mesx: 4, value: anio+ '-' + '05', mes: btoa(anio+ '-' + '05') },
+          { name: "JUNIO", fecha: anio, btn: this.BtnPago, mesx: 5, value: anio+ '-' + '06', mes: btoa(anio+ '-' + '06') },
+          { name: "JULIO", fecha: anio, btn: this.BtnPago, mesx: 6, value: anio+ '-' + '07', mes: btoa(anio+ '-' + '07') },
+          { name: "AGOSTO", fecha: anio, btn: this.BtnPago, mesx: 7, value: anio+ '-' + '08', mes: btoa(anio+ '-' + '08') },
+          { name: "SEPTIEMBRE", fecha: anio, btn: this.BtnPago, mesx: 8, value: anio+ '-' + '09', mes: btoa(anio+ '-' + '09') },
+          { name: "OCTUBRE", fecha: anio, btn: this.BtnPago, mesx: 9, value: anio+ '-' + '10', mes: btoa(anio+ '-' + '10') },
+          { name: "NOVIEMBRE", fecha: anio, btn: this.BtnPago, mesx: 10, value: anio+ '-' + '11', mes: btoa(anio+ '-' + '11') },
+          { name: "DICIEMBRE", fecha: anio, btn: this.BtnPago, mesx: 11, value: anio+ '-' + '12', mes: btoa(anio+ '-' + '12') }
         ]
 
-        for (let i = 0; i <= mesAnterior; i++) {
+        for (let i = 0; i <= mes; i++) {
           this.Xdata.push(this.meses[i])
         }
         this.meses.map(e => {
           e.monto = 0
           e.montox = 0
           e.piezas = 0
-          if (e.mesx == mesAnterior) {
+          if (e.mesx == mes) {
             e.btn = true
           } else {
             e.btn = false
@@ -202,8 +217,8 @@ export class PostagePerMonthComponent implements OnInit {
           this.DeclaracionPiezas.push(e)
         });
         this.rowsDeclaracionPiezas = this.DeclaracionPiezas;
-         let piezas = this.DeclaracionPiezas.map(item => item.cantidad_piezas ? item.cantidad_piezas : 0).reduce((prev, curr) => prev + curr, 0);
-         this.TotalPiezas = piezas.toLocaleString()
+        let piezas = this.DeclaracionPiezas.map(item => item.cantidad_piezas ? item.cantidad_piezas : 0).reduce((prev, curr) => prev + curr, 0);
+        this.TotalPiezas = piezas.toLocaleString()
         this.selected = this.DeclaracionPiezas.length
         let montopiezas = this.DeclaracionPiezas.map(item => item.montox ? item.montox : 0).reduce((prev, curr) => prev + curr, 0);
         this.MontoCausadoX = this.utilService.ConvertirMoneda(montopiezas);

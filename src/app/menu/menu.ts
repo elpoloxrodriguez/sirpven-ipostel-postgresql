@@ -84,15 +84,25 @@ export const menu: CoreMenu[] = [
     role: [1],
     url: 'dupven/opp',
   },
-      // AUDITORIA
-      {
-        id: 'audit',
-        nombre: 'Auditoria',
-        role: [3, 4],
-        icono: 'database',
-        type: 'item',
-        url: 'audit/audit',
-      },
+  // AUDITORIA
+  {
+    id: 'audit',
+    nombre: 'Auditoria',
+    role: [3, 4],
+    icono: 'database',
+    type: 'item',
+    url: 'audit/audit',
+  },
+
+  // RELACION DE PAGOS
+  {
+    id: 'paymet-relations',
+    nombre: 'Relacion Pagos',
+    role: [3, 4, 6],
+    icono: 'credit-card',
+    type: 'item',
+    url: 'paymet-relations/paymet',
+  },
   // OPERADORES POSTALES PRIVADOS Y SUBCONTRATISTAS
   {
     id: 'list-opp',
@@ -112,7 +122,7 @@ export const menu: CoreMenu[] = [
     url: 'payments-obligations/obligations',
   },
 
-// MODULO OPERADOR POSTAL Y SUBCONTRATISTAS
+  // MODULO OPERADOR POSTAL Y SUBCONTRATISTAS
 
   // Empresa
   {
@@ -157,15 +167,15 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'business/subcontractor',
   },
-    // SUCURSALES SUBCONTRATISTAS
-    {
-      id: 'Agencias',
-      nombre: 'Agencias',
-      role: [2],
-      icono: 'users',
-      type: 'item',
-      url: 'subcontractor/branch-offices',
-    },
+  // SUCURSALES SUBCONTRATISTAS
+  {
+    id: 'Agencias',
+    nombre: 'Agencias',
+    role: [2],
+    icono: 'users',
+    type: 'item',
+    url: 'subcontractor/branch-offices',
+  },
   // Pagos Postal
   {
     id: 'PagosPostales',

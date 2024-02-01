@@ -219,6 +219,8 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   public ListaSubcontratistasCombinacion = []
 
+  public totalsubagen : number = 0
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -553,6 +555,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
           this.loadingIndicator = false
         });
         const sumaCantidad = this.List_COMBINACION.reduce((total, item) => total + item.cantidad, 0);
+        this.totalsubagen = this.List_COMBINACION.reduce((total, item) => total + item.cantidad, 0);
         this.cantidadCombinacion = sumaCantidad
         this.rowsCOMBINACION = this.List_COMBINACION
         this.tempDataCOMBINACION = this.rowsCOMBINACION
