@@ -192,14 +192,14 @@ export const menu: CoreMenu[] = [
     icono: 'repeat',
     type: 'item',
     url: 'postal-solvency/postal-solvency-opp-sub',
-    role: [1, 2],
+    role: [1],
   },
   // Reportes
   {
     id: 'reports',
-    nombre: 'Reportes',
+    nombre: 'Ranking',
     role: [1],
-    icono: 'list',
+    icono: 'trending-up',
     type: 'item',
     url: 'opp-reports/reports-ranking',
   },

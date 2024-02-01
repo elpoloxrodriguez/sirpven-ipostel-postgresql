@@ -1,18 +1,9 @@
 <div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
   <div class="card-body">
-    <!-- <div class="container" align="center">
-      <label>
-        <h5>
-          <font color="red">Estimado OPP, este modulo solo mostrara las tarifas del mes actual, si desea visualizar las
-            tarifas de algun mes anterior y/o posterior al actual, tiene que dar click en el icono. </font><span
-            [data-feather]="'archive'"></span>
-        </h5>
-      </label>
-    </div> -->
 
     <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
-      <li ngbNavItem>
-        <a ngbNavLink (click)="ListaTarifas()">Lista de Tarifas Vigentes</a>
+      <li ngbNavItem (click)="ListaTarifas()">
+        <a ngbNavLink >Lista de Tarifas Vigentes</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -54,14 +45,18 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="!rowsTarifas || rowsTarifas.length === 0">
+              <ng-container *ngIf="isLoading == 0">
                 <div class="loading-overlay">
-                  <div class="spinner-border" role="status"></div>
-                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                  <div class="spinner-border text-success" role="status"></div>
+                  <div class="loading-message">Cargando datos, por favor espere...</div>
                 </div>
               </ng-container>
-              
-
+              <ng-container *ngIf="isLoading == 2">
+                <div class="loading-overlay">
+                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="loading-message">No hay registros...</div>
+                </div>
+              </ng-container>
 
               <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
                 [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
@@ -109,15 +104,6 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-
-                <!-- <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="60">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column> -->
-
                 <ngx-datatable-column name="status" prop="status_pef" [width]="60">
                   <ng-template let-status_pef="value" ngx-datatable-cell-template>
                     <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
@@ -155,565 +141,8 @@
           </section>
         </ng-template>
       </li>
-      <!-- <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Nacional Terrestre</a>
-        <ng-template ngbNavContent>
-          <section class="users-list-wrapper">
-            <div class="card">
-              <div class="row">
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <label class="d-flex align-items-center">Mostrar
-                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      Registros</label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-success" (click)="ModalRegistrarTarifaEnvio(ModalTarifaEnvio)"
-                      rippleEffect>
-                      Registrar Tarifa Nacional Terrestre</button>
-                  </div>
-                </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdateTarifaNacionalAereo($event)"
-                        (search)="filterUpdateTarifaNacionalAereo($event)" /></label>
-                  </div>
-                </div>
-              </div>
-
-              <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
-
-                <ngx-datatable-column name="Peso Envio" prop="nombre_peso_envio" [width]="60">
-                  <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="60">
-                  <ng-template let-descripcion="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ descripcion }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="PMVP" prop="pmvp" [width]="20">
-                  <ng-template let-pmvp="value" ngx-datatable-cell-template>
-                    <div>
-                      <div class="badge badge-pill" ngClass="badge-light-info">
-                        {{ pmvp }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-
-                <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="20">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="status" prop="status_pef" [width]="20">
-                  <ng-template let-status_pef="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
-                    </div>
-                    <div class="badge badge-pill" *ngIf="status_pef === 0" ngClass="badge-light-danger">No Autorizado
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                        <div>
-                          <a (click)="EditTarifa(ModalEditTarifa,row)" ngbDropdownItem><span [data-feather]="'edit'"
-                              [size]="16" [class]="'mr-50'"></span>
-                            Editar</a>
-                          <a (click)="DeleteTarifaNacionalAereo(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                              [size]="16" [class]="'mr-50'"></span> Eliminar</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-              </ngx-datatable>
-
-
-            </div>
-          </section>
-        </ng-template>
-      </li> -->
-      <!-- <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Internacional Marítimo Llegada</a>
-        <ng-template ngbNavContent>
-          <section class="users-list-wrapper">
-            <div class="card">
-              <div class="row">
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <label class="d-flex align-items-center">Mostrar
-                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      Registros</label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-success" (click)="ModalRegistrarTarifaEnvio(ModalTarifaEnvio)"
-                      rippleEffect>
-                      Registrar Tarifa Internacional Marítimo Llegada</button>
-                  </div>
-                </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdateTarifaNacionalAereo($event)"
-                        (search)="filterUpdateTarifaNacionalAereo($event)" /></label>
-                  </div>
-                </div>
-              </div>
-
-              <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
-
-                <ngx-datatable-column name="Peso Envio" prop="nombre_peso_envio" [width]="60">
-                  <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="60">
-                  <ng-template let-descripcion="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ descripcion }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="PMVP" prop="pmvp" [width]="20">
-                  <ng-template let-pmvp="value" ngx-datatable-cell-template>
-                    <div>
-                      <div class="badge badge-pill" ngClass="badge-light-info">
-                        {{ pmvp }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="20">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="status" prop="status_pef" [width]="20">
-                  <ng-template let-status_pef="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
-                    </div>
-                    <div class="badge badge-pill" *ngIf="status_pef === 0" ngClass="badge-light-danger">No Autorizado
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                        <div>
-                          <a (click)="EditTarifa(ModalEditTarifa,row)" ngbDropdownItem><span [data-feather]="'edit'"
-                              [size]="16" [class]="'mr-50'"></span>
-                            Editar</a>
-                          <a (click)="DeleteTarifaNacionalAereo(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                              [size]="16" [class]="'mr-50'"></span> Eliminar</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-              </ngx-datatable>
-
-
-            </div>
-          </section>
-        </ng-template>
-      </li> -->
-      <!-- <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Internacional Marítimo Salida</a>
-        <ng-template ngbNavContent>
-          <section class="users-list-wrapper">
-            <div class="card">
-              <div class="row">
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <label class="d-flex align-items-center">Mostrar
-                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      Registros</label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-success" (click)="ModalRegistrarTarifaEnvio(ModalTarifaEnvio)"
-                      rippleEffect>
-                      Registrar Tarifa Internacional Marítimo Salida</button>
-                  </div>
-                </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdateTarifaNacionalAereo($event)"
-                        (search)="filterUpdateTarifaNacionalAereo($event)" /></label>
-                  </div>
-                </div>
-              </div>
-
-              <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
-
-                <ngx-datatable-column name="Peso Envio" prop="nombre_peso_envio" [width]="60">
-                  <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="60">
-                  <ng-template let-descripcion="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ descripcion }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="PMVP" prop="pmvp" [width]="20">
-                  <ng-template let-pmvp="value" ngx-datatable-cell-template>
-                    <div>
-                      <div class="badge badge-pill" ngClass="badge-light-info">
-                        {{ pmvp }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-
-                <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="20">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-
-                <ngx-datatable-column name="status" prop="status_pef" [width]="20">
-                  <ng-template let-status_pef="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
-                    </div>
-                    <div class="badge badge-pill" *ngIf="status_pef === 0" ngClass="badge-light-danger">No Autorizado
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                        <div>
-                          <a (click)="EditTarifa(ModalEditTarifa,row)" ngbDropdownItem><span [data-feather]="'edit'"
-                              [size]="16" [class]="'mr-50'"></span>
-                            Editar</a>
-                          <a (click)="DeleteTarifaNacionalAereo(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                              [size]="16" [class]="'mr-50'"></span> Eliminar</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-              </ngx-datatable>
-
-
-            </div>
-          </section>
-        </ng-template>
-      </li> -->
-      <!-- <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Internacional Aéreo Llegada</a>
-        <ng-template ngbNavContent>
-          <section class="users-list-wrapper">
-            <div class="card">
-              <div class="row">
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <label class="d-flex align-items-center">Mostrar
-                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      Registros</label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-success" (click)="ModalRegistrarTarifaEnvio(ModalTarifaEnvio)"
-                      rippleEffect>
-                      Registrar Tarifa Internacional Aéreo Llegada</button>
-                  </div>
-                </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdateTarifaNacionalAereo($event)"
-                        (search)="filterUpdateTarifaNacionalAereo($event)" /></label>
-                  </div>
-                </div>
-              </div>
-
-              <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
-
-                <ngx-datatable-column name="Peso Envio" prop="nombre_peso_envio" [width]="60">
-                  <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="60">
-                  <ng-template let-descripcion="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ descripcion }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="PMVP" prop="pmvp" [width]="20">
-                  <ng-template let-pmvp="value" ngx-datatable-cell-template>
-                    <div>
-                      <div class="badge badge-pill" ngClass="badge-light-info">
-                        {{ pmvp }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-
-                <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="20">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="status" prop="status_pef" [width]="20">
-                  <ng-template let-status_pef="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
-                    </div>
-                    <div class="badge badge-pill" *ngIf="status_pef === 0" ngClass="badge-light-danger">No Autorizado
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                        <div>
-                          <a (click)="EditTarifa(ModalEditTarifa,row)" ngbDropdownItem><span [data-feather]="'edit'"
-                              [size]="16" [class]="'mr-50'"></span>
-                            Editar</a>
-                          <a (click)="DeleteTarifaNacionalAereo(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                              [size]="16" [class]="'mr-50'"></span> Eliminar</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-              </ngx-datatable>
-
-
-            </div>
-          </section>
-        </ng-template>
-      </li> -->
-      <!-- <li ngbNavItem>
-        <a ngbNavLink (click)="CapturarNav($event)">Internacional Aéreo Salida</a>
-        <ng-template ngbNavContent>
-          <section class="users-list-wrapper">
-            <div class="card">
-              <div class="row">
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <label class="d-flex align-items-center">Mostrar
-                      <select class="form-control mx-25" [(ngModel)]="selectedOption">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                      Registros</label>
-                  </div>
-                </div>
-                <div class="col-md-3 col-12">
-                  <div class="d-flex justify-content-between align-items-center m-1">
-                    <button type="button" class="btn btn-success" (click)="ModalRegistrarTarifaEnvio(ModalTarifaEnvio)"
-                      rippleEffect>
-                      Registrar Tarifa Internacional Aéreo Salida</button>
-                  </div>
-                </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
-                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                    <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
-                        name="searchValue" type="search" class="form-control ml-25" placeholder="Peso de Envio"
-                        (keyup)="filterUpdateTarifaNacionalAereo($event)"
-                        (search)="filterUpdateTarifaNacionalAereo($event)" /></label>
-                  </div>
-                </div>
-              </div>
-
-              <ngx-datatable [rows]="rowsTarifas" rowHeight="auto" class="bootstrap core-bootstrap"
-                [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-                [scrollbarH]="true">
-
-                <ngx-datatable-column name="Peso Envio" prop="nombre_peso_envio" [width]="60">
-                  <ng-template let-nombre_peso_envio="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ nombre_peso_envio }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="Descripcion" prop="descripcion" [width]="60">
-                  <ng-template let-descripcion="value" ngx-datatable-cell-template>
-                    <div>
-                      <span class="font-weight-bold">{{ descripcion }} </span>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="PMVP" prop="pmvp" [width]="20">
-                  <ng-template let-pmvp="value" ngx-datatable-cell-template>
-                    <div>
-                      <div class="badge badge-pill" ngClass="badge-light-info">
-                        {{ pmvp }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="TASA POSTAL" prop="tasa_postal" [width]="20">
-                  <ng-template let-tasa_postal="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" ngClass="badge-light-warning">
-                      {{ tasa_postal }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-                <ngx-datatable-column name="status" prop="status_pef" [width]="20">
-                  <ng-template let-status_pef="value" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="status_pef === 1" ngClass="badge-light-success">Autorizado
-                    </div>
-                    <div class="badge badge-pill" *ngIf="status_pef === 0" ngClass="badge-light-danger">No Autorizado
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-                <ngx-datatable-column name="Accion" [width]="5" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template let-row="row">
-                    <div ngbDropdown container="body">
-                      <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
-                        <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
-                      </button>
-                      <div ngbDropdownMenu>
-                        <div>
-                          <a (click)="EditTarifa(ModalEditTarifa,row)" ngbDropdownItem><span [data-feather]="'edit'"
-                              [size]="16" [class]="'mr-50'"></span>
-                            Editar</a>
-                          <a (click)="DeleteTarifaNacionalAereo(row)" ngbDropdownItem><span [data-feather]="'trash'"
-                              [size]="16" [class]="'mr-50'"></span> Eliminar</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-
-              </ngx-datatable>
-
-
-            </div>
-          </section>
-        </ng-template>
-      </li> -->
-      <li ngbNavItem>
-        <a ngbNavLink (click)="ListaTarifasFranqueoAll()">Historial</a>
+      <li ngbNavItem (click)="ListaTarifasFranqueoAll()">
+        <a ngbNavLink>Historial</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -873,8 +302,8 @@
           </section>
         </ng-template>
       </li>
-      <li ngbNavItem>
-        <a ngbNavLink (click)="ListaLotes()">Lotes</a>
+      <li ngbNavItem (click)="ListaLotes()">
+        <a ngbNavLink>Lotes</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
 
@@ -993,7 +422,7 @@
     <h5 class="modal-title" id="myModalLabel160">Procesar Tarifas por Lote</h5>
     <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
-    </button> 
+    </button>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
@@ -1138,7 +567,6 @@
 
 <ng-template #ModalTarifaEnvio let-modal>
   <div class="modal-header">
-    <!-- <h5 class="modal-title" id="myModalLabel160">Registrar Tarifa de Envio <strong><font color="red">{{ NombreTipoFranqueo }}</font></strong></h5> -->
     <h5 class="modal-title" id="myModalLabel160">Registrar Tarifa de Envio</h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>

@@ -16,7 +16,7 @@ const routes: Routes = [
     path: 'postal-solvency/postal-solvency-opp-sub',
     component: PostalSolvencyOppComponent,
     canActivate: [AuthGuard,AuthGuardGuard],
-    data: { roles: [1,2] },
+    data: { roles: [1] },
   },
 ];
 

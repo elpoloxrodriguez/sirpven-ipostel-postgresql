@@ -173,6 +173,8 @@ export class PriceTableComponent implements OnInit {
 
   public fnx;
 
+  public isLoading: number = 0;
+
   public Xnombre_peso_envio
   public Xpmvp
   public Xiva
@@ -186,7 +188,8 @@ export class PriceTableComponent implements OnInit {
   public itemsSelectPesoEnvio = []
   public rowsTarifas
   public tempDataTarifasFranqueo = []
-  public TarifasFranqueo = []
+  // public TarifasFranqueo = []
+  public TarifasFranqueo: any[] = []
 
   public TarifasFranqueoAll = []
   public rowsTarifaFranqueoAll
@@ -381,6 +384,7 @@ export class PriceTableComponent implements OnInit {
   }
 
   async ListaTarifas() {
+    this.isLoading = 0;
     this.TarifasFranqueo = []
     const date = this.anio + '-' + '0' + this.mes
     const id = this.ServicioFranqueoID
@@ -392,20 +396,25 @@ export class PriceTableComponent implements OnInit {
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        data.Cuerpo.map(e => {
-          e.pmvpx = e.pmvp
-          e.ivax = e.iva
-          e.tasa_postalx = e.tasa_postal
-          e.total_pagarx = e.total_pagar
-          e.pmvp = this.utilService.ConvertirMoneda(e.pmvp);
-          e.iva = this.utilService.ConvertirMoneda(e.iva);
-          e.tasa_postal = this.utilService.ConvertirMoneda(e.tasa_postal);
-          e.total_pagar = this.utilService.ConvertirMoneda(e.total_pagar);
-          this.TarifasFranqueo.push(e)
-        });
-        // console.log(this.TarifasFranqueo)
-        this.rowsTarifas = this.TarifasFranqueo;
-        this.tempDataTarifasFranqueo = this.rowsTarifas
+        if (data.Cuerpo.length > 0) {
+          data.Cuerpo.map(e => {
+            e.pmvpx = e.pmvp
+            e.ivax = e.iva
+            e.tasa_postalx = e.tasa_postal
+            e.total_pagarx = e.total_pagar
+            e.pmvp = this.utilService.ConvertirMoneda(e.pmvp);
+            e.iva = this.utilService.ConvertirMoneda(e.iva);
+            e.tasa_postal = this.utilService.ConvertirMoneda(e.tasa_postal);
+            e.total_pagar = this.utilService.ConvertirMoneda(e.total_pagar);
+            this.TarifasFranqueo.push(e)
+          });
+          this.isLoading = 1;
+          this.rowsTarifas = this.TarifasFranqueo;
+          this.tempDataTarifasFranqueo = this.rowsTarifas
+        } else {
+          this.isLoading = 2;
+        }
+        
       },
       (error) => {
         console.log(error)
@@ -916,6 +925,7 @@ export class PriceTableComponent implements OnInit {
           this.sectionBlockUI.start('Guardando Registros, por favor Espere!!!');
           this.rowsTarifas.push(this.TarifasFranqueo)
           if (data.tipo === 1) {
+            this.rowsLotes = []
             this.TarifasFranqueo = []
             this.TarifasFranqueoAll = []
             this.ListaTarifas()
@@ -954,6 +964,7 @@ export class PriceTableComponent implements OnInit {
           (data) => {
             this.rowsTarifas.push(this.TarifasFranqueo)
             if (data.tipo === 1) {
+              this.rowsTarifas = []
               this.utilService.alertConfirmMini('success', 'Registro Eliminado Exitosamente')
               this.TarifasFranqueo = []
               this.TarifasFranqueoAll = []
