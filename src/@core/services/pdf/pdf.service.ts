@@ -147,7 +147,7 @@ IPOSTEL bajo el N° ${data.n_archivo_curp} Tomo ${data.tomo_archivo_curp} de Fec
       285,
     );
 
-    doc.save("Certificado Uníco de Inscripción.pdf");
+    doc.save(`Certificado Uníco de Inscripción ${data.nombre_empresa} - ${data.rif}.pdf`);
     doc.autoPrint();
     // doc.output("dataurlnewwindow", { filename: 'Certificado Uníco de Inscripción.pdf' });
   }
