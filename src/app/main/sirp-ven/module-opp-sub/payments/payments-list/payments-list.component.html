@@ -41,10 +41,16 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="loadingIndicator">
+              <ng-container *ngIf="isLoading == 0">
                 <div class="loading-overlay">
-                  <div class="spinner-border" role="status"></div>
-                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                  <div class="spinner-border text-success" role="status"></div>
+                  <div class="loading-message">Cargando datos, por favor espere...</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="isLoading == 2">
+                <div class="loading-overlay">
+                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="loading-message">No hay registros...</div>
                 </div>
               </ng-container>
 
@@ -183,10 +189,16 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="loadingIndicator">
+              <ng-container *ngIf="isLoading == 0">
                 <div class="loading-overlay">
-                  <div class="spinner-border" role="status"></div>
-                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                  <div class="spinner-border text-success" role="status"></div>
+                  <div class="loading-message">Cargando datos, por favor espere...</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="isLoading == 2">
+                <div class="loading-overlay">
+                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="loading-message">No hay registros...</div>
                 </div>
               </ng-container>
 
@@ -295,10 +307,16 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="loadingIndicator">
+              <ng-container *ngIf="isLoading == 0">
                 <div class="loading-overlay">
-                  <div class="spinner-border" role="status"></div>
-                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                  <div class="spinner-border text-success" role="status"></div>
+                  <div class="loading-message">Cargando datos, por favor espere...</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="isLoading == 2">
+                <div class="loading-overlay">
+                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="loading-message">No hay registros...</div>
                 </div>
               </ng-container>
 
@@ -409,10 +427,16 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="loadingIndicator">
+              <ng-container *ngIf="isLoading == 0">
                 <div class="loading-overlay">
-                  <div class="spinner-border" role="status"></div>
-                  <div class="loading-message">Cargando datos por favor espere!..</div>
+                  <div class="spinner-border text-success" role="status"></div>
+                  <div class="loading-message">Cargando datos, por favor espere...</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="isLoading == 2">
+                <div class="loading-overlay">
+                  <div class="spinner-border text-danger" role="status"></div>
+                  <div class="loading-message">No hay registros...</div>
                 </div>
               </ng-container>
 

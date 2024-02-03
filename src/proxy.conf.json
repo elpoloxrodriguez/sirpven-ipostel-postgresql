@@ -1,11 +1,11 @@
 {
     "/v1/api/*": {
-        "target": "https://localhost",
+        "target": "https://sirp.ipostel.gob.ve",
         "secure": false,
         "logLevel": "debug"
     },
     "/devel/api/*": {
-        "target": "https://localhost",
+        "target": "https://sirp.ipostel.gob.ve",
         "secure": false,
         "logLevel": "debug"
     }

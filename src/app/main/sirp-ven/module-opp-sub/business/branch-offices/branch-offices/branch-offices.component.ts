@@ -64,6 +64,8 @@ export class BranchOfficesComponent implements OnInit {
 
   public loadingIndicatorOPP : boolean = true
 
+  public isLoading: number = 0;
+
   public idSUB
   public SelectOPP = []
   public idOPPSubcontrato: []
@@ -175,16 +177,21 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   async Sucursales(id: any) {
+    this.isLoading = 0;
     this.xAPI.funcion = "IPOSTEL_R_Sucursales_SUB"
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
+        if (data.Cuerpo.length > 0) {
         data.Cuerpo.map(e => {
           this.SubSucursales.push(e)
         });
         this.rowsSucursales = this.SubSucursales;
         this.tempDataSucursales = this.rowsSucursales
-        // console.log( this.rowsSucursales)
+        this.isLoading = 1;
+      } else {
+        this.isLoading = 2;
+      }
       },
       (error) => {
         console.log(error)
@@ -276,6 +283,9 @@ export class BranchOfficesComponent implements OnInit {
         // Manejar el resolve
         // console.log('Operación exitosa:', resultado);
         this.SubSucursales = []
+        this.rowsSucursales = []
+        this.tempDataSucursales = []
+        this.Sucursales(this.IdOPP)
         this.Limpiar()
         this.modalService.dismissAll('Cerrar Modal')
         this.utilService.alertConfirmMini('success', 'Agencia Registrada Exitosamente')
@@ -380,21 +390,18 @@ export class BranchOfficesComponent implements OnInit {
         this.sectionBlockUI.start('Eliminando Agencia, por favor Espere!!!');
         this.agregarAgencia.EliminarAgencia(row.id_suc)
         .then((resultado) => {
-          // Manejar el resolve
-          // console.log('Operación exitosa:', resultado);
           this.SubSucursales = []
+          this.rowsSucursales = []
+          this.tempDataSucursales = []
           this.Limpiar()
           this.modalService.dismissAll('Cerrar Modal')
           this.utilService.alertConfirmMini('success', 'Agencia Eliminada Exitosamente')
+          this.Sucursales(this.IdOPP)
         })
         .catch((error) => {
-          // Manejar el reject
-          // console.error('Error en la operación:', error);
           this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
         })
         .finally(() => {
-          // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
-          // console.log('Procesamiento finalizado');
           this.Sucursales(this.IdOPP)
           this.sectionBlockUI.stop()
         });

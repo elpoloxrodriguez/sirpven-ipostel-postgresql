@@ -959,6 +959,47 @@ export class PrivatePostalOperatorComponent implements OnInit {
   }
 
 
+  EliminarCon(row : any){
+    // console.log(row)
+    Swal.fire({
+      title: 'Esta seguro?',
+      text: "Desea Eliminar este Registro!",
+      icon: 'warning',
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminarlo',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.IUpdateStatusEmpresa.id_opp = this.IDResetStatus
+        this.xAPI.funcion = 'IPOSTEL_U_EliminarSubCombinacion'
+        this.xAPI.parametros = `${row.os_di}`
+        this.xAPI.valores = ''
+        this.apiService.EjecutarDev(this.xAPI).subscribe(
+          (data) => {
+            this.rowsOPP_SUB.push(this.List_OPP_SUB)
+            if (data.tipo == 1) {
+              this.rowsListaSubC = []
+              this.VerSubContratistas(row.os_id_opp)
+              // this.modalService.dismissAll('Close')
+              this.utilService.alertConfirmMini('success', 'Registro Eliminado Satisfactoriamente')
+            } else {
+              this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+            }
+          },
+          (error) => {
+            console.error(error)
+          }
+        )
+      }
+    })
+  }
+
+
 
 
 }

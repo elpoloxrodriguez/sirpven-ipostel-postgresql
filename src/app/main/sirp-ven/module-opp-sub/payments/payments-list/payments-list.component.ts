@@ -78,6 +78,8 @@ export class PaymentsListComponent implements OnInit {
   public kitchenSinkRows: any;
   public basicSelectedOption: number = 10;
 
+  public isLoading: number = 0;
+
   public idOPP
   public RowsLengthConciliacion
   public selectedOption = 10;
@@ -285,6 +287,7 @@ export class PaymentsListComponent implements OnInit {
   }
 
   async ListaPagosRecaudacion(n_opp : any) {
+    this.isLoading = 0;
     this.loadingIndicator = true
     this.List_Pagos_Recaudacion = []
     this.rowsPagosConciliacion = []
@@ -294,6 +297,7 @@ export class PaymentsListComponent implements OnInit {
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
+        if (data.Cuerpo.length > 0) {
         data.Cuerpo.map(e => {
           e.mantenimiento = JSON.parse(e.mantenimiento)
           e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
@@ -312,6 +316,10 @@ export class PaymentsListComponent implements OnInit {
         this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
         this.RowsLengthConciliacion = this.rowsPagosConciliacion.length
         this.tempDataPagosConciliacion = this.rowsPagosConciliacion
+        this.isLoading = 1;
+      } else {
+        this.isLoading = 2;
+      }
       },
       (error) => {
         console.log(error)

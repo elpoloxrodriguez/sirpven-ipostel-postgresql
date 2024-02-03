@@ -33,6 +33,19 @@
           </div>
         </div>
 
+        <ng-container *ngIf="isLoading == 0">
+          <div class="loading-overlay">
+            <div class="spinner-border text-success" role="status"></div>
+            <div class="loading-message">Cargando datos, por favor espere...</div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isLoading == 2">
+          <div class="loading-overlay">
+            <div class="spinner-border text-danger" role="status"></div>
+            <div class="loading-message">No hay registros...</div>
+          </div>
+        </ng-container>
+
         <ngx-datatable [rows]="rowsSucursales" rowHeight="auto" class="bootstrap core-bootstrap"
           [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
           [scrollbarH]="true">
@@ -235,8 +248,7 @@
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-    <button type="submit" (click)="GuardarSucursal()" rippleEffect class="btn btn-success mr-1">Agregar
-      Sucursal</button>
+    <button type="submit" (click)="GuardarSucursal()" rippleEffect class="btn btn-success mr-1">Agregar Agencia</button>
     <button type="submit" *ngIf="ShowModificarPago == true" (click)="ModificarConciliarPagoRecaudacion()" rippleEffect
       class="btn btn-success mr-1">Actualizar Sucursal</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
@@ -282,8 +294,7 @@
   <div class="modal-footer">
     <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
       <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-    <button type="submit" (click)="GuardarSubcontrato()" rippleEffect class="btn btn-success mr-1">Agregar
-      Subcontrato</button>
+    <button type="submit" (click)="GuardarSubcontrato()" rippleEffect class="btn btn-success mr-1">Agregar</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>
