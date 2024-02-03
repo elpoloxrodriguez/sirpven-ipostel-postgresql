@@ -350,7 +350,7 @@ export class PaymentsListComponent implements OnInit {
     this.ActualizarPago.monto_pc = data.montoReal
     this.ActualizarPago.dolar_dia = data.dolar_dia
     this.ActualizarPago.petro_dia = data.petro_dia
-    this.ActualizarPago.user_created = this.idOPP
+    this.ActualizarPago.user_created = data.user_created
     this.ActualizarPago.user_updated = this.idOPP
     this.ActualizarPago.id_pc = data.id_pc
     this.modalService.open(modal, {
@@ -378,7 +378,7 @@ export class PaymentsListComponent implements OnInit {
     this.ActualizarPago.dolar_dia = data.dolar_dia
     this.ActualizarPago.petro_dia = data.petro_dia
     this.ActualizarPago.archivo_adjunto = data.archivo_adjunto ? data.archivo_adjunto : this.archivos[0].name
-    this.ActualizarPago.user_created = this.idOPP
+    this.ActualizarPago.user_created = data.user_created
     this.ActualizarPago.user_updated = this.idOPP
     this.ActualizarPago.id_pc = data.id_pc
     this.modalService.open(modal, {
