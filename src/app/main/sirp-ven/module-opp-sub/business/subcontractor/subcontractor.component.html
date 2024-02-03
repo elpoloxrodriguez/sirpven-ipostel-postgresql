@@ -124,6 +124,10 @@
                     <a (click)="CambiarStatusSubcontratista(ModalCambiarStatus,row)" ngbDropdownItem><span
                         [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> Cambiar Status</a>
                   </div>
+                  <div>
+                    <a (click)="DetallesOPP(ModalDetailsOPP,row)" ngbDropdownItem><span [data-feather]="'eye'"
+                        [size]="16" [class]="'mr-50'"></span> Detalle Subcontratista</a>
+                  </div>
                 </div>
               </div>
             </ng-template>
@@ -159,8 +163,8 @@
             <div class="form-group">
               <label>Seleccionar Status</label>
               <ng-select [items]="SelectStatusSubcontratista" [(ngModel)]="CambiarStatus.status_agencia"
-                [ngModelOptions]="{standalone: true}" (ngModelChange)="capturarSelect($event)" bindLabel="name" bindValue="id"
-                placeholder="Seleccionar Status"></ng-select>
+                [ngModelOptions]="{standalone: true}" (ngModelChange)="capturarSelect($event)" bindLabel="name"
+                bindValue="id" placeholder="Seleccionar Status"></ng-select>
             </div>
           </div>
 
@@ -196,3 +200,156 @@
 </ng-template>
 
 
+<ng-template #ModalDetailsOPP let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Detalles de <strong>{{ DataEmpresa.nombre_empresa }}</strong></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <ul ngbNav #navCenter="ngbNav" class="nav nav-pills nav-pill-warning my-2 justify-content-center">
+        <li ngbNavItem>
+          <a ngbNavLink>DATOS GENERALES DEL SUBCONTRATISTA</a>
+          <ng-template ngbNavContent>
+            <div class="col-xl-12 col-md-12 col-12">
+              <!-- Header Starts -->
+              <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                <div>
+                  <div class="logo-wrapper">
+                    <h3 class="text-primary invoice-logo"> {{ DataEmpresa.nombre_empresa }} </h3>
+                  </div>
+                  <p class="card-text mb-25"><strong>RIF:</strong> {{ DataEmpresa.rif }} </p>
+                  <p class="card-text mb-25"><strong>Email:</strong> {{ DataEmpresa.correo_electronico }} </p>
+                  <p class="card-text mb-0"><strong>Tipo Registro:</strong> {{ DataEmpresa.tipo_registro }} </p>
+                  <p class="card-text mb-0"><strong>Dirección:</strong> {{ DataEmpresa.direccion_empresa }} </p>
+                  <p class="card-text mb-25"><strong>Estado:</strong> {{ DataEmpresa.estado_empresa }} |
+                    <strong>Ciudad:</strong> {{ DataEmpresa.ciudad_empresa }}
+                    | <strong>Parroquia:</strong> {{ DataEmpresa.parroquia_empresa }}
+                  </p>
+                  <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataEmpresa.facebook_empresa ?
+                    DataEmpresa.facebook_empresa : 'N/A' }} | <strong>Instagram:</strong> {{
+                    DataEmpresa.instagram_empresa
+                    ? DataEmpresa.instagram_empresa : 'N/A' }}
+                    | <strong>Twitter:</strong> {{ DataEmpresa.twitter_empresa ? DataEmpresa.twitter_empresa : 'N/A' }}
+                  </p>
+                  <p class="card-text mb-25"><strong>Tipo Agencia:</strong> {{ DataEmpresa.nombre_tipo_agencia }} </p>
+                  <p class="card-text mb-25"><strong>Tipologia Agencia:</strong> {{ DataEmpresa.nombre_tipologia }} </p>
+                  <p class="card-text mb-25"><strong>Cantidad Sucursales:</strong> {{ DataEmpresa.sucursales }} </p>
+                  <p class="card-text mb-25"><strong>Cantidad Subcontrataciones:</strong> {{
+                    DataEmpresa.subcontrataciones
+                    }} </p>
+                  <p class="card-text mb-25"><strong>Especificación:</strong> {{ DataEmpresa.especificacion_servicio}}
+                  </p>
+                  <p class="card-text mb-25"><strong>Licencia Actividades Economicas Municipales:</strong> {{
+                    DataEmpresa.licencia_actividades_economicas_municipales}} </p>
+                  <p class="card-text mb-25"><strong>Licencia Actividades Economicas SENIAT:</strong> {{
+                    DataEmpresa.actividades_economicas_seniat}} </p>
+                  <p class="card-text mb-25"><strong>Certificado RUPDAE:</strong> {{ DataEmpresa.certificado_rupdae}}
+                  </p>
+                  <p class="card-text mb-25"><strong>Licencia Patronal IVSS:</strong> {{ DataEmpresa.patronal_ivss}}
+                  </p>
+                  <p class="card-text mb-25"><strong>Matricula INCES:</strong> {{ DataEmpresa.matricula_inces}} </p>
+                  <p class="card-text mb-25"><strong>Identificación Ministerio Trabajo:</strong> {{
+                    DataEmpresa.identificacion_laboral_ministerio_trabajo}} </p>
+                  <p class="card-text mb-25"><strong>Certificado EOMIC:</strong> {{ DataEmpresa.certificado_eomic}} </p>
+                  <p class="card-text mb-25"><strong>Permiso Bomberos:</strong> {{ DataEmpresa.permiso_bomberos}} </p>
+                  <p class="card-text mb-25"><strong>Registro SAPI:</strong> {{ DataEmpresa.registro_sapi}} </p>
+                  <p class="card-text mb-25"><strong>Registro Nacional Contratista:</strong> {{
+                    DataEmpresa.registro_nacional_contratista}} </p>
+                  <p class="card-text mb-25"><strong>Cantidad Trabajadores:</strong> {{
+                    DataEmpresa.cantidad_trabajadores
+                    }} </p>
+                  <p class="card-text mb-25"><strong>Cantidad Subcontratados:</strong> {{
+                    DataEmpresa.cantidad_subcontratados}} </p>
+                </div>
+
+              </div>
+              <!-- Header Ends -->
+            </div>
+
+          </ng-template>
+          </li>
+          <li ngbNavItem>
+            <a ngbNavLink>DATOS DEL REPRESENTANTE LEGAL</a>
+            <ng-template ngbNavContent>
+
+              <div class="col-xl-12 col-md-12 col-12">
+                <!-- Header Starts -->
+                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                  <div>
+                    <div class="logo-wrapper">
+                      <h3 class="text-primary invoice-logo"> {{ DataRepresentanteLegal.nombres_representante_legal }} {{
+                        DataRepresentanteLegal.apellidos_representante_legal }} </h3>
+                    </div>
+                    <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{
+                      DataRepresentanteLegal.cedula_representante_legal }} </p>
+                    <p class="card-text mb-25"><strong>Email:</strong> {{ DataRepresentanteLegal.email_representante_legal }} </p>
+                    <p class="card-text mb-25"><strong>Tomo:</strong> {{ DataRepresentanteLegal.tomo }} </p>
+                    <p class="card-text mb-25"><strong>N# Registro:</strong> {{ DataRepresentanteLegal.n_registro}}</p>
+                    <p class="card-text mb-25"><strong>Fecha Registro:</strong> {{ DataRepresentanteLegal.fecha_registro}}</p>
+                    <p class="card-text mb-0"><strong>Dirección:</strong> {{ DataRepresentanteLegal.direccion_representante_legal
+                      }} </p>
+                    <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataRepresentanteLegal.facebook_representante_legal ?
+                      DataRepresentanteLegal.facebook_representante_legal : 'N/A' }} | <strong>Instagram:</strong> {{
+                      DataRepresentanteLegal.instagram_representante_legal
+                      ? DataRepresentanteLegal.instagram_representante_legal : 'N/A' }}
+                      | <strong>Twitter:</strong> {{ DataRepresentanteLegal.twitter_representante_legal ?
+                      DataRepresentanteLegal.twitter_representante_legal : 'N/A' }}
+                    </p>
+                    <p class="card-text mb-25"><strong>Telefono Residencial:</strong> {{
+                      DataRepresentanteLegal.telefono_residencial_representante_legal }} | <strong>Telefono Celular:</strong> {{
+                      DataRepresentanteLegal.telefono_movil_representante_legal }} </p>
+                    <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataRepresentanteLegal.cargo_representante_legal}}</p>
+                  </div>
+
+                </div>
+                <!-- Header Ends -->
+              </div>
+
+
+            </ng-template>
+          </li>
+          <li ngbNavItem>
+            <a ngbNavLink>DATOS DEL DELEGADO</a>
+            <ng-template ngbNavContent>
+
+              <div class="col-xl-12 col-md-12 col-12">
+                <!-- Header Starts -->
+                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                  <div>
+                    <div class="logo-wrapper">
+                      <h3 class="text-primary invoice-logo"> {{ DataDelegado.nombres_delegado }} {{
+                        DataDelegado.apellidos_delegado }} </h3>
+                    </div>
+                    <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{ DataDelegado.cedula_delegado }} </p>
+                    <p class="card-text mb-25"><strong>Email:</strong> {{ DataDelegado.email_delegado }} </p>
+                    <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataDelegado.facebook_delegado ?
+                      DataDelegado.facebook_delegado : 'N/A' }} | <strong>Instagram:</strong> {{ DataDelegado.instagram_delegado
+                      ? DataDelegado.instagram_delegado : 'N/A' }}
+                      | <strong>Twitter:</strong> {{ DataDelegado.twitter_delegado ? DataDelegado.twitter_delegado : 'N/A' }}
+                    </p>
+                    <p class="card-text mb-25"> <strong>Telefono Celular:</strong> {{ DataDelegado.telefono_delegado }} </p>
+                    <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataDelegado.cargo_delegado}}</p>
+                  </div>
+
+                </div>
+                <!-- Header Ends -->
+              </div>
+
+
+          </ng-template>
+      </li>
+
+</ul>
+<div [ngbNavOutlet]="navCenter" class="mt-2"></div>
+
+<!-- Header Ends -->
+</div>
+</div>
+<!--/ Invoice -->
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" (click)="cerrarModalDetalle()" rippleEffect>
+    Cerrar
+  </button>
+</div>
+</ng-template>

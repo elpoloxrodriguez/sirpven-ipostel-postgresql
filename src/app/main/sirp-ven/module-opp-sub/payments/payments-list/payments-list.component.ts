@@ -105,6 +105,9 @@ export class PaymentsListComponent implements OnInit {
 
   public fechaActualPago
 
+  public nombreEmpresaOPP
+  public rifEmpresaOPP
+
   public ListaMantenimientoYSeguridad = []
 
   public MontoRealPagar
@@ -114,6 +117,8 @@ export class PaymentsListComponent implements OnInit {
   public tempDataPagosConciliacion = []
   public List_Pagos_Recaudacion = []
   public TipoRegistro
+
+  public titleModal
 
   public user
 
@@ -402,7 +407,6 @@ export class PaymentsListComponent implements OnInit {
 
   mostarDatosDetalles(row: any, nuevo: any){
     
-    
     this.rowMantenimiento = row.mantenimiento
     this.fechaActualPago = row.fecha
     const dolar = row.dolar_dia
@@ -424,8 +428,28 @@ export class PaymentsListComponent implements OnInit {
 
   }
 
-  VerDetalle(modal:any, row:any){
+  async ConsultarOPP(id_opp: any){
+    this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
+    this.xAPI.parametros = `${id_opp}`
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          console.log(e)
+          this.nombreEmpresaOPP = e.nombre_empresa
+          this.rifEmpresaOPP = e.rif
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+  }
+
+  async VerDetalle(modal:any, row:any){
     // console.log(row)
+    this.titleModal = row.nombre_empresa
 
     let nuevo = {
       bolivares : 0,
@@ -437,6 +461,7 @@ export class PaymentsListComponent implements OnInit {
       tipo_pago : row.tipo_pago_pc
     }
 
+    await this.ConsultarOPP(row.user_created)
     this.mostarDatosDetalles(row, nuevo)
 
 

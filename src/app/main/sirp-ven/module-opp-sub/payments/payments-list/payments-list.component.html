@@ -629,7 +629,7 @@
 
 <ng-template #UsoContrato let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Detalle de Recibo de Pago</h5>
+    <h5 class="modal-title" id="myModalLabel160">Detalle de Recibo de Pago <strong>{{titleModal}}</strong></h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
@@ -638,6 +638,22 @@
       <!-- <form class="form" method="post" enctype="multipart/form-data" id="forma" name="forma"
         (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
         <div class="row d-flex align-items-end">
+
+          <div class="col-md-10 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">Operador Postal Privado</label>
+              <input type="text"  class="form-control" autocomplete="off" readonly [value]="nombreEmpresaOPP"
+                 />
+            </div>
+          </div>
+
+          <div class="col-md-2 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">RIF</label>
+              <input type="text" class="form-control" readonly [value]="rifEmpresaOPP" autocomplete="off"
+              />
+            </div>
+          </div>
 
           <table #No class="table table-striped">
             <thead>

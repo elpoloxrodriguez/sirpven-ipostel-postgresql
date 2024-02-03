@@ -428,6 +428,177 @@ export class SubcontractorComponent implements OnInit {
   }
 
 
+  async EmpresaOPP(id: any) {
+    this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
+    this.xAPI.parametros = `${id}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          this.DataEmpresa.id_opp = e.id_opp
+          this.DataEmpresa.nombre_empresa = e.nombre_empresa
+          this.DataEmpresa.rif = e.rif
+          this.DataEmpresa.role = e.role
+          this.DataEmpresa.status_empresa = e.status_empresa
+          if (e.tipo_registro === 1) {
+            this.DataEmpresa.tipo_registro = 'Oficina Postal Privada'
+            this.TipoRegistro = e.tipo_registro
+          } else {
+            this.DataEmpresa.tipo_registro = 'Subcontratista'
+            this.TipoRegistro = e.tipo_registro
+          }
+          this.DataEmpresa.opp = e.opp
+          this.DataEmpresa.direccion_empresa = e.direccion_empresa
+          this.DataEmpresa.estado_empresa = e.estado_empresa
+          this.DataEmpresa.ciudad_empresa = e.ciudad_empresa
+          this.DataEmpresa.parroquia_empresa = e.parroquia_empresa
+          this.DataEmpresa.correo_electronico = e.correo_electronico
+          this.DataEmpresa.empresa_facebook = e.empresa_facebook
+          this.DataEmpresa.empresa_instagram = e.empresa_instagram
+          this.DataEmpresa.empresa_twitter = e.empresa_twitter
+          this.DataEmpresa.tipo_agencia = e.tipo_agencia
+          this.DataEmpresa.nombre_tipo_agencia = e.nombre_tipo_agencia
+          this.DataEmpresa.sucursales = e.sucursales
+          this.DataEmpresa.subcontrataciones = e.subcontrataciones
+          this.DataEmpresa.tipologia_empresa = e.tipologia_empresa
+          this.DataEmpresa.nombre_tipologia = e.nombre_tipologia
+          this.DataEmpresa.tipo_servicio = JSON.parse(e.tipo_servicio)
+          this.DataEmpresa.especificacion_servicio = e.especificacion_servicio
+          this.DataEmpresa.licencia_actividades_economicas_municipales = e.licencia_actividades_economicas_municipales
+          this.DataEmpresa.actividades_economicas_seniat = e.actividades_economicas_seniat
+          this.DataEmpresa.certificado_rupdae = e.certificado_rupdae
+          this.DataEmpresa.patronal_ivss = e.patronal_ivss
+          this.DataEmpresa.matricula_inces = e.matricula_inces
+          this.DataEmpresa.identificacion_laboral_ministerio_trabajo = e.identificacion_laboral_ministerio_trabajo
+          this.DataEmpresa.certificado_eomic = e.certificado_eomic
+          this.DataEmpresa.permiso_bomberos = e.permiso_bomberos
+          this.DataEmpresa.registro_sapi = e.registro_sapi
+          this.DataEmpresa.registro_nacional_contratista = e.registro_nacional_contratista
+          this.DataEmpresa.flota_utilizada = JSON.parse(e.flota_utilizada)
+          this.DataEmpresa.cantidad_trabajadores = e.cantidad_trabajadores
+          this.DataEmpresa.cantidad_subcontratados = e.cantidad_subcontratados
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  async RepresentanteLegal(id: any) {
+    this.xAPI.funcion = "IPOSTEL_R_RepresentanteLegal_ID"
+    this.xAPI.parametros = `${id}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          this.DataRepresentanteLegal.apellidos_representante_legal = e.apellidos_representante_legal
+          this.DataRepresentanteLegal.cargo_representante_legal = e.cargo_representante_legal
+          this.DataRepresentanteLegal.cedula_representante_legal = e.cedula_representante_legal
+          this.DataRepresentanteLegal.direccion_representante_legal = e.direccion_representante_legal
+          this.DataRepresentanteLegal.email_representante_legal = e.email_representante_legal
+          this.DataRepresentanteLegal.facebook_representante_legal = e.facebook_representante_legal
+          this.DataRepresentanteLegal.fecha_registro = this.utilService.FechaMomentL(e.fecha_registro)
+          this.DataRepresentanteLegal.id_opp = e.id_opp
+          this.DataRepresentanteLegal.id_representante_legal = e.id_representante_legal
+          this.DataRepresentanteLegal.instagram_representante_legal = e.instagram_representante_legal
+          this.DataRepresentanteLegal.n_registro = e.n_registro
+          this.DataRepresentanteLegal.nombres_representante_legal = e.nombres_representante_legal
+          this.DataRepresentanteLegal.telefono_movil_representante_legal = e.telefono_movil_representante_legal
+          this.DataRepresentanteLegal.telefono_residencial_representante_legal = e.telefono_residencial_representante_legal
+          this.DataRepresentanteLegal.tomo = e.tomo
+          this.DataRepresentanteLegal.twitter_representante_legal = e.twitter_representante_legal
+
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  async Delegado(id: any) {
+    this.xAPI.funcion = "IPOSTEL_R_Delegado_ID"
+    this.xAPI.parametros = `${id}`
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          this.DataDelegado.apellidos_delegado = e.apellidos_delegado
+          this.DataDelegado.cargo_delegado = e.cargo_delegado
+          this.DataDelegado.cedula_delegado = e.cedula_delegado
+          this.DataDelegado.email_delegado = e.email_delegado
+          this.DataDelegado.facebook_delegado = e.facebook_delegado
+          this.DataDelegado.id_delegado = e.id_delegado
+          this.DataDelegado.id_opp = e.id_opp
+          this.DataDelegado.instagram_delegado = e.instagram_delegado
+          this.DataDelegado.nombres_delegado = e.nombres_delegado
+          this.DataDelegado.telefono_delegado = e.telefono_delegado
+          this.DataDelegado.twitter_delegado = e.twitter_delegado
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+
+
+  async DetallesOPP(modal, data) {
+    console.log(data)
+    await this.EmpresaOPP(data.id_real_sub)
+    await this.RepresentanteLegal(data.id_real_sub)
+    await this.Delegado(data.id_real_sub)
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  cerrarModalDetalle(){
+    this.DataEmpresa = {
+      id_opp: undefined,
+      nombre_empresa: undefined,
+      rif: undefined,
+      role: undefined,
+      status_empresa: undefined,
+      tipo_registro: undefined,
+      opp: undefined,
+      direccion_empresa: undefined,
+      estado_empresa: undefined,
+      ciudad_empresa: undefined,
+      parroquia_empresa: undefined,
+      correo_electronico: undefined,
+      empresa_facebook: undefined,
+      empresa_instagram: undefined,
+      empresa_twitter: undefined,
+      tipo_agencia: undefined,
+      nombre_tipo_agencia: undefined,
+      sucursales: undefined,
+      subcontrataciones: undefined,
+      tipologia_empresa: undefined,
+      nombre_tipologia: undefined,
+      tipo_servicio: undefined,
+      especificacion_servicio: undefined,
+      licencia_actividades_economicas_municipales: undefined,
+      actividades_economicas_seniat: undefined,
+      certificado_rupdae: undefined,
+      patronal_ivss: undefined,
+      matricula_inces: undefined,
+      identificacion_laboral_ministerio_trabajo: undefined,
+      certificado_eomic: undefined,
+      permiso_bomberos: undefined,
+      registro_sapi: undefined,
+      registro_nacional_contratista: undefined,
+      flota_utilizada: undefined,
+      cantidad_trabajadores: undefined,
+      cantidad_subcontratados: undefined,
+      municipio_empresa: undefined
+  
+    }
+    this.modalService.dismissAll('Accept click')
+  }
 
 
 }
