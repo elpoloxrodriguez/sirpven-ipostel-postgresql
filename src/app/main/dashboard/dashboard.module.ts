@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { CoreCommonModule } from '@core/common.module';
 import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
@@ -63,26 +63,26 @@ import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations
 
 
 @NgModule({
-    declarations: [
-      DashboardComponent,
-      OppComponent,
-      SubcontractorComponent,
-      PaymentsListComponent,
-      PostagePerMonthComponent,
-      ReportsAdminComponent,
-      SystemPullComponent,
-      ListPaymentsComponent,
-      PrivatePostalOperatorComponent,
-      PriceTableOppComponent,
-      ConnectionSettingsComponent,
-      PostalSolvencyComponent,
-      FinesPenaltiesComponent,
-      PostalSolvencyOppComponent,
-      PanelAsistenteVirtualComponent,
-      SystemUsersComponent,
-      DupvenAdminComponent,
-      DupvenOppComponent,
-    ],
+  declarations: [
+    DashboardComponent,
+    OppComponent,
+    SubcontractorComponent,
+    PaymentsListComponent,
+    PostagePerMonthComponent,
+    ReportsAdminComponent,
+    SystemPullComponent,
+    ListPaymentsComponent,
+    PrivatePostalOperatorComponent,
+    PriceTableOppComponent,
+    ConnectionSettingsComponent,
+    PostalSolvencyComponent,
+    FinesPenaltiesComponent,
+    PostalSolvencyOppComponent,
+    PanelAsistenteVirtualComponent,
+    SystemUsersComponent,
+    DupvenAdminComponent,
+    DupvenOppComponent,
+  ],
   imports: [
     CommonModule,
     AngularFileUploaderModule,
@@ -123,16 +123,7 @@ import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations
   providers: [DatePipe]
 
 })
-export class DashboardModule {
- 
-
-
-
-
- 
-
-
-}
+export class DashboardModule { }
 
 
 

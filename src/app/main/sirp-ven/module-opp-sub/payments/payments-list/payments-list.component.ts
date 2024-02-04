@@ -135,7 +135,7 @@ export class PaymentsListComponent implements OnInit {
 
   public montoPagar
   public totalPetros
-  public manNuevo 
+  public manNuevo
 
   public rowMantenimiento = []
 
@@ -291,7 +291,7 @@ export class PaymentsListComponent implements OnInit {
     }
   }
 
-  async ListaPagosRecaudacion(n_opp : any) {
+  async ListaPagosRecaudacion(n_opp: any) {
     this.isLoading = 0;
     this.loadingIndicator = true
     this.List_Pagos_Recaudacion = []
@@ -303,28 +303,28 @@ export class PaymentsListComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         if (data.Cuerpo.length > 0) {
-        data.Cuerpo.map(e => {
-          e.mantenimiento = JSON.parse(e.mantenimiento)
-          e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
-          e.montoReal = e.monto_pagar
-          e.monto_pcx = e.monto_pc
-          this.MontoRealPagar = e.monto_pagar
-          e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
-          e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
-          this.List_Pagos_Recaudacion.push(e)
-          // console.log(e)
-          this.loadingIndicator = false
-        });
-        // console.log(this.List_Pagos_Recaudacion)
-        let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
-        this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA ? MontoTotalA : 0)
-        this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
-        this.RowsLengthConciliacion = this.rowsPagosConciliacion.length
-        this.tempDataPagosConciliacion = this.rowsPagosConciliacion
-        this.isLoading = 1;
-      } else {
-        this.isLoading = 2;
-      }
+          data.Cuerpo.map(e => {
+            e.mantenimiento = JSON.parse(e.mantenimiento)
+            e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
+            e.montoReal = e.monto_pagar
+            e.monto_pcx = e.monto_pc
+            this.MontoRealPagar = e.monto_pagar
+            e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
+            e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
+            this.List_Pagos_Recaudacion.push(e)
+            // console.log(e)
+            this.loadingIndicator = false
+          });
+          // console.log(this.List_Pagos_Recaudacion)
+          let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+          this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA ? MontoTotalA : 0)
+          this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
+          this.RowsLengthConciliacion = this.rowsPagosConciliacion.length
+          this.tempDataPagosConciliacion = this.rowsPagosConciliacion
+          this.isLoading = 1;
+        } else {
+          this.isLoading = 2;
+        }
       },
       (error) => {
         console.log(error)
@@ -390,7 +390,7 @@ export class PaymentsListComponent implements OnInit {
     });
   }
 
-  cerrarModal(){
+  cerrarModal() {
     this.List_Pagos_Recaudacion = []
     this.rowsPagosConciliacion = []
 
@@ -405,14 +405,14 @@ export class PaymentsListComponent implements OnInit {
     this.modalService.dismissAll('Accept click')
   }
 
-  mostarDatosDetalles(row: any, nuevo: any){
-    
+  mostarDatosDetalles(row: any, nuevo: any) {
+
     this.rowMantenimiento = row.mantenimiento
     this.fechaActualPago = row.fecha
     const dolar = row.dolar_dia
-    
+
     this.rowMantenimiento.push(nuevo)
-    
+
 
     this.rowMantenimiento.map(e => {
       e.dolitar = this.utilService.ConvertirMoneda$(parseFloat(e.tasa_petro).toFixed(2))
@@ -422,13 +422,13 @@ export class PaymentsListComponent implements OnInit {
     });
     let MontoTotalA = this.ListaMantenimientoYSeguridad.map(item => item.bolivares).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
     this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA)
-   
+
     let MontoTotalB = this.ListaMantenimientoYSeguridad.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
     this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB)
 
   }
 
-  async ConsultarOPP(id_opp: any){
+  async ConsultarOPP(id_opp: any) {
     this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
     this.xAPI.parametros = `${id_opp}`
     this.xAPI.valores = ''
@@ -447,18 +447,18 @@ export class PaymentsListComponent implements OnInit {
 
   }
 
-  async VerDetalle(modal:any, row:any){
+  async VerDetalle(modal: any, row: any) {
     // console.log(row)
     this.titleModal = row.nombre_empresa
 
     let nuevo = {
-      bolivares : 0,
-      bolivaresx:  "VEF 0,00",
-      id_tipo_pagos : 0,
-      iniciales_tipo_pagos : row.iniciales_tipo_pagos,
-      nombre_tipo_pagos : row.nombre_tipo_pagos,
-      tasa_petro : (parseFloat(row.montoReal) / parseFloat(row.dolar_dia)).toFixed(2) ,
-      tipo_pago : row.tipo_pago_pc
+      bolivares: 0,
+      bolivaresx: "VEF 0,00",
+      id_tipo_pagos: 0,
+      iniciales_tipo_pagos: row.iniciales_tipo_pagos,
+      nombre_tipo_pagos: row.nombre_tipo_pagos,
+      tasa_petro: (parseFloat(row.montoReal) / parseFloat(row.dolar_dia)).toFixed(2),
+      tipo_pago: row.tipo_pago_pc
     }
 
     await this.ConsultarOPP(row.user_created)
@@ -558,32 +558,61 @@ export class PaymentsListComponent implements OnInit {
     )
   }
 
-  async DescargarFactura(data: any) {
-    // console.log(data)
-    this.sectionBlockUI.start('Generando Factura, por favor Espere!!!');
-    this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion"
-    this.xAPI.parametros = `${data.id_opp}` + ',' + `${data.id_pc}`
-    this.xAPI.valores = ''
-    await this.apiService.Ejecutar(this.xAPI).subscribe(
-      (data) => {
-        let datos = data.Cuerpo.map(e => {
-          // console.log(e)
-          e.ListaFranqueo = JSON.parse(e.listafranqueo)
-          e.ListaFacturas = JSON.parse(e.listafacturas)
-          e.MantenimientoSIRPVEN = JSON.parse(e.ListaFacturas[0].mantenimiento)
-          this.MantenimientoYSeguridad = e.MantenimientoSIRPVEN
-          this.sectionBlockUI.stop()
-          this.utilService.alertConfirmMini('success', 'Factura Generada Exitosamente!')
-          return e
-        });
-        // console.log(datos)
-        this.pdf.GenerarFactura(datos, this.MantenimientoYSeguridad)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-
+  async DescargarFactura(liquidacion: any) {
+    console.log(liquidacion)
+    this.sectionBlockUI.start('Generando Planilla de Autoliquidación, por favor Espere!!!');
+    switch (liquidacion.tipo_pago_pc) {
+      case 1:
+        this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion"
+        this.xAPI.parametros = `${liquidacion.id_opp}` + ',' + `${liquidacion.id_pc}`
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            let datos = data.Cuerpo.map(e => {
+              e.ListaFranqueo = JSON.parse(e.listafranqueo)
+              e.ListaFacturas = JSON.parse(e.listafacturas)
+              e.MantenimientoSIRPVEN = JSON.parse(e.ListaFacturas[0].mantenimiento)
+              this.MantenimientoYSeguridad = e.MantenimientoSIRPVEN
+              this.sectionBlockUI.stop()
+              return e
+            });
+            this.pdf.GenerarFactura(datos, this.MantenimientoYSeguridad)
+            this.sectionBlockUI.stop()
+            this.utilService.alertConfirmMini('success', 'Planilla Generada Exitosamente!')
+          },
+          (error) => {
+            this.sectionBlockUI.stop()
+            console.log(error)
+          }
+        )
+        break;
+      case 5:
+        this.xAPI.funcion = "IPOSTEL_R_GenerarPlanillaAutoliquidacion_UsuContratoSubcontratar"
+        this.xAPI.parametros = `${liquidacion.id_opp},${liquidacion.id_pc}`
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            let datos = data.Cuerpo.map(e => {
+              e.ListaFacturas = JSON.parse(e.listafacturas)
+              e.MantenimientoSIRPVEN = JSON.parse(e.ListaFacturas[0].mantenimiento)
+              this.MantenimientoYSeguridad = e.MantenimientoSIRPVEN
+              this.sectionBlockUI.stop()
+              console.log(e)
+              return e
+            });
+            this.pdf.GenerarPlanillaLiquidacion5(datos, this.MantenimientoYSeguridad)
+            this.sectionBlockUI.stop()
+            this.utilService.alertConfirmMini('success', 'Planilla Generada Exitosamente!')
+          },
+          (error) => {
+            this.sectionBlockUI.stop()
+            console.log(error)
+          }
+        )
+        break;
+      default:
+        break;
+    }
   }
 
   filterUpdatePagos(event) {

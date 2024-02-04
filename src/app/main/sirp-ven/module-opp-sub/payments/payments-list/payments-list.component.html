@@ -3,7 +3,7 @@
 
     <ul ngbNav #nav="ngbNav" class="nav nav-pills nav-pill-primary my-2 justify-content-center">
       <li ngbNavItem (click)="CapturarNav($event)">
-        <a ngbNavLink >PENDIENTES</a>
+        <a ngbNavLink>PENDIENTES</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -162,7 +162,7 @@
         </ng-template>
       </li>
       <li ngbNavItem (click)="CapturarNav($event)">
-        <a ngbNavLink >APROBADOS</a>
+        <a ngbNavLink>APROBADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -265,7 +265,7 @@
                       </button>
                       <div ngbDropdownMenu>
                         <a (click)="DescargarFactura(row)" ngbDropdownItem><span [size]="16" [data-feather]="'download'"
-                            [class]="'mr-50'"></span> Descargar Factura</a>
+                            [class]="'mr-50'"></span> Descargar Planilla</a>
                       </div>
                     </div>
                   </ng-template>
@@ -280,7 +280,7 @@
         </ng-template>
       </li>
       <li ngbNavItem (click)="CapturarNav($event)">
-        <a ngbNavLink >RECHAZADOS</a>
+        <a ngbNavLink>RECHAZADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -400,7 +400,7 @@
         </ng-template>
       </li>
       <li ngbNavItem (click)="CapturarNav($event)">
-        <a ngbNavLink >NO LIQUIDADOS</a>
+        <a ngbNavLink>NO LIQUIDADOS</a>
         <ng-template ngbNavContent>
           <section class="users-list-wrapper">
             <div class="card">
@@ -637,78 +637,76 @@
       <!-- <form method="post" enctype="multipart/form-data"  id="forma" name="forma"> -->
       <!-- <form class="form" method="post" enctype="multipart/form-data" id="forma" name="forma"
         (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
-        <div class="row d-flex align-items-end">
+      <div class="row d-flex align-items-end">
 
-          <div class="col-md-10 col-12">
-            <div class="form-group">
-              <label for=" itempmvp">Operador Postal Privado</label>
-              <input type="text"  class="form-control" autocomplete="off" readonly [value]="nombreEmpresaOPP"
-                 />
-            </div>
+        <div class="col-md-10 col-12">
+          <div class="form-group">
+            <label for=" itempmvp">Operador Postal Privado</label>
+            <input type="text" class="form-control" autocomplete="off" readonly [value]="nombreEmpresaOPP" />
           </div>
-
-          <div class="col-md-2 col-12">
-            <div class="form-group">
-              <label for=" itempmvp">RIF</label>
-              <input type="text" class="form-control" readonly [value]="rifEmpresaOPP" autocomplete="off"
-              />
-            </div>
-          </div>
-
-          <table #No class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Dolares</th>
-                <th scope="col">Bolivares Referencial</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of ListaMantenimientoYSeguridad; index as i">
-                <th scope="row">{{ i + 1 }}</th>
-                <td> {{ item.iniciales_tipo_pagos }} </td>
-                <td>{{ item.nombre_tipo_pagos }}</td>
-                <td>{{ item.dolitar }}</td>
-                <td>{{item.bolivaresx}}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>
-                  <font color="red">TOTAL</font>
-                </th>
-                <th>
-                  <font color="red">{{ totalPetros }}</font>
-                </th>
-                <th>
-                  <font color="red">{{ montoPagar }}</font>
-                </th>
-              </tr>
-            </tfoot>
-          </table>
-
-          <div class="col-md-6 col-12">
-            <div class="form-group">
-              <label for=" itempmvp">Monto</label>
-              <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly [value]="montoPagar"
-                placeholder="Monto a Pagar" />
-            </div>
-          </div>
-
-          <div class="col-md-6 col-12">
-            <div class="form-group">
-              <label for=" itempmvp">Fecha</label>
-              <input type="text" name="fechaNO" class="form-control" readonly [value]="fechaActual" autocomplete="off"
-                [(ngModel)]="fechaActualPago" [ngModelOptions]="{standalone: true}" placeholder="Mes" />
-            </div>
-          </div>
-
-
         </div>
+
+        <div class="col-md-2 col-12">
+          <div class="form-group">
+            <label for=" itempmvp">RIF</label>
+            <input type="text" class="form-control" readonly [value]="rifEmpresaOPP" autocomplete="off" />
+          </div>
+        </div>
+
+        <table #No class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Dolares</th>
+              <th scope="col">Bolivares Referencial</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of ListaMantenimientoYSeguridad; index as i">
+              <th scope="row">{{ i + 1 }}</th>
+              <td> {{ item.iniciales_tipo_pagos }} </td>
+              <td>{{ item.nombre_tipo_pagos }}</td>
+              <td>{{ item.dolitar }}</td>
+              <td>{{item.bolivaresx}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>
+                <font color="red">TOTAL</font>
+              </th>
+              <th>
+                <font color="red">{{ totalPetros }}</font>
+              </th>
+              <th>
+                <font color="red">{{ montoPagar }}</font>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for=" itempmvp">Monto</label>
+            <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly [value]="montoPagar"
+              placeholder="Monto a Pagar" />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for=" itempmvp">Fecha</label>
+            <input type="text" name="fechaNO" class="form-control" readonly [value]="fechaActual" autocomplete="off"
+              [(ngModel)]="fechaActualPago" [ngModelOptions]="{standalone: true}" placeholder="Mes" />
+          </div>
+        </div>
+
+
+      </div>
       <!-- </form> -->
     </div>
     <!-- Header Starts -->
