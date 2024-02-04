@@ -13,7 +13,7 @@
         </div>
         &nbsp;
         <ng-select [items]="yearsList" [(ngModel)]="anioObligaciones" [ngModelOptions]="{standalone: true}"
-          (ngModelChange)="FiltarObligacionAnio($event)" bindValue="year" bindLabel="year" placeholder="Seleccione"
+          (change)="FiltarObligacionAnio($event)" bindValue="year" bindLabel="year" placeholder="Seleccione"
           required autocomplete="off">
         </ng-select>
       </div>

@@ -76,6 +76,10 @@ export class ListPaymentsComponent implements OnInit {
 
   public MantenimientoYSeguridad
 
+  public yearsList: { year: number }[] = [];
+  public anioObligaciones = new Date().getFullYear()
+  public datosOriginales: any[];
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -89,6 +93,7 @@ export class ListPaymentsComponent implements OnInit {
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.idOPP = this.token.Usuario[0].id_opp
+    this.generateYearsList()
     await this.ListaBancosVzla()
     await this.ListaPagosRecaudacion(0)
   }
@@ -150,12 +155,23 @@ export class ListPaymentsComponent implements OnInit {
         this.tempDataPagosConciliacion = this.rowsPagosConciliacion
         let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.MontoPC).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
         this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA)
+
+        this.datosOriginales = [...this.rowsPagosConciliacion]; // Hacer una copia de respaldo al inicializar el componente
+        this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+        this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === this.anioObligaciones); // Aplicar el filtro
+        this.table.offset = 0;
       },
       (error) => {
         this.loadingIndicator = false;
         console.log(error)
       }
     )
+  }
+
+  FiltarObligacionAnio(event: any) {
+    this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+    this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year); // Aplicar el filtro
+    this.table.offset = 0;
   }
 
   async ListaBancosVzla() {
@@ -199,6 +215,13 @@ export class ListPaymentsComponent implements OnInit {
     this.rowsPagosConciliacion = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
+  }
+
+  generateYearsList() {
+    const currentYear = new Date().getFullYear();
+    for (let year = 2023; year <= currentYear; year++) {
+      this.yearsList.push({ year: year });
+    }
   }
 
 

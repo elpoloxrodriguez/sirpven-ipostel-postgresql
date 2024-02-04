@@ -26,7 +26,15 @@
                       Monto por Liquidar <small>(<strong>{{ MontoTotalAdeudado }}</strong>)</small></button>
                   </div>
                 </div>
-                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                <div class="col-md-3 col-12 d-flex justify-content-start justify-content-md-end">
+                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                    <ng-select [items]="yearsList" [(ngModel)]="anioObligaciones" [ngModelOptions]="{standalone: true}"
+                      (change)="FiltarObligacionAnio($event)" bindValue="year" bindLabel="year" placeholder="Seleccione"
+                      required autocomplete="off">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12 d-flex justify-content-start justify-content-md-end">
                   <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
                     <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input [(ngModel)]="searchValue"
                         name="searchValue" type="search" class="form-control ml-25" placeholder="Nombre OPP"
@@ -71,8 +79,12 @@
 
                 <ngx-datatable-column name="Tipo Pago" prop="iniciales_tipo_pagos" [width]="60">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 1" ngClass="badge-light-success"> <font size="1"> {{row.nombre_tipo_pagos}} </font> </div>
-                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 5" ngClass="badge-light-primary"> <font size="1"> {{row.nombre_tipo_pagos}} </font> </div>
+                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 1" ngClass="badge-light-success">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
+                    <div class="badge badge-pill" *ngIf="row.tipo_pago_pc == 5" ngClass="badge-light-primary">
+                      <font size="1"> {{row.nombre_tipo_pagos}} </font>
+                    </div>
                   </ng-template>
                 </ngx-datatable-column>
 

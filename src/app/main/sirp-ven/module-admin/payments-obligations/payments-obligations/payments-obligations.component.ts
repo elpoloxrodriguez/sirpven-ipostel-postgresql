@@ -90,12 +90,18 @@ export class PaymentsObligationsComponent implements OnInit {
 
   public loadingIndicator = true
 
+  private tempData = [];
+  public temp = [];
+  public rows
+
+  public datosOriginales: any[];
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
     private modalService: NgbModal,
     private generarConciliacion: GenerarPagoService,
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
@@ -135,6 +141,10 @@ export class PaymentsObligationsComponent implements OnInit {
         this.tempDataPagosConciliacion = this.rowsPagosConciliacion
         let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.MontoPC).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
         this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA)
+        this.datosOriginales = [...this.rowsPagosConciliacion]; // Hacer una copia de respaldo al inicializar el componente
+        this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+        this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === this.anioObligaciones); // Aplicar el filtro
+        this.table.offset = 0;
       },
       (error) => {
         console.log(error)
@@ -169,16 +179,18 @@ export class PaymentsObligationsComponent implements OnInit {
   }
 
 
-  FiltarObligacionAnio(event: number) {
-    const val = event;
-    const temp = this.tempDataPagosConciliacion.filter(function (d) {
-      return (typeof d.anio === 'string' && d.anio.indexOf(val) !== -1) || !val;
-    });
-    console.log(temp)
-    this.rowsPagosConciliacion = temp;
-    this.table.offset = 0;
-  }
+  // FiltarObligacionAnio(event: any) {
+  //   let objetosFiltrados = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year);
+  //   const val = event.year;
+  //   this.rowsPagosConciliacion = objetosFiltrados;
+  //   this.table.offset = 0;
+  // }
 
+FiltarObligacionAnio(event: any) {
+  this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+  this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year); // Aplicar el filtro
+  this.table.offset = 0;
+}
 
 
   ModalMultasObligaciones(modal) {
