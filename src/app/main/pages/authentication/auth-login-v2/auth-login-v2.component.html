@@ -22,39 +22,24 @@
         <h2 class="mb-1 drop"><strong>
             <font color="#ffffff">Validación de Certificados y Filatelia ✅</font>
           </strong></h2>
-        <p class="mb-3 drop"><font color="#ffffff">Ingrese el Codigo QR del Certificado y/o Filatelia.</font></p>
-        <!-- <form class="form-inline justify-content-center row m-0 mb-2" action="javascript:void(0);">
-          <div class="col-md-12 col-12">
-            <div class="form-group">
-              <input class="form-control" id="notify-email" type="text" autocomplete="off" [(ngModel)]="Qr"
-                [ngModelOptions]="{standalone: true, required: true}" placeholder="Ingrese el codigo QR" />
-            </div>
-            <div class="col-md-12 col-12">
-              <ng-select [items]="TipoVerificacion" bindValue="id" [(ngModel)]="TipoSeleccion"
-                [ngModelOptions]="{standalone: true, required: true}" (ngModelChange)="ValidarSeleccion($event)"
-                bindLabel="name" placeholder="Seleccione Tipo Estampilla" required autocomplete="off">
-              </ng-select>
-            </div>
-            <button class="btn btn-primary mb-1 btn-sm-block" type="submit" (click)="Certificado(Qr)"
-              rippleEffect>Verificar</button>
+        <p class="mb-3 drop">
+          <font color="#ffffff">Ingrese el Codigo QR del Certificado y/o Filatelia.</font>
+        </p>
+
+
+        <div align="center">
+          <div class="col-md-6 col-12">
+            <input class="form-control" id="notify-email" type="text" autocomplete="off" [(ngModel)]="Qr"
+              [ngModelOptions]="{standalone: true, required: true}" placeholder="Ingrese el Codigo QR" />
           </div>
-        </form> -->
-
-        <form>
-          <input class="form-control" id="notify-email" type="text" autocomplete="off" [(ngModel)]="Qr"
-                [ngModelOptions]="{standalone: true, required: true}" placeholder="Ingrese el Codigo QR" />
           <br>
-          
-          <ng-select [items]="TipoVerificacion" bindValue="id" [(ngModel)]="TipoSeleccion"
-                [ngModelOptions]="{standalone: true, required: true}" (ngModelChange)="ValidarSeleccion($event,Qr)"
-                bindLabel="name" placeholder="Seleccione Tipo de Verificación" required autocomplete="off">
-              </ng-select>
-          <br>
-          
-          <!-- <button class="btn btn-primary btn-block" type="submit"
-              rippleEffect>Verificar</button> -->
-        </form>
-
+          <div class="col-md-6 col-12">
+            <ng-select [items]="TipoVerificacion" bindValue="id" [(ngModel)]="TipoSeleccion"
+              [ngModelOptions]="{standalone: true, required: true}" (ngModelChange)="ValidarSeleccion($event,Qr)"
+              bindLabel="name" placeholder="Seleccione Tipo de Verificación" required autocomplete="off">
+            </ng-select>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -115,50 +100,30 @@
             </div>
           </div>
 
-          <!-- <div class="form-group">
-              <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" id="remember-me" type="checkbox" tabindex="3" />
-                <label class="custom-control-label" for="remember-me"> Recuérdame</label>
-              </div>
-            </div> -->
+          <div class="row">
 
-            <div class="row">
-
-              <div class="col-md-6">
-                <div class="custom-control custom-switch custom-switch-success">
-                  <p class="mb-50">Eres Subcontratista?</p>
-                  <input type="checkbox" class="custom-control-input" id="customSwitch111" [checked]="checkboxValue" (change)="toggleCheckbox($event)"  />
-                  <label class="custom-control-label" for="customSwitch111">
-                    <span class="switch-icon-left"><i data-feather="check"></i></span>
-                    <span class="switch-icon-right"><i data-feather="x"></i></span>
-                  </label>
-                </div>
+            <div class="col-md-6">
+              <div class="custom-control custom-switch custom-switch-success">
+                <p class="mb-50">Eres Subcontratista?</p>
+                <input type="checkbox" class="custom-control-input" id="customSwitch111" [checked]="checkboxValue"
+                  (change)="toggleCheckbox($event)" />
+                <label class="custom-control-label" for="customSwitch111">
+                  <span class="switch-icon-left"><i data-feather="check"></i></span>
+                  <span class="switch-icon-right"><i data-feather="x"></i></span>
+                </label>
               </div>
-              
-              <div class="col-md-6">
-                <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
+            </div>
+
+            <div class="col-md-6">
+              <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
                 [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
               <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
                 <div *ngIf="recaptcha.errors?.['required']">El reCAPTCHA es requerido.</div>
-                </div>
               </div>
+            </div>
 
           </div>
 
-
-
-
-          <!-- <div class="form-group" align="center">
-            <div class="row mt-3">
-              <div class="col-sm-12 mb-2">
-                <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
-                  [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
-                <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
-                  <div *ngIf="recaptcha.errors?.['required']">El reCAPTCHA es requerido.</div>
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <br>
 
@@ -173,22 +138,22 @@
 
           <div class="col-md-6 col-12">
             <div class="form-group">
-              <a class="btn btn-warning btn-block" *ngIf="btnShow"
-                routerLink="/register-private-post-offices"><span>&nbsp;Crear nueva cuenta OPP</span></a>
+              <a class="btn btn-success btn-block" *ngIf="btnShow"
+                routerLink="/register-private-post-offices"><span>&nbsp;Crear Nueva Cuenta Operador Postal</span></a>
             </div>
           </div>
 
           <div class="col-md-6 col-12">
             <div class="form-group">
-              <a class="btn btn-success btn-block" *ngIf="btnShow"
-                routerLink="/register-private-post-offices-subcontrator"><span>&nbsp;Crear nueva cuenta
+              <a class="btn btn-warning btn-block" *ngIf="btnShow"
+                routerLink="/register-private-post-offices-subcontrator"><span>&nbsp;Crear Nueva Cuenta
                   Subcontratista</span></a>
             </div>
           </div>
         </div>
 
 
-        <!-- <app-asistente-virtual></app-asistente-virtual> -->
+        <app-asistente-virtual></app-asistente-virtual>
 
         <app-footer></app-footer>
 
