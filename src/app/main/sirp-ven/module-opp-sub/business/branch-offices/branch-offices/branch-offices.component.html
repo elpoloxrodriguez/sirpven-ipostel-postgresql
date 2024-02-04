@@ -124,11 +124,14 @@
                 <div ngbDropdownMenu>
                   <div>
                     <a (click)="AgregarContrato(AgregarSubcontrato,row)" ngbDropdownItem><span
-                        [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span> Agregar OPP</a>
+                        [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span> Agregar Operador</a>
+                    <a (click)="ModificarAgencia(AgregarSucursal,row)" ngbDropdownItem><span [data-feather]="'edit'"
+                        [size]="16" [class]="'mr-50'"></span>
+                      Modificar Agencia</a>
                     <a (click)="VerSubContratistas(ModalVerSubContratistas,row)" ngbDropdownItem><span
-                        [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Ver Subcontratistas</a>
-                    <a (click)="EliminarContrato(row)" ngbDropdownItem><span [data-feather]="'trash'" [size]="16"
-                        [class]="'mr-50'"></span> Eliminar Agencia</a>
+                        [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span> Ver Aliados</a>
+                    <!-- <a (click)="EliminarContrato(row)" ngbDropdownItem><span [data-feather]="'trash'" [size]="16"
+                        [class]="'mr-50'"></span> Eliminar Agencia</a> -->
                   </div>
                 </div>
               </div>
@@ -151,7 +154,7 @@
 
 <ng-template #AgregarSucursal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Agregar Sucursal</h5>
+    <h5 class="modal-title" id="myModalLabel160">{{titleModal}}</h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
@@ -181,7 +184,7 @@
               <label for="tipo">Tipo Agencia</label>
               <ng-select [items]="tipoSucursal" [(ngModel)]="ICrearSucursalSUB.tipo_sub"
                 [ngModelOptions]="{standalone: true}" bindValue="id" bindLabel="name"
-                placeholder="Seleccione Tipo Sucursal" required autocomplete="off">
+                placeholder="Seleccione Tipo Agencia" required autocomplete="off">
               </ng-select>
             </div>
           </div>
@@ -246,12 +249,11 @@
   </div>
   <!--/ Invoice -->
   <div class="modal-footer">
-    <!-- <button class="btn bg-gradient-success text-white" [disabled]="!formUsersRegister.form.valid" (click)="RegistrarTarifaNacionalAereo()">
-      <span class="fa fa-plus"></span> Registrar Tarifa</button> -->
-    <button type="submit" (click)="GuardarSucursal()" rippleEffect class="btn btn-success mr-1">Agregar Agencia</button>
-    <button type="submit" *ngIf="ShowModificarPago == true" (click)="ModificarConciliarPagoRecaudacion()" rippleEffect
-      class="btn btn-success mr-1">Actualizar Sucursal</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+    <button type="submit" *ngIf="!showBtn" (click)="GuardarSucursal()" rippleEffect
+      class="btn btn-success mr-1">{{titleBtn}}</button>
+    <button type="submit" *ngIf="showBtn" (click)="ActualizarAgencia()" rippleEffect
+      class="btn btn-warning mr-1">{{titleBtn}}</button>
+    <button type="button" class="btn btn-danger" (click)="cerrarModal()" rippleEffect>
       Cerrar
     </button>
   </div>
@@ -266,6 +268,13 @@
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
+
+      <div class="align-items-center">
+        <font color="red">
+          <p>Estimado Subcontratista debe seleccionar los Operadores Postales Privado a quienes brinda el
+            servicio.</p>
+        </font>
+      </div>
       <!-- Header Starts -->
       <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
       <form method="post" enctype="multipart/form-data" id="forma" name="forma" class="invoice-repeater">

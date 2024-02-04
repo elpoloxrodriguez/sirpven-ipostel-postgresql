@@ -26,10 +26,16 @@
           </div>
         </div>
 
-        <ng-container *ngIf="loadingIndicator">
+        <ng-container *ngIf="isLoading == 0">
           <div class="loading-overlay">
-            <div class="spinner-border" role="status"></div>
-            <div class="loading-message">Cargando datos por favor espere!..</div>
+            <div class="spinner-border text-success" role="status"></div>
+            <div class="loading-message">Cargando datos, por favor espere...</div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isLoading == 2">
+          <div class="loading-overlay">
+            <div class="spinner-border text-danger" role="status"></div>
+            <div class="loading-message">No hay registros...</div>
           </div>
         </ng-container>
 
@@ -268,88 +274,97 @@
             </div>
 
           </ng-template>
-          </li>
-          <li ngbNavItem>
-            <a ngbNavLink>DATOS DEL REPRESENTANTE LEGAL</a>
-            <ng-template ngbNavContent>
+        </li>
+        <li ngbNavItem>
+          <a ngbNavLink>DATOS DEL REPRESENTANTE LEGAL</a>
+          <ng-template ngbNavContent>
 
-              <div class="col-xl-12 col-md-12 col-12">
-                <!-- Header Starts -->
-                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-                  <div>
-                    <div class="logo-wrapper">
-                      <h3 class="text-primary invoice-logo"> {{ DataRepresentanteLegal.nombres_representante_legal }} {{
-                        DataRepresentanteLegal.apellidos_representante_legal }} </h3>
-                    </div>
-                    <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{
-                      DataRepresentanteLegal.cedula_representante_legal }} </p>
-                    <p class="card-text mb-25"><strong>Email:</strong> {{ DataRepresentanteLegal.email_representante_legal }} </p>
-                    <p class="card-text mb-25"><strong>Tomo:</strong> {{ DataRepresentanteLegal.tomo }} </p>
-                    <p class="card-text mb-25"><strong>N# Registro:</strong> {{ DataRepresentanteLegal.n_registro}}</p>
-                    <p class="card-text mb-25"><strong>Fecha Registro:</strong> {{ DataRepresentanteLegal.fecha_registro}}</p>
-                    <p class="card-text mb-0"><strong>Dirección:</strong> {{ DataRepresentanteLegal.direccion_representante_legal
-                      }} </p>
-                    <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataRepresentanteLegal.facebook_representante_legal ?
-                      DataRepresentanteLegal.facebook_representante_legal : 'N/A' }} | <strong>Instagram:</strong> {{
-                      DataRepresentanteLegal.instagram_representante_legal
-                      ? DataRepresentanteLegal.instagram_representante_legal : 'N/A' }}
-                      | <strong>Twitter:</strong> {{ DataRepresentanteLegal.twitter_representante_legal ?
-                      DataRepresentanteLegal.twitter_representante_legal : 'N/A' }}
-                    </p>
-                    <p class="card-text mb-25"><strong>Telefono Residencial:</strong> {{
-                      DataRepresentanteLegal.telefono_residencial_representante_legal }} | <strong>Telefono Celular:</strong> {{
-                      DataRepresentanteLegal.telefono_movil_representante_legal }} </p>
-                    <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataRepresentanteLegal.cargo_representante_legal}}</p>
+            <div class="col-xl-12 col-md-12 col-12">
+              <!-- Header Starts -->
+              <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                <div>
+                  <div class="logo-wrapper">
+                    <h3 class="text-primary invoice-logo"> {{ DataRepresentanteLegal.nombres_representante_legal }} {{
+                      DataRepresentanteLegal.apellidos_representante_legal }} </h3>
                   </div>
-
+                  <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{
+                    DataRepresentanteLegal.cedula_representante_legal }} </p>
+                  <p class="card-text mb-25"><strong>Email:</strong> {{ DataRepresentanteLegal.email_representante_legal
+                    }} </p>
+                  <p class="card-text mb-25"><strong>Tomo:</strong> {{ DataRepresentanteLegal.tomo }} </p>
+                  <p class="card-text mb-25"><strong>N# Registro:</strong> {{ DataRepresentanteLegal.n_registro}}</p>
+                  <p class="card-text mb-25"><strong>Fecha Registro:</strong> {{ DataRepresentanteLegal.fecha_registro}}
+                  </p>
+                  <p class="card-text mb-0"><strong>Dirección:</strong> {{
+                    DataRepresentanteLegal.direccion_representante_legal
+                    }} </p>
+                  <p class="card-text mb-25"><strong>Facebook:</strong> {{
+                    DataRepresentanteLegal.facebook_representante_legal ?
+                    DataRepresentanteLegal.facebook_representante_legal : 'N/A' }} | <strong>Instagram:</strong> {{
+                    DataRepresentanteLegal.instagram_representante_legal
+                    ? DataRepresentanteLegal.instagram_representante_legal : 'N/A' }}
+                    | <strong>Twitter:</strong> {{ DataRepresentanteLegal.twitter_representante_legal ?
+                    DataRepresentanteLegal.twitter_representante_legal : 'N/A' }}
+                  </p>
+                  <p class="card-text mb-25"><strong>Telefono Residencial:</strong> {{
+                    DataRepresentanteLegal.telefono_residencial_representante_legal }} | <strong>Telefono
+                      Celular:</strong> {{
+                    DataRepresentanteLegal.telefono_movil_representante_legal }} </p>
+                  <p class="card-text mb-25"><strong>Cargo:</strong> {{
+                    DataRepresentanteLegal.cargo_representante_legal}}</p>
                 </div>
-                <!-- Header Ends -->
+
               </div>
-
-
-            </ng-template>
-          </li>
-          <li ngbNavItem>
-            <a ngbNavLink>DATOS DEL DELEGADO</a>
-            <ng-template ngbNavContent>
-
-              <div class="col-xl-12 col-md-12 col-12">
-                <!-- Header Starts -->
-                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
-                  <div>
-                    <div class="logo-wrapper">
-                      <h3 class="text-primary invoice-logo"> {{ DataDelegado.nombres_delegado }} {{
-                        DataDelegado.apellidos_delegado }} </h3>
-                    </div>
-                    <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{ DataDelegado.cedula_delegado }} </p>
-                    <p class="card-text mb-25"><strong>Email:</strong> {{ DataDelegado.email_delegado }} </p>
-                    <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataDelegado.facebook_delegado ?
-                      DataDelegado.facebook_delegado : 'N/A' }} | <strong>Instagram:</strong> {{ DataDelegado.instagram_delegado
-                      ? DataDelegado.instagram_delegado : 'N/A' }}
-                      | <strong>Twitter:</strong> {{ DataDelegado.twitter_delegado ? DataDelegado.twitter_delegado : 'N/A' }}
-                    </p>
-                    <p class="card-text mb-25"> <strong>Telefono Celular:</strong> {{ DataDelegado.telefono_delegado }} </p>
-                    <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataDelegado.cargo_delegado}}</p>
-                  </div>
-
-                </div>
-                <!-- Header Ends -->
-              </div>
+              <!-- Header Ends -->
+            </div>
 
 
           </ng-template>
-      </li>
+        </li>
+        <li ngbNavItem>
+          <a ngbNavLink>DATOS DEL DELEGADO</a>
+          <ng-template ngbNavContent>
 
-</ul>
-<div [ngbNavOutlet]="navCenter" class="mt-2"></div>
+            <div class="col-xl-12 col-md-12 col-12">
+              <!-- Header Starts -->
+              <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                <div>
+                  <div class="logo-wrapper">
+                    <h3 class="text-primary invoice-logo"> {{ DataDelegado.nombres_delegado }} {{
+                      DataDelegado.apellidos_delegado }} </h3>
+                  </div>
+                  <p class="card-text mb-25"><strong>Cedula Identidad:</strong> {{ DataDelegado.cedula_delegado }} </p>
+                  <p class="card-text mb-25"><strong>Email:</strong> {{ DataDelegado.email_delegado }} </p>
+                  <p class="card-text mb-25"><strong>Facebook:</strong> {{ DataDelegado.facebook_delegado ?
+                    DataDelegado.facebook_delegado : 'N/A' }} | <strong>Instagram:</strong> {{
+                    DataDelegado.instagram_delegado
+                    ? DataDelegado.instagram_delegado : 'N/A' }}
+                    | <strong>Twitter:</strong> {{ DataDelegado.twitter_delegado ? DataDelegado.twitter_delegado : 'N/A'
+                    }}
+                  </p>
+                  <p class="card-text mb-25"> <strong>Telefono Celular:</strong> {{ DataDelegado.telefono_delegado }}
+                  </p>
+                  <p class="card-text mb-25"><strong>Cargo:</strong> {{ DataDelegado.cargo_delegado}}</p>
+                </div>
 
-<!-- Header Ends -->
-</div>
-</div>
-<!--/ Invoice -->
-<div class="modal-footer">
-  <button type="button" class="btn btn-danger" (click)="cerrarModalDetalle()" rippleEffect>
-    Cerrar
-  </button>
-</div>
+              </div>
+              <!-- Header Ends -->
+            </div>
+
+
+          </ng-template>
+        </li>
+
+      </ul>
+      <div [ngbNavOutlet]="navCenter" class="mt-2"></div>
+
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="cerrarModalDetalle()" rippleEffect>
+      Cerrar
+    </button>
+  </div>
 </ng-template>

@@ -9,6 +9,7 @@ import { UtilService } from '@core/services/util/util.service';
 import { Router } from '@angular/router';
 import { AddAgencyService } from '../add-agency.service';
 import Swal from 'sweetalert2';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class BranchOfficesComponent implements OnInit {
 
   public ListaCompletaOPP = [];
 
-  public loadingIndicatorOPP : boolean = true
+  public loadingIndicatorOPP: boolean = true
 
   public isLoading: number = 0;
 
@@ -70,6 +71,8 @@ export class BranchOfficesComponent implements OnInit {
   public SelectOPP = []
   public idOPPSubcontrato: []
   public idcontrato
+
+  private _unsubscribeAll: Subject<any>;
 
   public selectedOption = 10;
   public ColumnMode = ColumnMode;
@@ -82,6 +85,10 @@ export class BranchOfficesComponent implements OnInit {
   public OPPSub = []
   public rowsOPPSub = []
   public tempDataOPPSub = []
+
+  public titleModal
+  public showBtn: boolean = true
+  public titleBtn
 
   public item = []
   constructor(
@@ -177,21 +184,22 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   async Sucursales(id: any) {
+    console.log(id)
     this.isLoading = 0;
     this.xAPI.funcion = "IPOSTEL_R_Sucursales_SUB"
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         if (data.Cuerpo.length > 0) {
-        data.Cuerpo.map(e => {
-          this.SubSucursales.push(e)
-        });
-        this.rowsSucursales = this.SubSucursales;
-        this.tempDataSucursales = this.rowsSucursales
-        this.isLoading = 1;
-      } else {
-        this.isLoading = 2;
-      }
+          data.Cuerpo.map(e => {
+            this.SubSucursales.push(e)
+          });
+          this.rowsSucursales = this.SubSucursales;
+          this.tempDataSucursales = this.rowsSucursales
+          this.isLoading = 1;
+        } else {
+          this.isLoading = 2;
+        }
       },
       (error) => {
         console.log(error)
@@ -200,7 +208,7 @@ export class BranchOfficesComponent implements OnInit {
   }
 
 
-  async ListaOPPSUB(id:any){
+  async ListaOPPSUB(id: any) {
     this.loadingIndicatorOPP = true
     this.xAPI.funcion = "IPOSTEL_R_SubcontratistaVerOpp"
     this.xAPI.parametros = `${id}`
@@ -220,7 +228,7 @@ export class BranchOfficesComponent implements OnInit {
     )
   }
 
-  VerSubContratistas(modal:any, row:any){
+  VerSubContratistas(modal: any, row: any) {
     // console.log(row)
     this.ListaOPPSUB(row.id_suc)
     this.TitleModal = row.nombre_empresa
@@ -231,6 +239,32 @@ export class BranchOfficesComponent implements OnInit {
       keyboard: false,
       windowClass: 'fondo-modal',
     });
+  }
+
+  async ActualizarAgencia() {
+    this.xAPI.funcion = "IPOSTEL_U_ActualizarSucursalSUB"
+    this.xAPI.parametros = ''
+    this.xAPI.valores = JSON.stringify(this.ICrearSucursalSUB)
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      async (data) => {
+        if (data.tipo == 1) {
+          this.SubSucursales = []
+          this.rowsSucursales = []
+          this.tempDataSucursales = []
+          this.Limpiar()
+          this.modalService.dismissAll('Cerrar Modal')
+          // await this.Sucursales(this.IdOPP)
+          this.router.navigate(['/subcontractor/branch-offices']).then(() => { window.location.reload() });
+          this.utilService.alertConfirmMini('success', 'Agencia Actualizada Exitosamente')
+        } else {
+          this.rowsSucursales = []
+          this.utilService.alertConfirmMini('warning', 'Oops, Lo sentimos algo salio mal!')
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
 
 
@@ -248,7 +282,7 @@ export class BranchOfficesComponent implements OnInit {
   }
 
 
-  filterOPPSUB(event){
+  filterOPPSUB(event) {
     // Reset ng-select on search
     const val = event.target.value.toLowerCase();
     // Filter Our Data
@@ -263,6 +297,9 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   ModalAgregarSucursal(modal) {
+    this.titleModal = 'Agregar Agencia'
+    this.showBtn = false
+    this.titleBtn = 'Agregar Agencia'
     this.ICrearSucursalSUB.nombre_empresa = this.token.Usuario[0].nombre_empresa
     this.ICrearSucursalSUB.rif_empresa = this.token.Usuario[0].rif
     this.modalService.open(modal, {
@@ -320,32 +357,32 @@ export class BranchOfficesComponent implements OnInit {
   async GuardarSubcontrato() {
     for (let i = 0; i < this.ListaCompletaOPP.length; i++) {
       const element = this.ListaCompletaOPP[i];
-    await this.servicioGuardarSubcontrato(element)
+      await this.servicioGuardarSubcontrato(element)
     }
   }
 
-  servicioGuardarSubcontrato(subcontrato : any){
+  servicioGuardarSubcontrato(subcontrato: any) {
     this.sectionBlockUI.start('Agregando Subcontrato, por favor Espere!!!');
     this.agregarAgencia.AgregarSubcontrato(subcontrato)
-    .then((resultado) => {
-      // Manejar el resolve
-      // console.log('Operación exitosa:', resultado);
-      this.SubSucursales = []
-      this.idcontrato = undefined
-      this.modalService.dismissAll('Cerrar Modal')
-      this.utilService.alertConfirmMini('success', 'Subcontrato Registrado Exitosamente')
-    })
-    .catch((error) => {
-      // Manejar el reject
-      // console.error('Error en la operación:', error);
-      this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
-    })
-    .finally(() => {
-      // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
-      // console.log('Procesamiento finalizado');
-      this.Sucursales(this.IdOPP)
-      this.sectionBlockUI.stop()
-    });
+      .then((resultado) => {
+        // Manejar el resolve
+        // console.log('Operación exitosa:', resultado);
+        this.SubSucursales = []
+        this.idcontrato = undefined
+        this.modalService.dismissAll('Cerrar Modal')
+        this.utilService.alertConfirmMini('success', 'Subcontrato Registrado Exitosamente')
+      })
+      .catch((error) => {
+        // Manejar el reject
+        // console.error('Error en la operación:', error);
+        this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+      })
+      .finally(() => {
+        // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+        // console.log('Procesamiento finalizado');
+        this.Sucursales(this.IdOPP)
+        this.sectionBlockUI.stop()
+      });
   }
 
   onSelectChange(selectedItems: any[]) {
@@ -374,7 +411,7 @@ export class BranchOfficesComponent implements OnInit {
     )
   }
 
-  async EliminarContrato(row: any){
+  async EliminarContrato(row: any) {
     // console.log(row.id_suc)
     await Swal.fire({
       title: "Esta seguro?",
@@ -389,22 +426,22 @@ export class BranchOfficesComponent implements OnInit {
       if (result.isConfirmed) {
         this.sectionBlockUI.start('Eliminando Agencia, por favor Espere!!!');
         this.agregarAgencia.EliminarAgencia(row.id_suc)
-        .then((resultado) => {
-          this.SubSucursales = []
-          this.rowsSucursales = []
-          this.tempDataSucursales = []
-          this.Limpiar()
-          this.modalService.dismissAll('Cerrar Modal')
-          this.utilService.alertConfirmMini('success', 'Agencia Eliminada Exitosamente')
-          this.Sucursales(this.IdOPP)
-        })
-        .catch((error) => {
-          this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
-        })
-        .finally(() => {
-          this.Sucursales(this.IdOPP)
-          this.sectionBlockUI.stop()
-        });
+          .then((resultado) => {
+            this.SubSucursales = []
+            this.rowsSucursales = []
+            this.tempDataSucursales = []
+            this.Limpiar()
+            this.modalService.dismissAll('Cerrar Modal')
+            this.utilService.alertConfirmMini('success', 'Agencia Eliminada Exitosamente')
+            this.Sucursales(this.IdOPP)
+          })
+          .catch((error) => {
+            this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+          })
+          .finally(() => {
+            this.Sucursales(this.IdOPP)
+            this.sectionBlockUI.stop()
+          });
       }
     });
   }
@@ -419,6 +456,38 @@ export class BranchOfficesComponent implements OnInit {
       keyboard: false,
       windowClass: 'fondo-modal',
     });
+  }
+
+  cerrarModal() {
+    this.modalService.dismissAll('Accept click')
+    this.Limpiar()
+  }
+
+  ModificarAgencia(modal: any, row: any) {
+    this.titleModal = 'Actualizar Agencia'
+    this.showBtn = true
+    this.titleBtn = 'Actualizar Agencia'
+    this.ICrearSucursalSUB.id_suc = parseInt(row.id_suc)
+    this.ICrearSucursalSUB.id_sub = this.IdOPP
+    this.ICrearSucursalSUB.tipo_sub = parseInt(row.tipo_sub)
+    this.ICrearSucursalSUB.estado_empresa = row.estado_empresa
+    this.ICrearSucursalSUB.ciudad_empresa = row.ciudad_empresa
+    this.ICrearSucursalSUB.municipio_empresa = row.municipio_empresa
+    this.ICrearSucursalSUB.parroquia_empresa = row.parroquia_empresa
+    this.ICrearSucursalSUB.zona_empresa = row.zona_empresa
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'lg',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
 }

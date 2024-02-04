@@ -220,13 +220,15 @@ export class SubcontractorComponent implements OnInit {
 
   public loadingIndicator = true
 
+  public isLoading: number = 0;
+
   public item = []
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
     private modalService: NgbModal,
     private router: Router,
-    private subContratista : BusinessService,
+    private subContratista: BusinessService,
     private generarConciliacion: GenerarPagoService
   ) { }
 
@@ -262,14 +264,14 @@ export class SubcontractorComponent implements OnInit {
   }
 
 
-  async ListaMantenimientoSeguidad(dolar:any) {
+  async ListaMantenimientoSeguidad(dolar: any) {
     let Xdolar = parseFloat(dolar ? dolar : 0)
     this.xAPI.funcion = "IPOSTEL_R_MantenimientoSeguridad"
     this.xAPI.parametros = '2'
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-         data.Cuerpo.map(e => {
+        data.Cuerpo.map(e => {
           e.tasa_petro = parseFloat(e.tasa_petro)
           e.bolivares = e.tasa_petro * Xdolar
           var valor = e.tasa_petro * Xdolar
@@ -304,14 +306,14 @@ export class SubcontractorComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         this.ListaTipoObligacion = data.Cuerpo.map(e => {
-         if (e.id_tipo_pagos == 5) {
-          this.nombreObligacionUsoContratoSub = e.nombre_tipo_pagos
-          let petro = e.tasa_petro * this.MontoPetro
-          let monto = petro * this.pDolar
-          this.MontoObligacionUsoContratoSub = monto
-          this.loadingIndicator = false
-          // console.log(this.MontoObligacionUsoContratoSub)
-         }
+          if (e.id_tipo_pagos == 5) {
+            this.nombreObligacionUsoContratoSub = e.nombre_tipo_pagos
+            let petro = e.tasa_petro * this.MontoPetro
+            let monto = petro * this.pDolar
+            this.MontoObligacionUsoContratoSub = monto
+            this.loadingIndicator = false
+            // console.log(this.MontoObligacionUsoContratoSub)
+          }
           return e
         });
       },
@@ -323,16 +325,21 @@ export class SubcontractorComponent implements OnInit {
 
 
   async Subcontratistas(id: any) {
+    this.isLoading = 0;
     this.xAPI.funcion = "IPOSTEL_R_Subcontratista_ID"
     this.xAPI.parametros = `${id}`
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        data.Cuerpo.map(e => {
-          this.Subcontratista.push(e)
-        });
-        this.rowsSubcontratistas = this.Subcontratista;
-        this.tempDataSubcontratas = this.rowsSubcontratistas
-        // console.log( this.rowsSubcontratistas)
+        if (data.Cuerpo.length > 0) {
+          data.Cuerpo.map(e => {
+            this.Subcontratista.push(e)
+          });
+          this.rowsSubcontratistas = this.Subcontratista;
+          this.tempDataSubcontratas = this.rowsSubcontratistas
+          this.isLoading = 1;
+        } else {
+          this.isLoading = 2;
+        }
       },
       (error) => {
         console.log(error)
@@ -354,13 +361,13 @@ export class SubcontractorComponent implements OnInit {
     this.table.offset = 0;
   }
 
-  capturarSelect(evento : any){
-      this.tipoStatus = evento
+  capturarSelect(evento: any) {
+    this.tipoStatus = evento
   }
 
   async RegistrarCambiarStatus() {
     this.sectionBlockUI.start('Cambiando Estatus, por favor Espere!!!');
-      this.subContratista.CambiarEstatusSubcontratista(this.CambiarStatus)
+    this.subContratista.CambiarEstatusSubcontratista(this.CambiarStatus)
       .then((resultado) => {
         if (this.tipoStatus == 1) {
           this.ProcesarOblicacion()
@@ -556,7 +563,7 @@ export class SubcontractorComponent implements OnInit {
     });
   }
 
-  cerrarModalDetalle(){
+  cerrarModalDetalle() {
     this.DataEmpresa = {
       id_opp: undefined,
       nombre_empresa: undefined,
@@ -595,7 +602,7 @@ export class SubcontractorComponent implements OnInit {
       cantidad_trabajadores: undefined,
       cantidad_subcontratados: undefined,
       municipio_empresa: undefined
-  
+
     }
     this.modalService.dismissAll('Accept click')
   }
