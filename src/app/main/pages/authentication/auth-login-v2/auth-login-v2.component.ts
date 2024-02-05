@@ -29,6 +29,7 @@ export class AuthLoginV2Component implements OnInit {
     event.preventDefault();
   }
 
+
   checkboxValue = false;
   checkboxControl = new FormControl(this.checkboxValue);
 
