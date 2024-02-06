@@ -116,12 +116,12 @@
 
             <div class="col-md-6">
               <div class="custom-control custom-switch custom-switch-success">
-              <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
-                [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
-              <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
-                <div *ngIf="recaptcha.errors?.['required']">El reCAPTCHA es requerido.</div>
+                <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
+                  [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
+                <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
+                  <div *ngIf="recaptcha.errors?.['required']">El reCAPTCHA es requerido.</div>
+                </div>
               </div>
-            </div>
             </div>
 
           </div>
@@ -138,20 +138,21 @@
 
         <div class="row">
 
-          <div class="col-md-6 col-12">
+          <!-- <div class="col-md-6 col-12">
             <div class="form-group">
               <a class="btn btn-success btn-block" *ngIf="btnShow"
                 routerLink="/register-private-post-offices"><span>&nbsp;Crear Nueva Cuenta Operador Postal</span></a>
             </div>
-          </div>
+          </div> -->
 
-          <div class="col-md-6 col-12">
+          <!-- <div class="col-md-6 col-12">
             <div class="form-group">
               <a class="btn btn-warning btn-block" *ngIf="btnShow"
                 routerLink="/register-private-post-offices-subcontrator"><span>&nbsp;Crear Nueva Cuenta
                   Subcontratista</span></a>
             </div>
-          </div>
+          </div> -->
+
         </div>
 
 
