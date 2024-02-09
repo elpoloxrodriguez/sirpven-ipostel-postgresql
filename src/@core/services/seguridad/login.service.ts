@@ -128,20 +128,20 @@ export class LoginService {
         //   'success'
         // )
 
-                // INICIO AGREGAR AUDITORIA //
-                this.token = jwt_decode(sessionStorage.getItem('token'));
-                this.xAuditoria.id = this.utilservice.GenerarUnicId()
-                this.xAuditoria.usuario = this.token.Usuario[0]
-                this.xAuditoria.funcion = 'IPOSTEL_R_Desconexion'
-                this.xAuditoria.metodo = 'Salio del Sistema'
-                this.xAuditoria.fecha = Date()
-                this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
-                // FIN AGREGAR AUDITORIA //
-      
+        // INICIO AGREGAR AUDITORIA //
+        this.token = jwt_decode(sessionStorage.getItem('token'));
+        this.xAuditoria.id = this.utilservice.GenerarUnicId()
+        this.xAuditoria.usuario = this.token.Usuario[0]
+        this.xAuditoria.funcion = 'IPOSTEL_R_Desconexion'
+        this.xAuditoria.metodo = 'Salio del Sistema'
+        this.xAuditoria.fecha = Date()
+        this.auditoria.InsertarInformacionAuditoria(this.xAuditoria)
+        // FIN AGREGAR AUDITORIA //
 
-        this.router.navigate(['login']);
+
+        this.router.navigate(['/login']).then(() => { window.location.reload() });
         sessionStorage.clear();
-        // localStorage.clear();
+        localStorage.clear();
       }
     })
   }

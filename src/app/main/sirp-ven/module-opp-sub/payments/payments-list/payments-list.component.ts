@@ -128,6 +128,8 @@ export class PaymentsListComponent implements OnInit {
   public MontoMantenimiento = []
   public DolarPetroDia
 
+
+
   public currentDate = new Date();
   public formattedDate = this.datePipe.transform(this.currentDate, 'MM-dd');
 
@@ -137,7 +139,39 @@ export class PaymentsListComponent implements OnInit {
   public totalPetros
   public manNuevo
 
+  public yearsList: { year: number }[] = [];
+
+  public datosOriginales: any[];
+
   public rowMantenimiento = []
+
+  public SelectCategoriaPagos = [
+    { id: 0, name: 'PAGOS EN REVISIÓN' },
+    { id: 4, name: 'PAGOS PENDIENTES' },
+    { id: 2, name: 'PAGOS APROBADOS' },
+    { id: 3, name: 'PAGOS RECHAZADOS' },
+    { id: 1, name: 'PAGOS NO CONCILIADOS' }
+  ]
+
+  public SelectTipoPagos = [
+    { id: 1, name: 'Franqueo Postal Obligatorio' },
+    { id: 2, name: 'Derecho Semestral 1' },
+    { id: 3, name: 'Derecho Semestral 2' },
+    { id: 4, name: 'Anualidad' },
+    { id: 5, name: 'Uso Contrato Subcontratista' },
+    { id: 6, name: 'Reparos' },
+    { id: 9, name: 'Renovación' }
+  ]
+
+
+  public anioObligaciones = undefined
+  public tipoPago = undefined
+  public tipoCategoriaPago = undefined
+  public statusPC = undefined
+
+  public tipoToken
+
+  public ShowTabla: boolean = true
 
   constructor(
     private apiService: ApiService,
@@ -153,11 +187,21 @@ export class PaymentsListComponent implements OnInit {
     // this.sectionBlockUI.start('Registrando Pago, por favor Espere!!!');
     // setTimeout(() => this.sectionBlockUI.stop(), 3000)
     this.token = jwt_decode(sessionStorage.getItem('token'));
+
+    this.tipoToken = this.token.Usuario[0].tipo_registro
+
+    if (this.tipoToken == 1) {
+      this.ShowTabla = true
+    } else {
+      this.ShowTabla = false
+    }
+
     this.idOPP = this.token.Usuario[0].id_opp
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
 
     this.Precio_Dolar_Petro()
-    await this.ListaPagosRecaudacion(0)
+    this.generateYearsList()
+    await this.ListaPagosRecaudacion()
     await this.ListaBancosVzla()
     await this.ListaTiposPagos()
   }
@@ -193,6 +237,17 @@ export class PaymentsListComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  async LimpiarFiltro() {
+    this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+    this.anioObligaciones = undefined
+    this.tipoPago = undefined
+    this.tipoCategoriaPago = undefined
+    this.statusPC = undefined
+
+    await this.ListaPagosRecaudacion()
   }
 
   customChkboxOnSelect({ selected }) {
@@ -260,50 +315,28 @@ export class PaymentsListComponent implements OnInit {
 
   }
 
-  async CapturarNav(event) {
-    switch (event.target.id) {
-      case 'ngb-nav-0':
-        this.List_Pagos_Recaudacion = []
-        this.rowsPagosConciliacion = []
-        this.n_opp = 0
-        await this.ListaPagosRecaudacion(0)
-        break;
-      case 'ngb-nav-1':
-        this.List_Pagos_Recaudacion = []
-        this.rowsPagosConciliacion = []
-        this.n_opp = 2
-        await this.ListaPagosRecaudacion(2)
-        break;
-      case 'ngb-nav-2':
-        this.List_Pagos_Recaudacion = []
-        this.rowsPagosConciliacion = []
-        this.n_opp = 3
-        await this.ListaPagosRecaudacion(3)
-        break;
-      case 'ngb-nav-3':
-        this.List_Pagos_Recaudacion = []
-        this.rowsPagosConciliacion = []
-        this.n_opp = 1
-        await this.ListaPagosRecaudacion(1)
-        break;
-      default:
-        break;
+
+  generateYearsList() {
+    const currentYear = new Date().getFullYear();
+    for (let year = 2023; year <= currentYear; year++) {
+      this.yearsList.push({ year: year });
     }
   }
 
-  async ListaPagosRecaudacion(n_opp: any) {
+  async ListaPagosRecaudacion() {
     this.isLoading = 0;
-    this.loadingIndicator = true
     this.List_Pagos_Recaudacion = []
     this.rowsPagosConciliacion = []
     this.RowsLengthConciliacion = 0
-    this.xAPI.funcion = "IPOSTEL_R_Pagos_Conciliacion_IDOPP"
-    this.xAPI.parametros = this.idOPP + ',' + n_opp
+    this.xAPI.funcion = "IPOSTEL_R_Pagos_ConciliacionOPPSUB"
+    this.xAPI.parametros = this.idOPP.toString()
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         if (data.Cuerpo.length > 0) {
           data.Cuerpo.map(e => {
+            let fecha = new Date(e.fecha_pc);
+            e.anio = fecha.getFullYear();
             e.mantenimiento = JSON.parse(e.mantenimiento)
             e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
             e.montoReal = e.monto_pagar
@@ -313,7 +346,6 @@ export class PaymentsListComponent implements OnInit {
             e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
             this.List_Pagos_Recaudacion.push(e)
             // console.log(e)
-            this.loadingIndicator = false
           });
           // console.log(this.List_Pagos_Recaudacion)
           let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
@@ -321,6 +353,12 @@ export class PaymentsListComponent implements OnInit {
           this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
           this.RowsLengthConciliacion = this.rowsPagosConciliacion.length
           this.tempDataPagosConciliacion = this.rowsPagosConciliacion
+
+          this.datosOriginales = [...this.rowsPagosConciliacion]; // Hacer una copia de respaldo al inicializar el componente
+          this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+          // this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => {
+          //   return objeto.anio === this.anioObligaciones && objeto.status_pc === this.tipoPago && objeto.tipo_pago_pc === this.tipopagopc;
+          // });
           this.isLoading = 1;
         } else {
           this.isLoading = 2;
@@ -331,6 +369,32 @@ export class PaymentsListComponent implements OnInit {
       }
     )
   }
+
+
+  FiltarObligacionAnio(event: any) {
+    if (event != undefined) {
+      this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+      this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year); // Aplicar el filtro
+      this.table.offset = 0;
+    }
+  }
+
+  FiltarObligacionCategoriaPago(event: any) {
+    if (event != undefined) {
+      this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+      this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.status_pc === event.id); // Aplicar el filtro
+      this.table.offset = 0;
+    }
+  }
+
+  FiltarObligacionStatusTipoPago(event: any) {
+    if (event != undefined) {
+      this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+      this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.tipo_pago_pc === event.id); // Aplicar el filtro
+      this.table.offset = 0;
+    }
+  }
+
 
   async ModalPagar(modal, data) {
     // console.log(data)
@@ -394,7 +458,7 @@ export class PaymentsListComponent implements OnInit {
     this.List_Pagos_Recaudacion = []
     this.rowsPagosConciliacion = []
 
-    this.ListaPagosRecaudacion(0)
+    this.ListaPagosRecaudacion()
 
     this.ListaMantenimientoYSeguridad = []
     this.montoPagar = 0
@@ -435,7 +499,7 @@ export class PaymentsListComponent implements OnInit {
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
-          console.log(e)
+          // console.log(e)
           this.nombreEmpresaOPP = e.nombre_empresa
           this.rifEmpresaOPP = e.rif
         });
@@ -484,7 +548,7 @@ export class PaymentsListComponent implements OnInit {
         this.rowsPagosConciliacion.push(this.List_Pagos_Recaudacion)
         if (data.tipo === 1) {
           this.List_Pagos_Recaudacion = []
-          this.ListaPagosRecaudacion(0)
+          this.ListaPagosRecaudacion()
           this.modalService.dismissAll('Close')
           this.sectionBlockUI.stop()
           this.utilService.alertConfirmMini('success', 'Pago Modificado Exitosamente!')
@@ -526,7 +590,7 @@ export class PaymentsListComponent implements OnInit {
               .finally(() => {
                 // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
                 // console.log('Procesamiento finalizado');
-                this.ListaPagosRecaudacion(0)
+                this.ListaPagosRecaudacion()
                 this.sectionBlockUI.stop()
               })
           } else {
@@ -559,7 +623,7 @@ export class PaymentsListComponent implements OnInit {
   }
 
   async DescargarFactura(liquidacion: any) {
-    console.log(liquidacion)
+    // console.log(liquidacion)
     this.sectionBlockUI.start('Generando Planilla de Autoliquidación, por favor Espere!!!');
     switch (liquidacion.tipo_pago_pc) {
       case 1:
@@ -597,7 +661,7 @@ export class PaymentsListComponent implements OnInit {
               e.MantenimientoSIRPVEN = JSON.parse(e.ListaFacturas[0].mantenimiento)
               this.MantenimientoYSeguridad = e.MantenimientoSIRPVEN
               this.sectionBlockUI.stop()
-              console.log(e)
+              // console.log(e)
               return e
             });
             this.pdf.GenerarPlanillaLiquidacion5(datos, this.MantenimientoYSeguridad)
@@ -620,7 +684,7 @@ export class PaymentsListComponent implements OnInit {
     const val = event.target.value.toLowerCase();
     // Filter Our Data
     const temp = this.tempDataPagosConciliacion.filter(function (d) {
-      return d.nombre_empresa.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.observacion_pc.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // Update The Rows
     this.rowsPagosConciliacion = temp;

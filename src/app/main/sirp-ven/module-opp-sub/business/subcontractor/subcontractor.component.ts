@@ -410,7 +410,7 @@ export class SubcontractorComponent implements OnInit {
   async ProcesarOblicacion() {
     this.IpagarRecaudacion.id_opp = this.idRealSUB
     this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
-    this.IpagarRecaudacion.status_pc = 0
+    this.IpagarRecaudacion.status_pc = 4
     this.IpagarRecaudacion.tipo_pago_pc = 5
     this.IpagarRecaudacion.monto_pc = '0'
     this.IpagarRecaudacion.monto_pagar = this.MontoObligacionUsoContratoSub.toString()
