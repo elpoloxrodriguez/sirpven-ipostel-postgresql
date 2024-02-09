@@ -46,8 +46,7 @@
           </div>
           <div class="col-md-3 col-12 d-flex justify-content-start justify-content-md-end">
             <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-              <button type="button" (click)="RegresarAtras()" class="btn btn-info"
-                rippleEffect>
+              <button type="button" (click)="RegresarAtras()" class="btn btn-info" rippleEffect>
                 Regresar Atras</button>
             </div>
           </div>
@@ -1080,13 +1079,12 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column name="Actions" [width]="10" [sortable]="false">
-            <ng-template ngx-datatable-cell-template let-row="row">
-            <div class="d-flex align-items-center" >
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div class="d-flex align-items-center">
               <!-- <i data-feather="trash"  class="text-danger cursor-pointer"></i> -->
-              <button class="btn btn-danger btn-sm text-nowrap px-1"
-              (click)="borrarRegistro(row.index)" rippleEffect>
-              <i data-feather="trash" class="mr-25"></i>
-            </button>
+              <button class="btn btn-danger btn-sm text-nowrap px-1" (click)="borrarRegistro(row.index)" rippleEffect>
+                <i data-feather="trash" class="mr-25"></i>
+              </button>
             </div>
           </ng-template>
         </ngx-datatable-column>
@@ -1175,7 +1173,7 @@
               </tr>
             </tfoot>
           </table>
-         
+
         </div>
         <hr>
 

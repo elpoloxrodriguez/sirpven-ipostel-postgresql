@@ -187,8 +187,10 @@
                   <a (click)="ModalPagar(ModalPagarDeclaracion,row)" *ngIf="row.montoReal != '0' && row.status_pc == 4"
                     ngbDropdownItem><span [size]="16" [data-feather]="'credit-card'" [class]="'mr-50'"></span>Reportar
                     Pago</a>
-                  <a (click)="VerDetalle(UsoContrato,row)" ngbDropdownItem><span [size]="16" [data-feather]="'eye'"
-                      [class]="'mr-50'"></span>Ver Detalle</a>
+                  <a (click)="VerDetalleSUB(UsoContrato,row)" *ngIf="!ShowTabla" ngbDropdownItem><span [size]="16"
+                      [data-feather]="'eye'" [class]="'mr-50'"></span>Ver Detalle</a>
+                  <a (click)="VerDetalleOPP(UsoContrato,row)" *ngIf="ShowTabla" ngbDropdownItem><span [size]="16"
+                      [data-feather]="'eye'" [class]="'mr-50'"></span>Ver Detalle</a>
                   <a (click)="DescargarFactura(row)" *ngIf="row.status_pc == 2" ngbDropdownItem><span [size]="16"
                       [data-feather]="'download'" [class]="'mr-50'"></span> Descargar Planilla</a>
                   <a (click)="ModalPagarModificar(ModalPagarDeclaracion,row)"
@@ -372,11 +374,50 @@
           </tfoot>
         </table>
 
+        <hr>
+
+        <table *ngIf="ShowTabla" class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Dolares</th>
+              <th scope="col">Bolivares Referencial</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let xitem of dataObligacionOPP; index as i">
+              <th scope="row">{{ i + 1 }}</th>
+              <td> {{ xitem.iniciales_tipo_pagos }} </td>
+              <td>{{ xitem.nombre_tipo_pagos }}</td>
+              <td [title]="cuanto">{{ xitem.tasa_petr }}</td>
+              <td>{{xitem.bolivaresxx}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>
+                <font color="red">TOTAL</font>
+              </th>
+              <th>
+                <font color="red">{{ XtotalPetrosX }}</font>
+              </th>
+              <th>
+                <font color="red">{{ XmontoPagarX }}</font>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+
+
         <div class="col-md-6 col-12">
           <div class="form-group">
             <label for=" itempmvp">Monto</label>
-            <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly [value]="montoPagar"
-              placeholder="Monto a Pagar" />
+            <input type="text" name="montoNO" class="form-control" autocomplete="off" readonly
+              [value]="resultadoFactura" placeholder="Monto a Pagar" />
           </div>
         </div>
 

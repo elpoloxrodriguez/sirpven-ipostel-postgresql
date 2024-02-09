@@ -121,7 +121,7 @@ export class StatementOfPartiesComponent implements OnInit {
   public PrecioMantenimiento
   public PrecioMantenimientoX
   public PrecioMantenimientoXT
-  public PrecioMantenimientoXTF : number = 0
+  public PrecioMantenimientoXTF: number = 0
   public MontoPetroTotalSumaServicio
   public MantenimientoYSeguridad = []
 
@@ -533,7 +533,7 @@ export class StatementOfPartiesComponent implements OnInit {
     )
   }
 
-  RegresarAtras(){
+  RegresarAtras() {
     this.router.navigate(['/postage/postage-per-month']);
   }
 
@@ -546,6 +546,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.MantenimientoYSeguridad = data.Cuerpo.map(e => {
           e.bolivares = e.tasa_petro * this.DolarDia ? this.DolarDia : 0
           var valor = e.tasa_petro * this.DolarDia
+          e.valor = valor
           e.bolivaresx = this.utilService.ConvertirMoneda(valor)
           return e
         });
@@ -569,11 +570,11 @@ export class StatementOfPartiesComponent implements OnInit {
     )
   }
 
-  Precio_Dolar_Petro() {
+  async Precio_Dolar_Petro() {
     this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
     this.xAPI.parametros = ''
     this.xAPI.valores = ''
-    this.apiService.Ejecutar(this.xAPI).subscribe(
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         data.Cuerpo.map(e => {
           this.DolarDia = e.dolar
@@ -584,6 +585,10 @@ export class StatementOfPartiesComponent implements OnInit {
           this.PetroConvertidoBolivares = e.petro_bolivares
           return e
         });
+        // alert(this.DolarDia)
+        this.IpagarRecaudacion.dolar_dia = this.DolarDia
+        // this.IpagarRecaudacion.petro_dia = this.PetroDia
+
         // console.log(this.PrecioMantenimientoX)
       },
       (error) => {
@@ -650,13 +655,14 @@ export class StatementOfPartiesComponent implements OnInit {
           this.selected = this.DeclaracionPiezasLength.length
         })
         const SumaMontos = this.DeclaracionPiezasLength.map(item => item.monto_causado).reduce((prev, curr) => prev + curr, 0);
+        this.IpagarRecaudacion.petro_dia = SumaMontos
         this.MontoCausadoX = this.utilService.ConvertirMoneda(SumaMontos)
         this.MontoCausado = SumaMontos
         this.MontoCausadoYMantenimiento = SumaMontos
         var montoPagar = this.MontoCausado
         var montoMant = this.totalBolivares
         var TotalMontoPagar = montoPagar
-        var TotalMontoPagar = montoPagar +  this.totalBolivares  //completo y mantenimiento 
+        var TotalMontoPagar = montoPagar + this.totalBolivares  //completo y mantenimiento 
         var TotalMontoPagarConvertido = parseFloat(TotalMontoPagar.toFixed(2))
         // this.PrecioMantenimientoXTF = this.utilService.ConvertirMoneda(TotalMontoPagarConvertido)
         var TotalMante = TotalMontoPagarConvertido
@@ -815,14 +821,14 @@ export class StatementOfPartiesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.IpagarRecaudacion.id_opp = this.idOPP
-        this.IpagarRecaudacion.status_pc = 0
+        this.IpagarRecaudacion.status_pc = 4
         this.IpagarRecaudacion.tipo_pago_pc = 1
         this.IpagarRecaudacion.monto_pc = '0'
         this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
         this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF.toString()
         this.IpagarRecaudacion.monto_pagar = this.MontoCausado
-        this.IpagarRecaudacion.dolar_dia = this.DolarDia
-        this.IpagarRecaudacion.petro_dia = this.PetroDia
+        // this.IpagarRecaudacion.dolar_dia = this.DolarDia
+        // this.IpagarRecaudacion.petro_dia = this.PetroDia
         this.IpagarRecaudacion.fecha_pc = this.fechaActual
         // this.IpagarRecaudacion.archivo_adjunto = ''
         this.IpagarRecaudacion.user_created = this.idOPP
@@ -834,7 +840,7 @@ export class StatementOfPartiesComponent implements OnInit {
             this.idFactura = resultado
 
             let ok = {
-              id_factura : this.idFactura,
+              id_factura: this.idFactura,
               id_opp: this.idOPP,
               mes: this.fechaUri
             }
@@ -940,16 +946,18 @@ export class StatementOfPartiesComponent implements OnInit {
       if (result.isConfirmed) {
         var frm = new FormData(document.forms.namedItem("forma"))
         this.IpagarRecaudacion.id_opp = this.idOPP
-        this.IpagarRecaudacion.status_pc = 0
+        this.IpagarRecaudacion.status_pc = 4
         this.IpagarRecaudacion.tipo_pago_pc = 1
         this.IpagarRecaudacion.monto_pc = '0'
         this.IpagarRecaudacion.monto_pagar = this.montoPagar
-        this.IpagarRecaudacion.dolar_dia = '0'
-        this.IpagarRecaudacion.petro_dia = '0'
+        // this.IpagarRecaudacion.dolar_dia = '0'
+        // this.IpagarRecaudacion.petro_dia = '0'
         this.IpagarRecaudacion.fecha_pc = this.fechaActual
         this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
         this.IpagarRecaudacion.archivo_adjunto = this.archivos[0].name
         this.IpagarRecaudacion.user_created = this.idOPP
+        // console.log(this.MantenimientoYSeguridad)
+        // console.log(this.IpagarRecaudacion)
         this.xAPI.funcion = "IPOSTEL_C_PagosDeclaracionOPP_SUB";
         this.xAPI.parametros = ''
         this.xAPI.valores = JSON.stringify(this.IpagarRecaudacion)

@@ -135,6 +135,8 @@ export class PaymentsListComponent implements OnInit {
 
   public loadingIndicator = true
 
+  public XtotalPetrosX
+  public XmontoPagarX
   public montoPagar
   public totalPetros
   public manNuevo
@@ -164,6 +166,8 @@ export class PaymentsListComponent implements OnInit {
   ]
 
 
+  public resultadoFactura
+
   public anioObligaciones = undefined
   public tipoPago = undefined
   public tipoCategoriaPago = undefined
@@ -171,7 +175,11 @@ export class PaymentsListComponent implements OnInit {
 
   public tipoToken
 
+  public cuanto
+
   public ShowTabla: boolean = true
+
+  public dataObligacionOPP = []
 
   constructor(
     private apiService: ApiService,
@@ -463,13 +471,16 @@ export class PaymentsListComponent implements OnInit {
     this.ListaMantenimientoYSeguridad = []
     this.montoPagar = 0
     this.totalPetros = 0
+    this.XmontoPagarX = 0
+    this.XtotalPetrosX = 0
     this.rowMantenimiento = []
+    this.dataObligacionOPP = []
     this.fechaActualPago = ''
     this.manNuevo = []
     this.modalService.dismissAll('Accept click')
   }
 
-  mostarDatosDetalles(row: any, nuevo: any) {
+  mostarDatosDetallesSUB(row: any, nuevo: any) {
 
     this.rowMantenimiento = row.mantenimiento
     this.fechaActualPago = row.fecha
@@ -485,11 +496,51 @@ export class PaymentsListComponent implements OnInit {
       this.ListaMantenimientoYSeguridad.push(e)
     });
     let MontoTotalA = this.ListaMantenimientoYSeguridad.map(item => item.bolivares).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
-    this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA)
+    this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA) // Bolivares
 
     let MontoTotalB = this.ListaMantenimientoYSeguridad.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
-    this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB)
+    this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB) // Dolares
 
+    this.resultadoFactura = this.montoPagar
+  }
+
+  mostarDatosDetallesOPP(row: any, nuevo: any) {
+
+    // console.log(nuevo)
+    this.rowMantenimiento = row.mantenimiento
+    this.fechaActualPago = row.fecha
+    const dolar = row.dolar_dia
+
+    // this.rowMantenimiento.push(nuevo)
+    this.dataObligacionOPP.push(nuevo)
+
+    let MontoTotalAx = this.dataObligacionOPP.map(item => item.monto_real).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.XmontoPagarX = this.utilService.ConvertirMoneda(MontoTotalAx) // Bolivares
+
+    let MontoTotalBx = this.dataObligacionOPP.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.XtotalPetrosX = this.utilService.ConvertirMoneda$(MontoTotalBx) // Dolares
+
+    this.rowMantenimiento.map(e => {
+      e.dolitar = this.utilService.ConvertirMoneda$(parseFloat(e.tasa_petro).toFixed(2))
+      e.bolivares = (parseFloat(e.tasa_petro) * parseFloat(dolar)).toFixed(2)
+      e.bolivaresx = this.utilService.ConvertirMoneda(e.bolivares)
+      this.ListaMantenimientoYSeguridad.push(e)
+    });
+    let MontoTotalA = this.ListaMantenimientoYSeguridad.map(item => item.bolivares).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA) // Bolivares
+
+    let MontoTotalB = this.ListaMantenimientoYSeguridad.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB) // Dolares
+
+    // Eliminar el texto "VEF" y espacios, y reemplazar la coma por un punto
+    this.XmontoPagarX = this.XmontoPagarX.replace(/(VEF)|(\s)/g, "").replace(",", ".");
+    this.montoPagar = this.montoPagar.replace(/(VEF)|(\s)/g, "").replace(",", ".");
+    // Convertir los montos a números
+    let numeroMonto1 = parseFloat(this.XmontoPagarX);
+    let numeroMonto2 = parseFloat(this.montoPagar);
+    // Sumar los montos
+    let result = numeroMonto1 + numeroMonto2;
+    this.resultadoFactura = this.utilService.ConvertirMoneda(result)
   }
 
   async ConsultarOPP(id_opp: any) {
@@ -511,8 +562,7 @@ export class PaymentsListComponent implements OnInit {
 
   }
 
-  async VerDetalle(modal: any, row: any) {
-    // console.log(row)
+  async VerDetalleSUB(modal: any, row: any) {
     this.titleModal = row.nombre_empresa
 
     let nuevo = {
@@ -526,7 +576,55 @@ export class PaymentsListComponent implements OnInit {
     }
 
     await this.ConsultarOPP(row.user_created)
-    this.mostarDatosDetalles(row, nuevo)
+    this.mostarDatosDetallesSUB(row, nuevo)
+
+
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  async VerDetalleOPP(modal: any, row: any) {
+
+    // console.log(row)
+    this.titleModal = row.nombre_empresa
+
+    this.cuanto = row.petro_dia / row.dolar_dia
+
+    await this.ConsultarOPP(row.user_created)
+
+    if (row.declaracion == 0) {
+      let nuevo = {
+        monto_real: 0,
+        bolivares: 0,
+        bolivaresx: "VEF 0,00",
+        id_tipo_pagos: 0,
+        iniciales_tipo_pagos: row.iniciales_tipo_pagos,
+        nombre_tipo_pagos: row.nombre_tipo_pagos,
+        tasa_petro: 0,
+        tipo_pago: row.tipo_pago_pc
+      }
+      this.mostarDatosDetallesOPP(row, nuevo)
+    } else {
+      let nuevo = {
+        monto_real: row.petro_dia,
+        bolivares: this.utilService.ConvertirMoneda$(this.cuanto),
+        bolivaresx: row.petro_dia,
+        bolivaresxx: this.utilService.ConvertirMoneda(row.petro_dia),
+        id_tipo_pagos: 0,
+        iniciales_tipo_pagos: row.iniciales_tipo_pagos,
+        nombre_tipo_pagos: row.nombre_tipo_pagos,
+        tasa_petro: (parseFloat(row.petro_dia) / parseFloat(row.dolar_dia)).toFixed(2),
+        tasa_petr: this.utilService.ConvertirMoneda$((parseFloat(row.petro_dia) / parseFloat(row.dolar_dia)).toFixed(2)),
+        tipo_pago: row.tipo_pago_pc
+      }
+      this.mostarDatosDetallesOPP(row, nuevo)
+    }
+
 
 
     this.modalService.open(modal, {
