@@ -74,6 +74,7 @@ export class StatementOfPartiesComponent implements OnInit {
     id_opp: 0,
     status_pc: 0,
     tipo_pago_pc: 0,
+    declaracion: 0,
     monto_pc: '',
     monto_pagar: '',
     dolar_dia: '',
@@ -823,6 +824,7 @@ export class StatementOfPartiesComponent implements OnInit {
         this.IpagarRecaudacion.id_opp = this.idOPP
         this.IpagarRecaudacion.status_pc = 4
         this.IpagarRecaudacion.tipo_pago_pc = 1
+        this.IpagarRecaudacion.declaracion = 1
         this.IpagarRecaudacion.monto_pc = '0'
         this.IpagarRecaudacion.mantenimiento = JSON.stringify(this.MantenimientoYSeguridad)
         this.IpagarRecaudacion.monto_pagar = this.PrecioMantenimientoXTF.toString()

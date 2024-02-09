@@ -21,7 +21,9 @@
           href="Tel:02124053366">0212-405.33.66</a>
       </small>
       <br>
-      <small [title]="fechaX">Versión {{Version}} </small>
+      <small
+        title="Build: {{ fechafinal | date: 'fullDate':'':'es' }} a las {{ fechafinal | date: 'h:mm a':'':'es' }}">Versión
+        {{Version}} </small>
     </p>
   </div>
 </div>

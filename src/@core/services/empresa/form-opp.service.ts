@@ -353,6 +353,7 @@ export interface IPOSTEL_U_OPP_ID { // Actualizar datos generales de OPP
 export interface IPOSTEL_C_PagosDeclaracionOPP_SUB { // INSERTAR PAGO EN RECAUDACION
 	id_opp: number
 	status_pc: number
+	declaracion?: number
 	tipo_pago_pc: number
 	monto_pc: string
 	observacion_pc?: string
