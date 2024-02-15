@@ -462,7 +462,9 @@
 
 <ng-template #ModalConciliarPago let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="myModalLabel160">Declaración de Pago <strong>{{ title_modal }}</strong></h5>
+    <h5 class="modal-title" id="myModalLabel160">Declaración de Pago <font color="red"><strong>{{ title_modal
+          }}</strong></font>
+    </h5>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <div class="col-xl-12 col-md-12 col-12">
@@ -470,6 +472,28 @@
       <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm"
         class="invoice-repeater">
         <div class="row d-flex align-items-end">
+
+          <div class="col-md-8 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">
+                <font color="red"><strong>NOMBRE DEL OPERADOR POSTAL</strong></font>
+              </label>
+              <input type="text" class="form-control" autocomplete="off" readonly [value]="nombreOPP"
+                placeholder="NOMBRE OPP" />
+            </div>
+          </div>
+
+          <div class="col-md-4 col-12">
+            <div class="form-group">
+              <label for=" itempmvp">
+                <font color="red"><strong>RIF DEL OPERADOR POSTAL</strong></font>
+              </label>
+              <input type="text" class="form-control" autocomplete="off" readonly [value]="rifOPP"
+                placeholder="RIF OPP" />
+            </div>
+          </div>
+
+
           <div class="col-md-6 col-12">
             <div class="form-group">
               <label for=" itempmvp">

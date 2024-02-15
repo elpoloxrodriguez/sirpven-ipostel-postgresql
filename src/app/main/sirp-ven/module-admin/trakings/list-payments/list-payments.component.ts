@@ -74,6 +74,9 @@ export class ListPaymentsComponent implements OnInit {
   public NombreBancoEmisor = ''
   public FechaPago
 
+  public nombreOPP // nombre de la empresa en genero el recibo de pago
+  public rifOPP // rif de la empresa en genero el recibo de pago
+
   public MantenimientoYSeguridad
 
   public yearsList: { year: number }[] = [];
@@ -129,7 +132,7 @@ export class ListPaymentsComponent implements OnInit {
     }
   }
 
-  async ListaPagosRecaudacion(n_opp : any) {
+  async ListaPagosRecaudacion(n_opp: any) {
     this.List_Pagos_Recaudacion = []
     this.rowsPagosConciliacion = []
     this.MontoTotalAdeudado = '0'
@@ -258,15 +261,17 @@ export class ListPaymentsComponent implements OnInit {
 
 
   ConciliarPago(modal, data) {
-    // console.log(btoa(data.archivo_adjunto))
+    console.log(data)
+    this.nombreOPP = data.nombre_empresa_opp
+    this.rifOPP = data.rif_empresa_opp
     this.title_modal = data.nombre_empresa
     var banco = '(' + data.bzCodigo + ') ' + data.bzNombre
     this.NombreBancoEmisor = banco ? banco : 'Reporto en Cero (0.00)'
     this.FechaPago = this.utilService.FechaMomentLL(data.fecha_pc)
     this.ActualizarPago.status_pc = data.status_pc.toString()
     this.ActualizarPago.fecha_pc = data.fecha_pc
-    this.ActualizarPago.archivo_adjunto = 
-    this.ActualizarPago.id_banco_pc = data.id_banco_pc
+    this.ActualizarPago.archivo_adjunto =
+      this.ActualizarPago.id_banco_pc = data.id_banco_pc
     this.ActualizarPago.referencia_bancaria = data.referencia_bancaria ? data.referencia_bancaria : 'Reporto en Cero (0.00)'
     this.ActualizarPago.monto_pc = data.MontoPC
     this.ActualizarPago.monto_pagar = data.MontoPAGAR
@@ -310,7 +315,7 @@ export class ListPaymentsComponent implements OnInit {
         // console.log('Procesamiento finalizado');
         this.List_Pagos_Recaudacion = []
         this.rowsPagosConciliacion = []
-        this.MontoTotalAdeudado = '0'    
+        this.MontoTotalAdeudado = '0'
         this.ListaPagosRecaudacion(0)
         this.sectionBlockUI.stop()
       })
