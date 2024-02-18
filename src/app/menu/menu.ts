@@ -123,8 +123,8 @@ export const menu: CoreMenu[] = [
         url: '#'
       },
       {
-        id: 'elavorar-guia',
-        nombre: 'Elavorar Guia',
+        id: 'elaborar-guia',
+        nombre: 'Elaborar Guia',
         type: 'item',
         icono: 'circle',
         url: '#'

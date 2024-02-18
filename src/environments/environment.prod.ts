@@ -9,5 +9,5 @@ export const environment = {
   ID: 'ID-001',
   apiUrl: 'https://sirp.ipostel.gob.ve',
   Hash: ':c521f27fb1b3311d686d511b668e5bd4',
-  buildDateTime: 'Sun Feb 18 2024 12:28:03 GMT-0400 (Venezuela Time)',
+  buildDateTime: 'Sun Feb 18 2024 16:58:44 GMT-0400 (Venezuela Time)',
 };

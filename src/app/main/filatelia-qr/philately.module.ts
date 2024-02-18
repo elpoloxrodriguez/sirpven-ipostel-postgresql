@@ -18,12 +18,14 @@ import { BlockUIModule } from 'ng-block-ui';
 import { PhilatelyRoutingModule } from './philately-routing.module';
 import { PhilatelyAdminComponent } from './philately-admin/philately-admin.component';
 import { PhilatelyOppComponent } from './philately-opp/philately-opp.component';
+import { SaleFppComponent } from './sale-fpp/sale-fpp.component';
 
 
 @NgModule({
   declarations: [
     PhilatelyAdminComponent,
     PhilatelyOppComponent,
+    SaleFppComponent,
   ],
   imports: [
     CommonModule,

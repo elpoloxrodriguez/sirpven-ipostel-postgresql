@@ -10,12 +10,13 @@ import { AuthGuardGuard } from '@core/services/seguridad/auth-guard.guard';
 import { AuthGuard } from 'app/auth/helpers';
 import { PhilatelyAdminComponent } from './philately-admin/philately-admin.component'
 import { PhilatelyOppComponent } from './philately-opp/philately-opp.component'
+import { SaleFppComponent } from './sale-fpp/sale-fpp.component'
 
 
 const routes: Routes = [
   {
     path: 'philately/sale-of-philately',
-    component: PhilatelyAdminComponent,
+    component: SaleFppComponent,
     canActivate: [AuthGuard, AuthGuardGuard],
     data: { roles: [3] },
   },
