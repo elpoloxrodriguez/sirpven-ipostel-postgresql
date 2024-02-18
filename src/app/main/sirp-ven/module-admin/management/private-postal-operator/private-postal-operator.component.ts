@@ -164,7 +164,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   public loadingIndicator: boolean = true;
 
-  public loadingIndicatorSub : boolean = true
+  public loadingIndicatorSub: boolean = true
 
   public IdUser
   public selectedOption = 10;
@@ -219,7 +219,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   public ListaSubcontratistasCombinacion = []
 
-  public totalsubagen : number = 0
+  public totalsubagen: number = 0
 
   constructor(
     private apiService: ApiService,
@@ -277,7 +277,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     }
   }
 
-  async ListaOPP_SUB(n_opp : any) {
+  async ListaOPP_SUB(n_opp: any) {
     this.loadingIndicator = true
     this.List_OPP_SUB = []
     this.rowsOPP_SUB = []
@@ -396,7 +396,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               // INSERT API
@@ -445,7 +445,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               // INSERT API
@@ -665,7 +665,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     this.table.offset = 0;
   }
 
-  
+
 
   filterUpdateListaSubC(event) {
     // Reset ng-select on search
@@ -679,7 +679,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
-  
+
 
   filterUpdateCOMBINACION(event) {
     // Reset ng-select on search
@@ -824,7 +824,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     });
   }
 
-  async VerSubContratistas(opp:any){
+  async VerSubContratistas(opp: any) {
     this.ListaSubcontratistasCombinacion = []
     this.rowsListaSubC = []
     this.tempDataListaSubC = []
@@ -841,7 +841,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
         });
         // console.log(this.ListaSubcontratistasCombinacion)
         this.rowsListaSubC = this.ListaSubcontratistasCombinacion
-        this.tempDataListaSubC =  this.rowsListaSubC
+        this.tempDataListaSubC = this.rowsListaSubC
       },
       (error) => {
         console.log(error)
@@ -849,7 +849,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     )
   }
 
-  async ModalVerSubContratistas(modal:any, data:any) {
+  async ModalVerSubContratistas(modal: any, data: any) {
     // console.log(data)
     this.VerSubContratistas(data.id_opp)
     this.title_modal = data.operador
@@ -959,7 +959,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
   }
 
 
-  EliminarCon(row : any){
+  EliminarCon(row: any) {
     // console.log(row)
     Swal.fire({
       title: 'Esta seguro?',

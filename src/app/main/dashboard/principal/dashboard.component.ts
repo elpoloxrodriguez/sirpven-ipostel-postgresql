@@ -186,7 +186,7 @@ export class DashboardComponent implements OnInit {
         break;
       case 2:
         this.EmpresaOppSub(this.token.Usuario[0].id_opp)
-        this.EmpresaRIF(this.token.Usuario[0].id_opp)    
+        this.EmpresaRIF(this.token.Usuario[0].id_opp)
         this.title = 'Sub Contratista'
         this.empresaSUB = true
         this.empresaOPP = false
@@ -304,11 +304,11 @@ export class DashboardComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.httpClient.get('https://localhost/devel/api/scraping').subscribe(
         (data) => {
-          console.log('Correo: ',data)
+          console.log('Correo: ', data)
           resolve(data);
         },
         (error) => {
-          console.log('Error: ',error)
+          console.log('Error: ', error)
           reject(error);
         }
       );
@@ -484,19 +484,19 @@ export class DashboardComponent implements OnInit {
   }
 
 
-   async GenerarReporteLiquidacionFPO() {
+  async GenerarReporteLiquidacionFPO() {
     this.sectionBlockUI.start('Generando Reporte de Liquidación P.F.O, por favor Espere!!!');
     let mes = this.mes_consultar
     let mes1 = this.mes_consultar + '-' + '01'
     let mes2 = this.mes_consultar + '-' + '31'
-      await this.TotalEmpresas()
-      await this.EmpresasLiquidadas(mes1, mes2)
-      await this.EmpresasReparos(mes1, mes2)
-      await this.FPO(mes1, mes2)
-      await this.FPOIngresos(mes1, mes2)
-      await this.PiezasMovilizadas(mes)
-      await this.sectionBlockUI.stop()
-      // this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
+    await this.TotalEmpresas()
+    await this.EmpresasLiquidadas(mes1, mes2)
+    await this.EmpresasReparos(mes1, mes2)
+    await this.FPO(mes1, mes2)
+    await this.FPOIngresos(mes1, mes2)
+    await this.PiezasMovilizadas(mes)
+    await this.sectionBlockUI.stop()
+    // this.utilService.alertConfirmMini('success', 'Reporte de Liquidacion P.P.O Descagado Exitosamente')
   }
 
   async EmpresaRIF(id: any) {
@@ -584,7 +584,7 @@ export class DashboardComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               //console.log(data)
@@ -633,7 +633,7 @@ export class DashboardComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               // INSERT API

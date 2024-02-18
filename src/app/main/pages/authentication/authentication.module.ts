@@ -101,17 +101,18 @@ const routes: Routes = [
     ContentHeaderModule,
     BlockUIModule,
     CardSnippetModule,
-        //  Recaptcha V3
-        RecaptchaV3Module,
-        //  Recaptcha V2
-        RecaptchaFormsModule,
-        RecaptchaModule,
+    //  Recaptcha V3
+    RecaptchaV3Module,
+    //  Recaptcha V2
+    RecaptchaFormsModule,
+    RecaptchaModule,
   ],
   providers: [
     //  Recaptcha V3
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey},
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey },
     // Recaptcha V2
-    { provide: RECAPTCHA_SETTINGS,
+    {
+      provide: RECAPTCHA_SETTINGS,
       useValue: {
         siteKey: environment.recaptcha.siteKey,
       } as RecaptchaSettings,
