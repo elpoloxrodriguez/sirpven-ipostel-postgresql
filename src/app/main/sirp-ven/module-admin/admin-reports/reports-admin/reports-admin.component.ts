@@ -36,6 +36,7 @@ export class ReportsAdminComponent implements OnInit {
     { id: 5, name: 'Reporte el día cuatro (04) hábil bancario de los OPP que no hayan realizado el Pago.' },
     { id: 6, name: 'Reporte el día cuatro (04) hábil bancario de los OPP que hayan realizado su Pago' },
     { id: 7, name: 'Historico Administrativo por OPP' },
+    { id: 8, name: 'Pagos de Subcontratistas' },
   ]
 
   public inputShow = false
@@ -46,11 +47,11 @@ export class ReportsAdminComponent implements OnInit {
     private apiService: ApiService,
     private utilservice: UtilService,
     private modalService: NgbModal,
-  ) {}
+  ) { }
 
-  
+
   async ngOnInit() {
-   this.ListaOPP_SUB()
+    this.ListaOPP_SUB()
   }
 
   async ListaOPP_SUB() {
@@ -69,7 +70,7 @@ export class ReportsAdminComponent implements OnInit {
     )
     // console.log(this.Opp)
   }
-  
+
 
   async ReportEmpresasAprobadas(id: any) {
     switch (this.itemReports) {
@@ -92,26 +93,26 @@ export class ReportsAdminComponent implements OnInit {
           }
         )
         break;
-        case 2:
-          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
-          this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte02";
-          this.xAPI.parametros = ''
-          this.xAPI.valores = ''
-          await this.apiService.Ejecutar(this.xAPI).subscribe(
-            (data) => {
-              this.itemReports = undefined
-              this.exportAsXLSX(data.Cuerpo, 'Generar por mes la actividad y movimientos de los OPP')
-              this.utilservice.alertConfirmMini('success', 'Archivo Descagado Exitosamente!')
-              this.sectionBlockUI.stop();
-            },
-            (error) => {
-              this.sectionBlockUI.stop();
-              console.log(error)
-            }
-          )
+      case 2:
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte02";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            this.itemReports = undefined
+            this.exportAsXLSX(data.Cuerpo, 'Generar por mes la actividad y movimientos de los OPP')
+            this.utilservice.alertConfirmMini('success', 'Archivo Descagado Exitosamente!')
+            this.sectionBlockUI.stop();
+          },
+          (error) => {
+            this.sectionBlockUI.stop();
+            console.log(error)
+          }
+        )
 
         break;
-        case 3:
+      case 3:
         this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
         this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte03";
         this.xAPI.parametros = ''
@@ -129,62 +130,77 @@ export class ReportsAdminComponent implements OnInit {
           }
         )
         break;
-        case 4:
-          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
-          this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte04";
-          this.xAPI.parametros = ''
-          this.xAPI.valores = ''
-          await this.apiService.Ejecutar(this.xAPI).subscribe(
-            (data) => {
-  
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
+      case 4:
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte04";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
         break;
-        case 5:
-          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
-          this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte05";
-          this.xAPI.parametros = ''
-          this.xAPI.valores = ''
-          await this.apiService.Ejecutar(this.xAPI).subscribe(
-            (data) => {
-  
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
+      case 5:
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte05";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
         break;
-        case 6:
-          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
-          this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte06";
-          this.xAPI.parametros = ''
-          this.xAPI.valores = ''
-          await this.apiService.Ejecutar(this.xAPI).subscribe(
-            (data) => {
-  
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
+      case 6:
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte06";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
         break;
-        case 7:
-          this.inputShow = true
-          this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
-          this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte07";
-          this.xAPI.parametros = ''
-          this.xAPI.valores = ''
-          await this.apiService.Ejecutar(this.xAPI).subscribe(
-            (data) => {
-  
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
+      case 7:
+        this.inputShow = true
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte07";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+        break;
+      case 8:
+        this.inputShow = true
+        this.sectionBlockUI.start('Generando Reporte, por favor Espere!!!');
+        this.xAPI.funcion = "IPOSTEL_R_OPP_Reporte08";
+        this.xAPI.parametros = ''
+        this.xAPI.valores = ''
+        await this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
         break;
       default:
         this.statusEmpresa = undefined
@@ -193,7 +209,7 @@ export class ReportsAdminComponent implements OnInit {
   }
 
 
-  GenerarReportesHistoricos(data:any) {
+  GenerarReportesHistoricos(data: any) {
     console.log(data)
   }
 

@@ -16,14 +16,14 @@ const routes: Routes = [
   {
     path: 'philately/sale-of-philately',
     component: PhilatelyAdminComponent,
-    canActivate: [AuthGuard,AuthGuardGuard],
+    canActivate: [AuthGuard, AuthGuardGuard],
     data: { roles: [3] },
   },
   {
     path: 'philately-opp',
     component: PhilatelyOppComponent,
-    canActivate: [AuthGuard,AuthGuardGuard],
-    data: { roles: [1] },
+    canActivate: [AuthGuard, AuthGuardGuard],
+    data: { roles: [1, 2] },
   },
 ]
 

@@ -83,6 +83,28 @@ export class ListPaymentsComponent implements OnInit {
   public anioObligaciones = new Date().getFullYear()
   public datosOriginales: any[];
 
+  public tipoPago = undefined
+  public tipoCategoriaPago = undefined
+
+
+  public SelectCategoriaPagos = [
+    { id: 0, name: 'PAGOS EN REVISIÓN' },
+    { id: 4, name: 'PAGOS PENDIENTES' },
+    { id: 2, name: 'PAGOS APROBADOS' },
+    { id: 3, name: 'PAGOS RECHAZADOS' },
+    { id: 1, name: 'PAGOS NO CONCILIADOS' }
+  ]
+
+  public SelectTipoPagos = [
+    { id: 1, name: 'Franqueo Postal Obligatorio' },
+    { id: 2, name: 'Derecho Semestral 1' },
+    { id: 3, name: 'Derecho Semestral 2' },
+    { id: 4, name: 'Anualidad' },
+    { id: 5, name: 'Uso Contrato Subcontratista' },
+    { id: 6, name: 'Reparos' },
+    { id: 9, name: 'Renovación' }
+  ]
+
   constructor(
     private apiService: ApiService,
     private utilService: UtilService,
@@ -177,6 +199,25 @@ export class ListPaymentsComponent implements OnInit {
     this.table.offset = 0;
   }
 
+
+  FiltarObligacionCategoriaPago(event: any) {
+    if (event != undefined) {
+      this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+      this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.status_pc === event.id); // Aplicar el filtro
+      this.table.offset = 0;
+    }
+  }
+
+  FiltarObligacionStatusTipoPago(event: any) {
+    if (event != undefined) {
+      this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+      this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.tipo_pago_pc === event.id); // Aplicar el filtro
+      this.table.offset = 0;
+    }
+  }
+
+
+
   async ListaBancosVzla() {
     this.xAPI.funcion = "IPOSTEL_R_BancosVzla"
     this.xAPI.parametros = ''
@@ -261,7 +302,7 @@ export class ListPaymentsComponent implements OnInit {
 
 
   ConciliarPago(modal, data) {
-    console.log(data)
+    // console.log(data)
     this.nombreOPP = data.nombre_empresa_opp
     this.rifOPP = data.rif_empresa_opp
     this.title_modal = data.nombre_empresa
@@ -293,6 +334,8 @@ export class ListPaymentsComponent implements OnInit {
       windowClass: 'fondo-modal',
     });
   }
+
+
 
   async ConciliarPagoRecaudacion() {
     this.sectionBlockUI.start('Comprobando Pago, por favor Espere!!!');

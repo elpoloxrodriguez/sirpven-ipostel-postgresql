@@ -15,11 +15,11 @@ export const menu: CoreMenu[] = [
   // FILATELIA ADMIN
   {
     id: 'philately-admin',
-    nombre: 'FILATELIA',
-    title: 'FILATELIA',
+    nombre: 'Franqueo Previo',
+    title: 'Franqueo Previo',
     role: [3],
     type: 'collapsible',
-    icono: 'package',
+    icono: 'trello',
     children: [
       {
         id: 'sale-of-philately',
@@ -30,41 +30,14 @@ export const menu: CoreMenu[] = [
       }
     ]
   },
-  // ENVIARVEN ADMIN
-  {
-    id: 'philately-admin',
-    nombre: 'ENVIARVEN',
-    title: 'ENVIARVEN',
-    role: [3],
-    type: 'collapsible',
-    icono: 'package',
-    children: [
-      {
-        id: 'sale-of-philately',
-        nombre: 'Ventas',
-        type: 'item',
-        icono: 'circle',
-        // url: ''
-      }
-    ]
-  },
-  // FILATELIA OPP
-  {
-    id: 'philately-opp',
-    nombre: 'FILATELIA',
-    icono: 'package',
-    role: [1],
-    type: 'item',
-    url: 'philately-opp',
-  },
   //  DUPVEN ADMIN
   {
     id: 'philately-admin',
-    nombre: 'DUPVEN',
-    title: 'DUPVEN',
+    nombre: 'DupVen',
+    title: 'DupVen',
     role: [3],
     type: 'collapsible',
-    icono: 'package',
+    icono: 'truck',
     children: [
       {
         id: 'sale-of-philately',
@@ -75,14 +48,120 @@ export const menu: CoreMenu[] = [
       }
     ]
   },
-  //  DUPVEN OPP
+  // ENVIARVEN ADMIN
   {
-    id: 'takings',
-    nombre: 'DUPVEN',
-    icono: 'credit-card',
-    type: 'item',
-    role: [1],
-    url: 'dupven/opp',
+    id: 'philately-admin',
+    nombre: 'EnviarVen',
+    title: 'EnviarVen',
+    role: [3],
+    type: 'collapsible',
+    icono: 'map-pin',
+    children: [
+      {
+        id: 'sale-of-philately',
+        nombre: 'Ventas',
+        type: 'item',
+        icono: 'circle',
+        // url: ''
+      }
+    ]
+  },
+  // FILATELIA OPP SUB
+  {
+    id: 'philately-admin',
+    nombre: 'Franqueo Previo',
+    title: 'Franqueo Previo',
+    role: [1, 2],
+    type: 'collapsible',
+    icono: 'trello',
+    children: [
+      {
+        id: 'adquisicion',
+        nombre: 'Adqusición',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'asignacion-taquilla',
+        nombre: 'Asignación Taquilla',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'asignacion-agente',
+        nombre: 'Asignación Agencias',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'stock',
+        nombre: 'Inventario Stock',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+
+    ]
+  },
+  //  DUPVEN OPP SUB
+  {
+    id: 'philately-admin',
+    nombre: 'DupVen',
+    title: 'DupVen',
+    role: [1, 2],
+    type: 'collapsible',
+    icono: 'truck',
+    children: [
+      {
+        id: 'lista-guia',
+        nombre: 'Lista Guias',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'elavorar-guia',
+        nombre: 'Elavorar Guia',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      }
+    ]
+  },
+  // ENVIARVEN OPP SUB
+  {
+    id: 'philately-admin',
+    nombre: 'EnviarVen',
+    title: 'EnviarVen',
+    role: [1, 2],
+    type: 'collapsible',
+    icono: 'map-pin',
+    children: [
+      {
+        id: 'desglose',
+        nombre: 'Desglose de Guia',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'stock',
+        nombre: 'Quejas y Reclamos',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+      {
+        id: 'stock',
+        nombre: 'Calificación Servicio',
+        type: 'item',
+        icono: 'circle',
+        url: '#'
+      },
+    ]
   },
   // AUDITORIA
   {
@@ -129,7 +208,7 @@ export const menu: CoreMenu[] = [
     id: 'EmpresaOPP',
     nombre: 'Empresa',
     role: [1, 2],
-    icono: 'package',
+    icono: 'layout',
     type: 'item',
     url: 'business/opp',
   },
