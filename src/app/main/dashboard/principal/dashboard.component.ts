@@ -584,7 +584,7 @@ export class DashboardComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               //console.log(data)
@@ -633,7 +633,7 @@ export class DashboardComponent implements OnInit {
         this.n_curp = data.msj + '-IP' + this.aniox
         if (data.tipo === 1) {
           var id = this.CrearCert.token
-          let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/certificate/');
+          let ruta: string = btoa('https://sirp.ipostel.gob.ve/');
           this.apiService.GenQR(id, ruta).subscribe(
             (data) => {
               // INSERT API
