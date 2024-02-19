@@ -252,7 +252,7 @@ export class PhilatelyAdminComponent implements OnInit {
 
   async miFuncionRecursiva(contador: number) {
     var token: string = this.utilService.TokenAleatorio(8);
-    let ruta: string = btoa('https://sirp.ipostel.gob.ve/#/philately/');
+    let ruta: string = btoa('https://sirp.ipostel.gob.ve/app/#/philately');
     this.apiService.GenQR(token, ruta).subscribe(
       (data) => {
         if (data.tipo == 1) {
