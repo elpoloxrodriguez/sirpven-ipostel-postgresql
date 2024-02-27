@@ -114,7 +114,7 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6" *ngIf="!production">
               <div class="custom-control custom-switch custom-switch-success">
                 <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="token" required
                   [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
@@ -156,7 +156,7 @@
         </div>
 
 
-        <app-asistente-virtual></app-asistente-virtual>
+        <!-- <app-asistente-virtual></app-asistente-virtual> -->
 
         <app-footer></app-footer>
 

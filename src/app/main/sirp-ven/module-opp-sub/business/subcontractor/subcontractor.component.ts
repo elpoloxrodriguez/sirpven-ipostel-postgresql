@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService, IAPICore } from '@core/services/apicore/api.service';
-import { IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_DATA_DELEGADOP_ID, IPOSTEL_DATA_EMPRESA_ID, IPOSTEL_DATA_REPRESENTANTE_LEGAL_ID, IPOSTEL_U_Status_Opp_Sub } from '@core/services/empresa/form-opp.service';
+import { IPOSTEL_C_PagosDeclaracionOPP_SUB, IPOSTEL_DATA_DELEGADOP_ID, IPOSTEL_DATA_EMPRESA_ID, IPOSTEL_DATA_REPRESENTANTE_LEGAL_ID, IPOSTEL_U_PagosDeclaracionOPP_SUB, IPOSTEL_U_Status_Opp_Sub } from '@core/services/empresa/form-opp.service';
 import { UtilService } from '@core/services/util/util.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from "jwt-decode";
@@ -42,6 +42,22 @@ export class SubcontractorComponent implements OnInit {
     user_created: 0,
     fecha_pc: '',
     mantenimiento: ''
+  }
+
+  public ActualizarPago: IPOSTEL_U_PagosDeclaracionOPP_SUB = {
+    status_pc: 0,
+    fecha_pc: '',
+    id_banco_pc: undefined,
+    referencia_bancaria: '',
+    monto_pc: '',
+    monto_pagar: '',
+    dolar_dia: '',
+    petro_dia: '',
+    archivo_adjunto: '',
+    observacion_pc: '',
+    user_created: 0,
+    user_updated: 0,
+    id_pc: 0
   }
 
   public DataEmpresa: IPOSTEL_DATA_EMPRESA_ID = {
@@ -214,13 +230,35 @@ export class SubcontractorComponent implements OnInit {
 
   public MantenimientoYSeguridad = []
   public DolarDia = 0
-  public totalPetros = 0
+  public totalPetros
   public totalBolivares = 0
   public convertirTotalBolivares
+
+  public nombreEmpresaOPP
+  public rifEmpresaOPP
+  public rowMantenimiento
+  public fechaActualPago
+  public ListaMantenimientoYSeguridad
+  public montoPagar
+  public resultadoFactura
 
   public loadingIndicator = true
 
   public isLoading: number = 0;
+
+  public isLoadingSub: number = 0;
+
+  public List_Pagos_Recaudacion = []
+  public rowsPagosConciliacion = []
+  public RowsLengthConciliacion
+  public MontoRealPagar
+  public MontoTotalAdeudado
+  public tempDataPagosConciliacion
+  public datosOriginales
+
+  public passwordTextType: boolean;
+  public passwordTextTypeX: boolean;
+
 
   public item = []
   constructor(
@@ -323,6 +361,47 @@ export class SubcontractorComponent implements OnInit {
     )
   }
 
+  async CambiarContrasena(modal, data) {
+    // data.id_real_sub
+    this.title_modal = data.nombre_empresa
+    this.idOPPSelected = data.id_real_sub
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'lg',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  async ResetPassword() {
+    if (this.ConfirmNewPassword != this.NewPassword) {
+      this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Las Contraseñas deben ser iguales!, Verifique e intente de nuevo')
+    } else {
+      const pwd = this.NewPassword
+      this.xAPI.funcion = 'IPOSTEL_U_CambiarPasswordOPPSUB'
+      this.xAPI.parametros = `${this.idOPPSelected}` + ',' + this.utilService.md5(pwd)
+      this.xAPI.valores = ''
+      await this.apiService.EjecutarDev(this.xAPI).subscribe(
+        (data) => {
+          if (data.tipo == 1) {
+            this.NewPassword = ''
+            this.ConfirmNewPassword = ''
+            this.Subcontratista = []
+            this.rowsSubcontratistas = []
+            this.modalService.dismissAll('Close')
+            this.utilService.alertConfirmMini('success', 'Felicidades<br>La Contraseña fue actualizada satisfactoriamente!')
+            this.Subcontratistas(this.IdOPP)
+          } else {
+            this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+          }
+        },
+        (error) => {
+          console.error(error)
+        }
+      )
+    }
+  }
 
   async Subcontratistas(id: any) {
     this.isLoading = 0;
@@ -468,7 +547,7 @@ export class SubcontractorComponent implements OnInit {
           this.DataEmpresa.subcontrataciones = e.subcontrataciones
           this.DataEmpresa.tipologia_empresa = e.tipologia_empresa
           this.DataEmpresa.nombre_tipologia = e.nombre_tipologia
-          this.DataEmpresa.tipo_servicio = JSON.parse(e.tipo_servicio)
+          // this.DataEmpresa.tipo_servicio = JSON.parse(e.tipo_servicio)
           this.DataEmpresa.especificacion_servicio = e.especificacion_servicio
           this.DataEmpresa.licencia_actividades_economicas_municipales = e.licencia_actividades_economicas_municipales
           this.DataEmpresa.actividades_economicas_seniat = e.actividades_economicas_seniat
@@ -480,7 +559,7 @@ export class SubcontractorComponent implements OnInit {
           this.DataEmpresa.permiso_bomberos = e.permiso_bomberos
           this.DataEmpresa.registro_sapi = e.registro_sapi
           this.DataEmpresa.registro_nacional_contratista = e.registro_nacional_contratista
-          this.DataEmpresa.flota_utilizada = JSON.parse(e.flota_utilizada)
+          // this.DataEmpresa.flota_utilizada = JSON.parse(e.flota_utilizada)
           this.DataEmpresa.cantidad_trabajadores = e.cantidad_trabajadores
           this.DataEmpresa.cantidad_subcontratados = e.cantidad_subcontratados
         });
@@ -547,10 +626,15 @@ export class SubcontractorComponent implements OnInit {
     )
   }
 
-
+  togglePasswordTextType() {
+    this.passwordTextType = !this.passwordTextType;
+  }
+  togglePasswordTextTypeX() {
+    this.passwordTextTypeX = !this.passwordTextTypeX;
+  }
 
   async DetallesOPP(modal, data) {
-    console.log(data)
+    // console.log(data)
     await this.EmpresaOPP(data.id_real_sub)
     await this.RepresentanteLegal(data.id_real_sub)
     await this.Delegado(data.id_real_sub)
@@ -562,6 +646,133 @@ export class SubcontractorComponent implements OnInit {
       windowClass: 'fondo-modal',
     });
   }
+
+
+  ModalPagosSubcontratistas(modal, data) {
+    // console.log(data)
+    this.ListaPagosSubcontratista(data.id_real_sub)
+    this.TitleModal = data.nombre_empresa
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  async ListaPagosSubcontratista(id: number) {
+    this.isLoadingSub = 0;
+    this.List_Pagos_Recaudacion = []
+    this.rowsPagosConciliacion = []
+    this.RowsLengthConciliacion = 0
+    this.xAPI.funcion = "IPOSTEL_R_Pagos_ConciliacionOPPSUB"
+    this.xAPI.parametros = `${id.toString()}`
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        if (data.Cuerpo.length > 0) {
+          data.Cuerpo.map(e => {
+            let fecha = new Date(e.fecha_pc);
+            e.anio = fecha.getFullYear();
+            e.mantenimiento = JSON.parse(e.mantenimiento)
+            e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
+            e.montoReal = e.monto_pagar
+            e.monto_pcx = e.monto_pc
+            this.MontoRealPagar = e.monto_pagar
+            e.monto_pc = this.utilService.ConvertirMoneda(e.monto_pc)
+            e.monto_pagar = this.utilService.ConvertirMoneda(e.monto_pagar)
+            this.List_Pagos_Recaudacion.push(e)
+          });
+          console.log(this.List_Pagos_Recaudacion)
+          let MontoTotalA = this.List_Pagos_Recaudacion.map(item => item.montoReal).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+          this.MontoTotalAdeudado = this.utilService.ConvertirMoneda(MontoTotalA ? MontoTotalA : 0)
+          this.rowsPagosConciliacion = this.List_Pagos_Recaudacion
+          this.RowsLengthConciliacion = this.rowsPagosConciliacion.length
+          this.tempDataPagosConciliacion = this.rowsPagosConciliacion
+          this.datosOriginales = [...this.rowsPagosConciliacion]; // Hacer una copia de respaldo al inicializar el componente
+          this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+          this.isLoadingSub = 1;
+        } else {
+          this.isLoadingSub = 2;
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  async ConsultarOPP(id_opp: any) {
+    this.xAPI.funcion = "IPOSTEL_R_OPP_ID"
+    this.xAPI.parametros = `${id_opp}`
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        data.Cuerpo.map(e => {
+          // console.log(e)
+          this.nombreEmpresaOPP = e.nombre_empresa
+          this.rifEmpresaOPP = e.rif
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+  }
+
+  mostarDatosDetallesSUB(row: any, nuevo: any) {
+
+    this.rowMantenimiento = row.mantenimiento
+    this.fechaActualPago = row.fecha
+    const dolar = row.dolar_dia
+
+    this.rowMantenimiento.push(nuevo)
+
+
+    this.rowMantenimiento.map(e => {
+      e.dolitar = this.utilService.ConvertirMoneda$(parseFloat(e.tasa_petro).toFixed(2))
+      e.bolivares = (parseFloat(e.tasa_petro) * parseFloat(dolar)).toFixed(2)
+      e.bolivaresx = this.utilService.ConvertirMoneda(e.bolivares)
+      this.ListaMantenimientoYSeguridad.push(e)
+    });
+    let MontoTotalA = this.ListaMantenimientoYSeguridad.map(item => item.bolivares).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.montoPagar = this.utilService.ConvertirMoneda(MontoTotalA) // Bolivares
+
+    let MontoTotalB = this.ListaMantenimientoYSeguridad.map(item => item.tasa_petro).reduce((prev, curr) => parseFloat(prev) + parseFloat(curr), 0);
+    this.totalPetros = this.utilService.ConvertirMoneda$(MontoTotalB) // Dolares
+
+    this.resultadoFactura = this.montoPagar
+  }
+
+  async VerDetalleSUB(modal: any, row: any) {
+    // console.log(row)
+    this.TitleModal = row.nombre_empresa
+
+    let nuevo = {
+      bolivares: 0,
+      bolivaresx: "VEF 0,00",
+      id_tipo_pagos: 0,
+      iniciales_tipo_pagos: row.iniciales_tipo_pagos,
+      nombre_tipo_pagos: row.nombre_tipo_pagos,
+      tasa_petro: (parseFloat(row.montoReal) / parseFloat(row.dolar_dia)).toFixed(2),
+      tipo_pago: row.tipo_pago_pc
+    }
+
+    await this.ConsultarOPP(row.user_created)
+    // this.mostarDatosDetallesSUB(row, nuevo)
+
+
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
 
   cerrarModalDetalle() {
     this.DataEmpresa = {

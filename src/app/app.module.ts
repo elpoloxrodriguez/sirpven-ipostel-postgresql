@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 import 'hammerjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -62,6 +62,7 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 
+
 registerLocaleData(localeEs);
 
 
@@ -87,7 +88,7 @@ const appRoutes: Routes = [
     PaymentsObligationsComponent,
     BranchOfficesComponent,
     ProfileComponent,
-                          ],
+  ],
   imports: [
     BrowserModule,
     NgxDatatableModule,
@@ -95,7 +96,7 @@ const appRoutes: Routes = [
     DigitalFileOppModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    
+
     RouterModule.forRoot(appRoutes, {
       scrollPositionRestoration: 'enabled', // Add options right here
       relativeLinkResolution: 'legacy',
@@ -112,11 +113,11 @@ const appRoutes: Routes = [
     CoreSidebarModule,
     AngularFileUploaderModule,
     CoreThemeCustomizerModule,
-    
+
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
-    
+
     //  Recaptcha V3
     RecaptchaV3Module,
     //  Recaptcha V2
@@ -137,14 +138,15 @@ const appRoutes: Routes = [
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
-    { provide: [ LocationStrategy, AuthGuardGuard,  JsonPipe], useClass: HashLocationStrategy },
-    { provide: HTTP_INTERCEPTORS,useClass: AuthInterceptorService, multi: true },
+    { provide: [LocationStrategy, AuthGuardGuard, JsonPipe], useClass: HashLocationStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     //  Recaptcha V3
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey},
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha.siteKey },
     // Recaptcha V2
-    { provide: RECAPTCHA_SETTINGS,
+    {
+      provide: RECAPTCHA_SETTINGS,
       useValue: {
         siteKey: environment.recaptcha.siteKey,
       } as RecaptchaSettings,
@@ -153,4 +155,4 @@ const appRoutes: Routes = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

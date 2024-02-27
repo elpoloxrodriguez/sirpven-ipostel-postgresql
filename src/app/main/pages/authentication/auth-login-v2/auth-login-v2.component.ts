@@ -14,7 +14,7 @@ import jwt_decode from "jwt-decode";
 import { VERSION } from '@angular/core';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Auditoria, InterfaceService } from 'app/main/audit/auditoria.service';
-
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-auth-login-v2',
@@ -94,6 +94,8 @@ export class AuthLoginV2Component implements OnInit {
 
   public idFnx // ID de la funcion
 
+  public production = environment.production
+
   /**
    * Constructor
    *
@@ -172,6 +174,7 @@ export class AuthLoginV2Component implements OnInit {
    * On init
    */
   async ngOnInit() {
+    // alert(this.production)
     // console.log(VERSION.full);
     let Ruta = this.rutaActiva.snapshot.params.id
     if (Ruta != undefined) {
@@ -220,17 +223,19 @@ export class AuthLoginV2Component implements OnInit {
 
 
   public send(form: NgForm): void {
-    // console.log(form.invalid)
-    if (form.invalid) {
-      for (const control of Object.keys(form.controls)) {
-        form.controls[control].markAsTouched();
+    if (this.production === true) {
+      if (form.invalid) {
+        for (const control of Object.keys(form.controls)) {
+          form.controls[control].markAsTouched();
+        }
+        return;
       }
-      return;
-    }
-    if (form.invalid != true) {
+      if (form.invalid != true) {
+        this.login()
+      }
+    } else {
       this.login()
     }
-    // console.debug(`Token [${this.token}] generated`);
   }
 
 
@@ -380,8 +385,10 @@ export class AuthLoginV2Component implements OnInit {
   }
 
   async Certificado(id: string) {
+    // console.log(id)
     this.xAPI.funcion = "IPOSTEL_R_Certificados";
     this.xAPI.parametros = `${id}`
+    this.xAPI.valores = ''
     await this.apiService.EjecutarDev(this.xAPI).subscribe(
       (data) => {
         // console.log(data)
@@ -449,8 +456,6 @@ export class AuthLoginV2Component implements OnInit {
             allowEnterKey: false,
             showConfirmButton: false,
             showCloseButton: true,
-            // confirmButtonText: 'Cerrar',
-            // confirmButtonColor: '#3085d6',
           })
         } else {
           // this.Qr = ''
@@ -458,23 +463,21 @@ export class AuthLoginV2Component implements OnInit {
             title: 'Certificado NO Valido!',
             text: 'Lo sentimos, este certificado no es generado por nuestro sistema.',
             icon: 'error',
-            imageWidth: 400,
-            imageHeight: 200,
-            imageAlt: 'Custom image',
           })
         }
       },
       (error) => {
-        console.log(error)
+        //   console.log(error)
+        this.utilservice.alertMessageAutoCloseTimer(5000, '<font color="red">Estimado Usuario</font>', '<strong><h4>En este momento estamos presentando fallas de conexión, intente de nuevo</h4></strong>')
       }
     )
   }
 
   async Philately(id: string) {
     Swal.fire({
-      title: 'Filatelia!',
-      text: 'QR Valido',
-      icon: 'success',
+      title: 'Franqueo Postal Previo',
+      text: 'El Codigo del QR es de prueba',
+      icon: 'warning',
       imageWidth: 400,
       imageHeight: 200,
       imageAlt: 'Custom image',

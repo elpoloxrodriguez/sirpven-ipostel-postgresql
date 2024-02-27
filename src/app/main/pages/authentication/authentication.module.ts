@@ -61,10 +61,10 @@ const routes: Routes = [
     path: '',
     component: AuthLoginV2Component,
   },
-  {
-    path: 'register-private-post-offices',
-    component: RegisterOppComponent,
-  },
+  // {
+  //   path: 'register-private-post-offices',
+  //   component: RegisterOppComponent,
+  // },
   // {
   //   path: 'register-private-post-offices-subcontrator',
   //   component: AuthRegisterSubcontratorComponent,

@@ -142,6 +142,7 @@ export class ApiService {
     return this.http.post<any>(url, xAPI, this.httpOptions);
   }
 
+
   //Ejecutar Api generales
   EjecutarDev(xAPI: IAPICore): Observable<any> {
     var url = "/devel/api/accion" + this.hash;

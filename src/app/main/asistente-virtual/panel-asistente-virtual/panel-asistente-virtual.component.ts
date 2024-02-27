@@ -42,7 +42,7 @@ export class PanelAsistenteVirtualComponent implements OnInit {
     id: 0
   }
 
-  public I_U_chatboot : CHATBOOT_U_AsistenteVirtual = {
+  public I_U_chatboot: CHATBOOT_U_AsistenteVirtual = {
     idio: '',
     tipo: '',
     clas: '',
@@ -85,7 +85,7 @@ export class PanelAsistenteVirtualComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.sectionBlockUI.start('Sin Inicializar !!!');
+    // this.sectionBlockUI.start('Sin Inicializar !!!');
     // this.sectionBlockUI.stop();
     await this.ListaAsistenteVirtual()
   }
@@ -193,7 +193,7 @@ export class PanelAsistenteVirtualComponent implements OnInit {
           this.ListaAsistenteVirtual()
           this.utilService.alertConfirmMini('success', 'Enseñanza Registrada Exitosamente')
           this.modalService.dismissAll('Close')
-          window.location.reload() 
+          window.location.reload()
         } else {
           this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
         }
@@ -222,7 +222,7 @@ export class PanelAsistenteVirtualComponent implements OnInit {
           this.ListaAsistenteVirtual()
           this.utilService.alertConfirmMini('success', 'Enseñanza Actualizada Exitosamente')
           this.modalService.dismissAll('Close')
-          window.location.reload() 
+          window.location.reload()
         } else {
           this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal, intente de nuevo')
         }
