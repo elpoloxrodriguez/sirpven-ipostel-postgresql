@@ -46,6 +46,19 @@ export interface GuardarQRs {
 	dateCreated: string
 }
 
+export interface FranqueoPostalPrevio {
+	id?: any
+	id_opp: any
+	tipo: any
+	cantidad: any
+	status: any
+	observacion: string
+	created_user?: any
+	created_date?: any
+	updated_user?: any
+	updated_date?: any
+}
+
 
 export interface QrContenido {
 

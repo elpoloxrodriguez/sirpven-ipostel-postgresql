@@ -48,7 +48,7 @@ import { PostalSolvencyOppComponent } from '../sirp-ven/module-opp-sub/postal-so
 import { PostalSolvencyOppModule } from '../sirp-ven/module-opp-sub/postal-solvency-opp/postal-solvency-opp.module';
 import { PanelAsistenteVirtualComponent } from '../asistente-virtual/panel-asistente-virtual/panel-asistente-virtual.component';
 import { SystemUsersComponent } from '../sirp-ven/module-admin/settings/system-users/system-users.component';
-import { PhilatelyModule } from '../filatelia-qr/philately.module';
+import { PhilatelyModule } from '../franqueo-postal-previo/philately.module';
 import { DupvenRoutingModule } from '../dup-ven/dupven-routing.module';
 import { DupvenAdminComponent } from '../dup-ven/dupven-admin/dupven-admin.component';
 import { DupvenOppComponent } from '../dup-ven/dupven-opp/dupven-opp.component';

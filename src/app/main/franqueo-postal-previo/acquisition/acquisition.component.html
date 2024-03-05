@@ -1,0 +1,186 @@
+<div class="card content-wrapper container-xxl p-0" *blockUI="'section-block'">
+    <div class="card-body">
+
+        <section class="users-list-wrapper">
+
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">Mostrar
+                                <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                Registros</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <button type="button" class="btn btn-warning" (click)="AdquisicionAdd(ModalAdquisicion)"
+                                rippleEffect>
+                                Solicitar F.P.P </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <label class="d-flex align-items-center ml-1 ml-md-0">Buscar:<input
+                                    [(ngModel)]="searchValue" name="searchValue" type="search"
+                                    class="form-control ml-25" placeholder="Numero Tiraje"
+                                    (keyup)="filterUpdate($event)" (search)="filterUpdate($event)" /></label>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable [rows]="rowsFPP" rowHeight="auto" class="bootstrap core-bootstrap"
+                    [limit]="selectedOption" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+                    [scrollbarH]="true">
+
+
+                    <ngx-datatable-column name="empresa" prop="nombre_empresa" [width]="200">
+                        <ng-template let-nombre_empresa="value" ngx-datatable-cell-template>
+                            <div>
+                                <span class="font-weight-bold"> <strong>{{ nombre_empresa.slice(0,90) }}</strong>
+                                </span>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Rif" prop="rif" [width]="100">
+                        <ng-template let-rif="value" ngx-datatable-cell-template>
+                            <div>
+                                <span class="font-weight-bold"> {{ rif }} </span>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="TIPO" prop="tipox" [width]="100">
+                        <ng-template let-tipox="value" ngx-datatable-cell-template>
+                            <div>
+                                <span class="font-weight-bold"> {{ tipox }} </span>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Cantidad" prop="cantidad" [width]="100">
+                        <ng-template let-cantidad="value" ngx-datatable-cell-template>
+                            <div>
+                                <span class="font-weight-bold"> {{ cantidad }} </span>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="STATUS" prop="status" [width]="100">
+                        <ng-template let-status="value" ngx-datatable-cell-template>
+                            <div *ngIf="status === 0" class="badge badge-pill" ngClass="badge-light-warning">
+                                En Espera
+                            </div>
+                            <div *ngIf="status === 1" class="badge badge-pill" ngClass="badge-light-success">
+                                Generada
+                            </div>
+                            <div *ngIf="status === 2" class="badge badge-pill" ngClass="badge-light-danger">
+                                Rechazado
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+
+
+                    <ngx-datatable-column name="Accion" [width]="50" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-row="row">
+                            <div ngbDropdown container="body">
+                                <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow"
+                                    rippleEffect>
+                                    <span [data-feather]="'settings'" [class]="'cursor-pointer'"></span>
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <a ngbDropdownItem><span [size]="16" [data-feather]="'file'"
+                                            [class]="'mr-50'"></span>Detalle</a>
+                                    <a *ngIf="row.status != 1" (click)="ModalModificar(ModalAdquisicion,row)"
+                                        ngbDropdownItem><span [size]="16" [data-feather]="'edit'"
+                                            [class]="'mr-50'"></span>Modificar</a>
+                                    <a *ngIf="row.status != 1" (click)="Delete(row)" ngbDropdownItem><span [size]="16"
+                                            [data-feather]="'trash'" [class]="'mr-50'"></span>Eliminar</a>
+                                    <a *ngIf="row.status == 1" ngbDropdownItem><span [size]="16"
+                                            [data-feather]="'download'" [class]="'mr-50'"></span>Descargar FPO</a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+
+                </ngx-datatable>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<ng-template #ModalAdquisicion let-modal>
+    <form class="form" #formUsersRegister="ngForm">
+        <div class="modal-header">
+            <h5 class="modal-title" id="myModalLabel160"> Solicitud de Franqueo Postal Previo</h5>
+        </div>
+        <div class="modal-body" tabindex="0" ngbAutofocus>
+            <div class="col-xl-12 col-md-12 col-12">
+                <!-- Header Starts -->
+
+                <div class="row">
+                    <div class="col-md-12 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Seleccione Tipo de Estampilla</label>
+                            <ng-select [items]="SelectTipoEstampilla" #TipoEstampilla="ngModel"
+                                [class.error]="!TipoEstampilla.valid && formUsersRegister.submitted"
+                                [(ngModel)]="IFranqueoPostalPrevio.tipo"
+                                [ngModelOptions]="{standalone: true, required: true}" bindLabel="name"
+                                placeholder="Seleccione Tipo Estampilla" required autocomplete="off">
+                            </ng-select>
+                            <span *ngIf="formUsersRegister.submitted && TipoEstampilla.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="TipoEstampilla.errors.required">Tipo de
+                                    Estampilla es requerido!</small>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Cantidad</label>
+                            <input required type="number" class="form-control" #CostoReceptor="ngModel"
+                                [class.error]="!CostoReceptor.valid && formUsersRegister.submitted"
+                                [(ngModel)]="IFranqueoPostalPrevio.cantidad" [ngModelOptions]="{standalone: true}"
+                                placeholder="Ingrese Costo" />
+                            <span *ngIf="formUsersRegister.submitted && CostoReceptor.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="CostoReceptor.errors.required">Costo es
+                                    requerido!</small>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Observación</label>
+                            <textarea class="form-control" [(ngModel)]="IFranqueoPostalPrevio.observacion"
+                                [ngModelOptions]="{standalone: true, required: true}" id="basicTextarea"
+                                placeholder="Observación" required autocomplete="off" rows="3"></textarea>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- Header Ends -->
+            </div>
+        </div>
+        <!--/ Invoice -->
+        <div class="modal-footer">
+            <button (click)="Guardar()" class="btn bg-gradient-success text-white" type="submit" *ngIf="!showBtn">
+                <span class="fa fa-plus"></span> Agregar Solicitud</button>
+            <button (click)="Modificar()" class="btn bg-gradient-warning text-white" type="submit" *ngIf="showBtn">
+                <span class="fa fa-edit"></span> Modificar Solicitud</button>
+            <button type="button" class="btn btn-danger" (click)="CerrarModal()" rippleEffect>
+                Cerrar
+            </button>
+        </div>
+    </form>
+</ng-template>

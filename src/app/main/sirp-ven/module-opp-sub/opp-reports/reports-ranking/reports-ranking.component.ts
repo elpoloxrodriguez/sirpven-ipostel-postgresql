@@ -151,9 +151,9 @@ export class ReportsRankingComponent implements OnInit {
                 display: true
               },
               ticks: {
-                stepSize: 10000,
+                stepSize: 1000,
                 min: valores.minV,
-                max: valores.maxV,
+                // max: valores.maxV,
                 fontColor: this.labelColor
               },
               gridLines: {
@@ -190,7 +190,7 @@ export class ReportsRankingComponent implements OnInit {
           // data: [30332,24776],
           label: `Movimiento de Piezas Año ${this.añoAn}`,
           borderColor: this.lineChartDanger,
-          lineTension: 0.5,
+          lineTension: 0.1,
           pointStyle: 'circle',
           backgroundColor: this.lineChartDanger,
           fill: false,
@@ -211,7 +211,7 @@ export class ReportsRankingComponent implements OnInit {
           data: valores.data2 ? valores.data2 : 0,
           label: `Movimiento de Piezas Año ${this.añoAc}`,
           borderColor: this.lineChartPrimary,
-          lineTension: 0.5,
+          lineTension: 0.1,
           pointStyle: 'circle',
           backgroundColor: this.lineChartPrimary,
           fill: false,

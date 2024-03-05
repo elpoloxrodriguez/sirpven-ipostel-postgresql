@@ -51,7 +51,6 @@ export class FilateliaService {
 
 
   GenerarCabecera(Qr: any, Tipo: number, TokenTiraje: string) {
-
     const pageHeight = this.doc.internal.pageSize.height || this.doc.internal.pageSize.getHeight();
     const pageWidth = this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth();
     this.doc.setProperties({
@@ -271,17 +270,13 @@ export class FilateliaService {
         var letterY = y + rectHeight - 0.2; // Ajuste para posicionar  en la parte inferior
         doc.setFontSize(4.5);
         doc.text(alphanumeric, letterX, letterY);
-
-
       }
     }
-
 
     // Guardar o mostrar el documento
     doc.save('Franqueo Postal Previo.pdf');  // Guardar como archivo PDF
     // this.doc.autoPrint();
     // this.doc.output("dataurlnewwindow", { filename: 'Franqueo Postal Previo.pdf' });
-
 
   }
 

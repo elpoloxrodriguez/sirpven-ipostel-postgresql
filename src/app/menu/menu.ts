@@ -44,7 +44,7 @@ export const menu: CoreMenu[] = [
         nombre: 'Ventas',
         type: 'item',
         icono: 'circle',
-        // url: ''
+        url: '#'
       }
     ]
   },
@@ -62,7 +62,7 @@ export const menu: CoreMenu[] = [
         nombre: 'Ventas',
         type: 'item',
         icono: 'circle',
-        // url: ''
+        url: '#'
       }
     ]
   },
@@ -76,32 +76,32 @@ export const menu: CoreMenu[] = [
     icono: 'trello',
     children: [
       {
-        id: 'adquisicion',
+        id: 'fpp/acquisition',
         nombre: 'Adqusición',
         type: 'item',
         icono: 'circle',
-        url: '#'
+        url: 'fpp/acquisition'
       },
       {
-        id: 'asignacion-taquilla',
+        id: 'fpp/box-office-allocation',
         nombre: 'Asignación Taquilla',
         type: 'item',
         icono: 'circle',
-        url: '#'
+        url: 'fpp/box-office-allocation'
       },
       {
         id: 'asignacion-agente',
         nombre: 'Asignación Agencias',
         type: 'item',
         icono: 'circle',
-        url: '#'
+        url: 'fpp/box-office-agency'
       },
       {
-        id: 'stock',
+        id: 'fpp/inventary-stock',
         nombre: 'Inventario Stock',
         type: 'item',
         icono: 'circle',
-        url: '#'
+        url: 'fpp/inventary-stock'
       },
 
     ]
@@ -116,18 +116,18 @@ export const menu: CoreMenu[] = [
     icono: 'truck',
     children: [
       {
-        id: 'lista-guia',
-        nombre: 'Lista Guias',
-        type: 'item',
-        icono: 'circle',
-        url: '#'
-      },
-      {
         id: 'elaborar-guia',
         nombre: 'Elaborar Guia',
         type: 'item',
         icono: 'circle',
-        url: '#'
+        url: 'dupven/prepare-guide'
+      },
+      {
+        id: 'lista-guia',
+        nombre: 'Lista Guias',
+        type: 'item',
+        icono: 'circle',
+        url: 'dupven/guide-list'
       }
     ]
   },
