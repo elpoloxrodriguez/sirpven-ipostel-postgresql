@@ -233,6 +233,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
+    console.log(this.token)
     this.idOPP = this.token.Usuario[0].id_opp
     this.IdUser = this.token.Usuario[0].id_user
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
@@ -379,14 +380,13 @@ export class PrivatePostalOperatorComponent implements OnInit {
   }
 
   async GenerarCertificadoInscripcion(data) {
-    // console.log(data)
     this.EmpresaRIF(data.id_opp)
-    this.CrearCert.usuario = this.token.Usuario[0].id_opp
-    this.CrearCert.token = this.utilService.TokenAleatorio(10),
-      this.CrearCert.type = 1,
-      // 1 CERTIFICADO UNICO OPP
-      // 2 AUTORIZACION UNICA  SUB
-      this.CrearCert.created_user = this.token.Usuario[0].id_opp
+    this.CrearCert.created_user = this.IdUser
+    this.CrearCert.usuario = data.id_opp
+    this.CrearCert.token = this.utilService.TokenAleatorio(10)
+    this.CrearCert.type = 1
+    // 1 CERTIFICADO UNICO OPP
+    // 2 AUTORIZACION UNICA  SUB
     this.xAPI.funcion = "IPOSTEL_C_Certificados";
     this.xAPI.parametros = ''
     this.xAPI.valores = JSON.stringify(this.CrearCert)
