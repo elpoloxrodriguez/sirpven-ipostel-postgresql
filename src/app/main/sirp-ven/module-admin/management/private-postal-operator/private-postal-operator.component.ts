@@ -233,7 +233,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
-    console.log(this.token)
+    // console.log(this.token)
     this.idOPP = this.token.Usuario[0].id_opp
     this.IdUser = this.token.Usuario[0].id_user
     this.TipoRegistro = this.token.Usuario[0].tipo_registro

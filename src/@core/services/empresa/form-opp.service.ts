@@ -473,6 +473,7 @@ export interface IPOSTEL_U_TarifasFranqueo { // Actualizar tarifa de franqueo
 	pmvp: string
 	iva: string
 	tasa_postal: string
+	descripcion: string
 	total_pagar: string
 	mes: string
 	id_servicio_franqueo: number

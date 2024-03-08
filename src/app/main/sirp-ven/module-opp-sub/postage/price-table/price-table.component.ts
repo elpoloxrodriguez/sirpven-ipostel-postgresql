@@ -42,7 +42,7 @@ export class PriceTableComponent implements OnInit {
   public xAPI: IAPICore = {
     funcion: '',
     parametros: '',
-    valores: {},
+    valores: '',
   };
 
   public files = {
@@ -88,6 +88,7 @@ export class PriceTableComponent implements OnInit {
     id_servicio_franqueo: 0,
     user_updated: 0,
     id_pef: undefined,
+    descripcion: ''
   }
 
   public itemsSelectMes = [
@@ -202,6 +203,10 @@ export class PriceTableComponent implements OnInit {
   public montoTASA
   public montoTASAnombre
 
+  miArray: any[];
+
+  public rowsLocalTarifas = []
+
   public ServicioFranqueoID = 1
 
   public selectedMes
@@ -230,10 +235,17 @@ export class PriceTableComponent implements OnInit {
     clave: ''
   }
 
+  public servicio_franqueo
+  public peso_envio
 
+  public XTarifaEnvio
+
+  public TarifasLote = []
   public ListaLote = []
   public rowsListaLote = []
   public tempListaLote = []
+
+  public LocalTarifas = []
 
 
   public ListaTarifaLote = []
@@ -247,6 +259,21 @@ export class PriceTableComponent implements OnInit {
   private tempData = [];
   private _unsubscribeAll: Subject<any>;
 
+  public prueba = {
+    id_opp: '',
+    id_peso_envio: undefined,
+    id_servicio_franqueo: undefined,
+    peso_envio: undefined,
+    servicio_franqueo: undefined,
+    descripcion: '',
+    pmvp: 0,
+    iva: 0,
+    tasa_postal: 0,
+    total_pagar: 0,
+    mes: '',
+    user_created: '',
+  }
+
   public itemsSelectStatus = [
     { id: '0', name: 'No Autorizado' },
     { id: '1', name: 'Autorizado' }
@@ -258,10 +285,15 @@ export class PriceTableComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router,
     private _formBuilder: FormBuilder,
-    private movilizacionPiezas: MobilizationPartsService
+    private movilizacionPiezas: MobilizationPartsService,
+    private RegistroTarifas: MobilizationPartsService,
   ) { }
 
   async ngOnInit() {
+    this.RegistroTarifas.listaActualizadaTarifas.subscribe(() => {
+      // Vuelve a cargar la lista de registros desde sessionStorage
+      this.cargarRegistrosTarifa();
+    });
     this.token = jwt_decode(sessionStorage.getItem('token'));
     this.numControl = this.token.Usuario[0].rif
     this.llave = this.utilService.GenerarUnicId();
@@ -282,28 +314,28 @@ export class PriceTableComponent implements OnInit {
     await this.ModalListaServicioFranqueo(1)
   }
 
-  addItem() {
-    this.items.push({
-      id_opp: null,
-      id_peso_envio: null,
-      descripcion: null,
-      pmvp: null,
-      iva: null,
-      tasa_postal: null,
-      total_pagar: null,
-      mes: null,
-      id_servicio_franqueo: null,
-      user_created: null,
-    });
-  }
-  deleteItem(id) {
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items.indexOf(this.items[i]) === id) {
-        this.items.splice(i, 1);
-        break;
-      }
-    }
-  }
+  // addItem() {
+  //   this.items.push({
+  //     id_opp: null,
+  //     id_peso_envio: null,
+  //     descripcion: null,
+  //     pmvp: null,
+  //     iva: null,
+  //     tasa_postal: null,
+  //     total_pagar: null,
+  //     mes: null,
+  //     id_servicio_franqueo: null,
+  //     user_created: null,
+  //   });
+  // }
+  // deleteItem(id) {
+  //   for (let i = 0; i < this.items.length; i++) {
+  //     if (this.items.indexOf(this.items[i]) === id) {
+  //       this.items.splice(i, 1);
+  //       break;
+  //     }
+  //   }
+  // }
 
   async TasaPostal(tipologia, id_opp) {
     this.xAPI.funcion = "IPOSTEL_R_TasaPostal"
@@ -414,7 +446,7 @@ export class PriceTableComponent implements OnInit {
         } else {
           this.isLoading = 2;
         }
-        
+
       },
       (error) => {
         console.log(error)
@@ -555,6 +587,8 @@ export class PriceTableComponent implements OnInit {
   }
 
   async ModalRegistrarTarifaEnvio(modal) {
+    this.rowsLocalTarifas = []
+    // console.info(this.rowsLocalTarifas)
     this.modalService.open(modal, {
       centered: true,
       size: 'xl',
@@ -563,19 +597,19 @@ export class PriceTableComponent implements OnInit {
       windowClass: 'fondo-modal',
     });
     this.fechax = this.anio + '-0' + this.mes
-    this.items.splice(0);
-    this.items.push([{
-      id_opp: '',
-      id_peso_envio: '',
-      descripcion: '',
-      pmvp: '',
-      iva: '',
-      tasa_postal: '',
-      total_pagar: '',
-      mes: '',
-      id_servicio_franqueo: '',
-      user_created: ''
-    }]);
+    // this.items.splice(0);
+    // this.items.push([{
+    //   id_opp: '',
+    //   id_peso_envio: '',
+    //   descripcion: '',
+    //   pmvp: '',
+    //   iva: '',
+    //   tasa_postal: '',
+    //   total_pagar: '',
+    //   mes: '',
+    //   id_servicio_franqueo: '',
+    //   user_created: ''
+    // }]);
   }
 
   SubirXLS(modal: any) {
@@ -694,22 +728,42 @@ export class PriceTableComponent implements OnInit {
     );
   }
 
-  async DriverConexion(){
+  async DriverConexion() {
     this.xAPI.funcion = 'IPOSTEL_R_DriverID'
     this.xAPI.parametros = 'SIRPVEN IPOSTEL'
     this.xAPI.valores = ''
     await this.apiService.Ejecutar(this.xAPI).subscribe(
-      (data)=> {
+      (data) => {
         this.DatosConexionBD.host = data[0].host
         this.DatosConexionBD.basedatos = data[0].basedatos
         this.DatosConexionBD.puerto = data[0].puerto
         this.DatosConexionBD.usuario = data[0].usuario
         this.DatosConexionBD.clave = data[0].clave
       },
-      (error)=> {
+      (error) => {
         console.log(error)
       }
-      )
+    )
+  }
+
+
+  limpiarForm() {
+    this.prueba = {
+      id_opp: '',
+      id_peso_envio: undefined,
+      id_servicio_franqueo: undefined,
+      peso_envio: undefined,
+      servicio_franqueo: undefined,
+      descripcion: '',
+      pmvp: 0,
+      iva: 0,
+      tasa_postal: 0,
+      total_pagar: 0,
+      mes: '',
+      user_created: '',
+    }
+    this.peso_envio = undefined
+    this.servicio_franqueo = undefined
   }
 
   consultarMasivo(id: number) {
@@ -734,11 +788,11 @@ export class PriceTableComponent implements OnInit {
     this.sectionBlockUI.start('Guardando Registros por Lote, por favor Espere!!!');
     this.fnx = {
       funcion: 'Fnx_SubirTarifasLote',
-      pass:this.DatosConexionBD.clave,
-      host:this.DatosConexionBD.host,
-      db:this.DatosConexionBD.basedatos,
-      port:this.DatosConexionBD.puerto,
-      user:this.DatosConexionBD.usuario,
+      pass: this.DatosConexionBD.clave,
+      host: this.DatosConexionBD.host,
+      db: this.DatosConexionBD.basedatos,
+      port: this.DatosConexionBD.puerto,
+      user: this.DatosConexionBD.usuario,
       // pass: '123456789',
       // host: '127.0.0.1',
       // db: 'sirpven-ipostel',
@@ -778,20 +832,27 @@ export class PriceTableComponent implements OnInit {
   }
 
   async EditTarifa(modal, data) {
-    // console.log(data);
-    this.Xnombre_peso_envio = data.nombre_peso_envio
+    console.log(data)
+    this.Xnombre_peso_envio = data.id_peso_envio
+    this.XTarifaEnvio = parseInt(data.id_servicio_franqueo)
     this.Xpmvp = data.pmvpx
     this.Xiva = data.ivax
     this.Xtasa_postal = data.tasa_postalx
     this.Xtotal_pagar = data.total_pagarx
 
+    this.IupdateTarifaFranqueo.pmvp = this.Xpmvp
+    this.IupdateTarifaFranqueo.tasa_postal = data.tasa_postal
+    this.IupdateTarifaFranqueo.descripcion = data.descripcion
     this.IupdateTarifaFranqueo.status_pef = 0
-    this.IupdateTarifaFranqueo.id_peso_envio = data.id_peso_envio
+    // this.IupdateTarifaFranqueo.id_peso_envio = this.Xnombre_peso_envio
+    // this.IupdateTarifaFranqueo.id_servicio_franqueo = this.XTarifaEnvio
     this.IupdateTarifaFranqueo.mes = data.mes
-    this.IupdateTarifaFranqueo.id_servicio_franqueo = parseInt(data.id_servicio_franqueo)
     this.IupdateTarifaFranqueo.user_updated = this.idOPP
     this.IupdateTarifaFranqueo.id_pef = data.id_pef
 
+
+    // console.log(this.Xnombre_peso_envio);
+    // console.log(this.IupdateTarifaFranqueo)
 
     this.modalService.open(modal, {
       centered: true,
@@ -818,7 +879,93 @@ export class PriceTableComponent implements OnInit {
     this.IupdateTarifaFranqueo.total_pagar = this.Xtotal_pagar
   }
 
-  async UpdateTarifa() {
+  cargarRegistrosTarifa() {
+    this.LocalTarifas = []
+    this.miArray = JSON.parse(sessionStorage.getItem('tarifas') || '[]');
+    let i = 0
+    if (this.miArray !== null) {
+      this.miArray.map(element => {
+        element.index = i++
+        this.LocalTarifas.push(element)
+      });
+      this.rowsLocalTarifas = this.LocalTarifas
+      this.limpiarForm()
+    }
+  }
+
+  registro() {
+    this.prueba.id_opp = this.idOPP
+    this.prueba.id_peso_envio = this.peso_envio.id
+    this.prueba.id_servicio_franqueo = this.servicio_franqueo.id
+    this.prueba.peso_envio = this.peso_envio.name
+    this.prueba.servicio_franqueo = this.servicio_franqueo.name
+    this.prueba.iva = this.montoIVA
+    this.prueba.tasa_postal = this.montoTASA
+    this.prueba.total_pagar = 0
+    this.prueba.mes = this.fechax
+    this.prueba.user_created = this.idOPP
+    this.RegistroTarifas.agregarRegistroTarifas(this.prueba);
+    this.cargarRegistrosTarifa()
+  }
+
+  borrarRegistro(index: number) {
+    this.RegistroTarifas.borrarRegistroTarifas(index);
+  }
+
+
+  async LoteRegistrarTarifa() {
+    let valor = this.miArray
+    for (let i = 0; i < valor.length; i++) {
+      const iva = valor[i].pmvp * this.montoIVA / 100
+      const tasa = valor[i].pmvp * this.montoTASA / 100
+      const total = valor[i].pmvp + iva + tasa
+      this.PesoEnvioFranqueo.id_opp = this.idOPP
+      this.PesoEnvioFranqueo.pmvp = valor[i].pmvp
+      this.PesoEnvioFranqueo.id_peso_envio = valor[i].id_peso_envio
+      this.PesoEnvioFranqueo.descripcion = valor[i].descripcion
+      this.PesoEnvioFranqueo.iva = parseFloat(iva.toFixed(2))
+      this.PesoEnvioFranqueo.tasa_postal = parseFloat(tasa.toFixed(2))
+      this.PesoEnvioFranqueo.total_pagar = parseFloat(total.toFixed(2))
+      this.PesoEnvioFranqueo.mes = this.fechax
+      this.PesoEnvioFranqueo.id_servicio_franqueo = valor[i].id_servicio_franqueo
+      this.PesoEnvioFranqueo.user_created = this.idOPP
+      this.xAPI.funcion = "IPOSTEL_C_Peso_Envio_Franqueo"
+      this.xAPI.parametros = ''
+      this.xAPI.valores = JSON.stringify(this.PesoEnvioFranqueo)
+      // console.log(this.PesoEnvioFranqueo)
+      await this.apiService.Ejecutar(this.xAPI).subscribe(
+        (data) => {
+          this.sectionBlockUI.start('Guardando Registros, por favor Espere!!!');
+          if (data.tipo == 1) {
+            this.LocalTarifas = []
+            this.rowsTarifas = []
+            this.rowsLocalTarifas = []
+            this.TarifasFranqueo = []
+            this.ListaTarifas()
+            this.modalService.dismissAll()
+            this.limpiarForm()
+            this.LocalTarifas.push()
+            sessionStorage.removeItem('tarifas')
+            this.sectionBlockUI.stop()
+            this.utilService.alertConfirmMini('success', 'Tarifas Registradas Exitosamente!')
+          } else {
+            this.sectionBlockUI.stop();
+            this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+          }
+        },
+        (error) => {
+          console.log(error)
+          this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+        }
+      )
+    }
+  }
+
+  async UpdateTarifa(row1: any, row2: any) {
+    // console.log(row2)
+    this.IupdateTarifaFranqueo.id_peso_envio = row1
+    this.IupdateTarifaFranqueo.id_servicio_franqueo = row2
+    // console.log(this.IupdateTarifaFranqueo)
     await Swal.fire({
       title: 'Esta Seguro?',
       html: "De Actualizar el Monto de este Registro! <br> Tenga en cuenta que una vez modifique el monto tendra que esperar la autorización del mismo por parte de <font color='red'><strong>IPOSTEL</strong</font>",
@@ -829,31 +976,34 @@ export class PriceTableComponent implements OnInit {
       confirmButtonText: 'Si, Actualizarlo!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
-      this.xAPI.funcion = "IPOSTEL_U_TarifasFranqueo"
-      this.xAPI.parametros = ''
-      this.xAPI.valores = JSON.stringify(this.IupdateTarifaFranqueo)
-      this.apiService.Ejecutar(this.xAPI).subscribe(
-        (data) => {
-          this.sectionBlockUI.start('Actualizando Registros, por favor Espere!!!');
-          this.rowsTarifas.push(this.TarifasFranqueo)
-          if (data.tipo === 1) {
-            this.TarifasFranqueo = []
-            this.TarifasFranqueoAll = []
-            this.ListaTarifas()
-            this.ListaTarifasFranqueoAll()
-            this.modalService.dismissAll('Close')
-            this.sectionBlockUI.stop()
-            this.utilService.alertConfirmMini('success', 'Tarifas Actualizadas Exitosamente!')
-          } else {
-            this.sectionBlockUI.stop();
-            this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+      if (result.isConfirmed) {
+        this.xAPI.funcion = "IPOSTEL_U_TarifasFranqueo"
+        this.xAPI.parametros = ''
+        this.xAPI.valores = JSON.stringify(this.IupdateTarifaFranqueo)
+        this.apiService.Ejecutar(this.xAPI).subscribe(
+          (data) => {
+            this.sectionBlockUI.start('Actualizando Registros, por favor Espere!!!');
+            // this.rowsTarifas.push(this.TarifasFranqueo)
+            if (data.tipo === 1) {
+              this.TarifasFranqueo = []
+              this.TarifasFranqueoAll = []
+              this.ListaTarifas()
+              this.ListaTarifasFranqueoAll()
+              this.modalService.dismissAll('Close')
+              this.sectionBlockUI.stop()
+              this.utilService.alertConfirmMini('success', 'Tarifas Actualizadas Exitosamente!')
+            } else {
+              this.sectionBlockUI.stop();
+              this.utilService.alertConfirmMini('error', 'Algo salio mal! <br> Verifique e intente de nuevo')
+            }
+          },
+          (error) => {
+            console.log(error)
           }
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+        )
+      }
     })
+
   }
 
   async RegistrarTarifaLote() {
@@ -874,20 +1024,22 @@ export class PriceTableComponent implements OnInit {
       this.PesoEnvioFranqueo.mes = this.fechax
       this.PesoEnvioFranqueo.id_servicio_franqueo = parseInt(element.id_servicio_franqueo)
       this.PesoEnvioFranqueo.user_created = this.idOPP
-      this.loteRegistros.push(this.PesoEnvioFranqueo)
     }
     this.xAPI.funcion = "IPOSTEL_C_Peso_Envio_Franqueo"
     this.xAPI.parametros = ''
     this.xAPI.valores = JSON.stringify(this.PesoEnvioFranqueo)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
-        this.rowsTarifas.push(this.PesoEnvioFranqueo)
         if (data.tipo === 1) {
+          this.LocalTarifas = []
+          this.rowsTarifas = []
+          this.rowsLocalTarifas = []
           this.TarifasFranqueo = []
-          this.TarifasFranqueoAll = []
           this.ListaTarifas()
-          this.ListaTarifasFranqueoAll()
-          this.modalService.dismissAll('Close')
+          this.modalService.dismissAll()
+          this.limpiarForm()
+          this.LocalTarifas.push()
+          sessionStorage.removeItem('tarifas')
           this.sectionBlockUI.stop()
           this.utilService.alertConfirmMini('success', 'Tarifas Registradas Exitosamente!')
         } else {
@@ -899,6 +1051,14 @@ export class PriceTableComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  cerrarModal() {
+    this.modalService.dismissAll()
+    this.limpiarForm()
+    this.LocalTarifas.push()
+    sessionStorage.removeItem('tarifas')
+    this.rowsLocalTarifas = []
   }
 
   async RegistrarTarifaNacionalAereo() {
