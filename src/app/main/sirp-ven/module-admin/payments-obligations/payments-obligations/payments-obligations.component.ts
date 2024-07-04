@@ -90,6 +90,8 @@ export class PaymentsObligationsComponent implements OnInit {
 
   public loadingIndicator = true
 
+  public tasa_petro = ''
+
   private tempData = [];
   public temp = [];
   public rows
@@ -101,7 +103,7 @@ export class PaymentsObligationsComponent implements OnInit {
     private utilService: UtilService,
     private modalService: NgbModal,
     private generarConciliacion: GenerarPagoService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.token = jwt_decode(sessionStorage.getItem('token'));
@@ -186,11 +188,11 @@ export class PaymentsObligationsComponent implements OnInit {
   //   this.table.offset = 0;
   // }
 
-FiltarObligacionAnio(event: any) {
-  this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
-  this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year); // Aplicar el filtro
-  this.table.offset = 0;
-}
+  FiltarObligacionAnio(event: any) {
+    this.rowsPagosConciliacion = [...this.datosOriginales]; // Restaurar los datos originales
+    this.rowsPagosConciliacion = this.rowsPagosConciliacion.filter(objeto => objeto.anio === event.year); // Aplicar el filtro
+    this.table.offset = 0;
+  }
 
 
   ModalMultasObligaciones(modal) {
@@ -279,10 +281,11 @@ FiltarObligacionAnio(event: any) {
     this.montoPetroIncumplimiento = event.monto
     this.monto = this.pPetro * this.montoPetroIncumplimiento
     this.conversion = this.monto * this.pDolar
-    this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+    // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
   }
 
   CapturarObligacion(obligacion: any) {
+    this.tasa_petro = obligacion.tasa_petro
     // console.log(obligacion)
     switch (obligacion.id) {
       case 2: // Derecho Semestral 1
@@ -290,11 +293,13 @@ FiltarObligacionAnio(event: any) {
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
         } else { // SUB
           this.monto = this.pPetro / 2
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
         }
         break;
       case 3: // Derecho Semestral 2
@@ -302,11 +307,15 @@ FiltarObligacionAnio(event: any) {
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+
         } else { // SUB
           this.monto = this.pPetro / 2
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+
         }
         break;
       case 4: //Anualidad
@@ -342,11 +351,16 @@ FiltarObligacionAnio(event: any) {
         if (this.TipoRegistro === 1) { // OPP
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
         } else {
           this.monto = this.pPetro
           this.conversion = this.monto * this.pDolar
-          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+
         }
         break;
       default:
@@ -392,21 +406,15 @@ FiltarObligacionAnio(event: any) {
     this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
     await this.generarConciliacion.GuardarCreacionRecaudacionIndividual(this.IpagarRecaudacion)
       .then((resultado) => {
-        // Manejar el resolve
-        // console.log('Operación exitosa:', resultado);
         this.List_Pagos_Recaudacion = []
         this.modalService.dismissAll('Cerrar Modal')
         this.LimpiarModal()
         this.utilService.alertConfirmMini('success', 'Recibo Guardado Exitosamente')
       })
       .catch((error) => {
-        // Manejar el reject
-        // console.error('Error en la operación:', error);
         this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
       })
       .finally(() => {
-        // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
-        // console.log('Procesamiento finalizado');
         this.ListaPagosObligaciones()
         this.sectionBlockUI.stop()
       });

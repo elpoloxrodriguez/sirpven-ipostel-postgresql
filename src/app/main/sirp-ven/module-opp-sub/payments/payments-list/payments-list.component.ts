@@ -339,12 +339,14 @@ export class PaymentsListComponent implements OnInit {
     this.xAPI.funcion = "IPOSTEL_R_Pagos_ConciliacionOPPSUB"
     this.xAPI.parametros = this.idOPP.toString()
     this.xAPI.valores = ''
+    // console.log(this.xAPI)
     await this.apiService.Ejecutar(this.xAPI).subscribe(
       (data) => {
         if (data.Cuerpo.length > 0) {
           data.Cuerpo.map(e => {
             let fecha = new Date(e.fecha_pc);
             e.anio = fecha.getFullYear();
+            e.mantenimiento = e.mantenimiento ? e.mantenimiento : null
             e.mantenimiento = JSON.parse(e.mantenimiento)
             e.fecha = this.utilService.FechaMomentLL(e.fecha_pc)
             e.montoReal = e.monto_pagar

@@ -13,8 +13,8 @@
         </div>
         &nbsp;
         <ng-select [items]="yearsList" [(ngModel)]="anioObligaciones" [ngModelOptions]="{standalone: true}"
-          (change)="FiltarObligacionAnio($event)" bindValue="year" bindLabel="year" placeholder="Seleccione"
-          required autocomplete="off">
+          (change)="FiltarObligacionAnio($event)" bindValue="year" bindLabel="year" placeholder="Seleccione" required
+          autocomplete="off">
         </ng-select>
       </div>
     </div>
@@ -187,6 +187,14 @@
             </div>
           </div>
 
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="obligacion">Tasa de Obligación</label>
+              <input type="text" class="form-control" placeholder="Tasa de Obligación" readonly autocomplete="off"
+                [(ngModel)]="tasa_petro" [ngModelOptions]="{standalone: true}" />
+            </div>
+          </div>
+
 
           <div class="col-md-12 col-12" *ngIf="showIncumplimiento">
             <div class="form-group">
@@ -274,6 +282,14 @@
                 (ngModelChange)="CapturarObligacion($event)" bindLabel="name"
                 placeholder="Seleccione Tipo de Obligación" required autocomplete="off">
               </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="obligacion">Tasa de Obligación</label>
+              <input type="text" class="form-control" placeholder="Tasa de Obligación" readonly autocomplete="off"
+                [(ngModel)]="tasa_petro" [ngModelOptions]="{standalone: true}" />
             </div>
           </div>
 
