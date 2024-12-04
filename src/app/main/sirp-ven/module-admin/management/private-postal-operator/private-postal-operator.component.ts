@@ -11,6 +11,7 @@ import { FormBuilder } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { PdfService } from '@core/services/pdf/pdf.service';
 import { parse } from 'path';
+import { GenerarPagoService } from '@core/services/generar-pago.service';
 
 @Component({
   selector: 'app-private-postal-operator',
@@ -151,6 +152,29 @@ export class PrivatePostalOperatorComponent implements OnInit {
   public hora_Actual_convert
   public n_curp
 
+  public ListaOPPSUB = []
+  public DolarPetroDia: number = 0
+  public obligacion
+  public observacion
+
+  public monto: number = 0
+  public pPetro: number = 0
+  public conversion: number = 0
+  public pDolar: number = 0
+  public tasa_petro:any = 0
+
+
+
+  public ListaTipoObligacion = []
+
+  public title = ''
+
+  public cantidadObligaciones = 0
+
+
+  public showIncumplimiento: boolean = false
+
+
   public DatosEmpresa = []
   public DatosSub_OPP = []
 
@@ -228,7 +252,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
     private router: Router,
     private _formBuilder: FormBuilder,
     private pdf: PdfService,
-
+    private generarConciliacion: GenerarPagoService,
   ) { }
 
   async ngOnInit() {
@@ -239,6 +263,8 @@ export class PrivatePostalOperatorComponent implements OnInit {
     this.TipoRegistro = this.token.Usuario[0].tipo_registro
     // console.log(this.IdUser)
     await this.ListaOPP_SUB(1)
+    await this.LstObligaciones()
+    await this.Precio_Dolar_Petro()
   }
 
   filterUpdate(event) {
@@ -806,7 +832,7 @@ export class PrivatePostalOperatorComponent implements OnInit {
 
     this.IpagarRecaudacion.id_opp = data.id_opp
     this.IpagarRecaudacion.status_pc =
-      this.IpagarRecaudacion.tipo_pago_pc
+    this.IpagarRecaudacion.tipo_pago_pc
     this.IpagarRecaudacion.monto_pc
     this.IpagarRecaudacion.monto_pagar
     this.IpagarRecaudacion.dolar_dia
@@ -839,9 +865,14 @@ export class PrivatePostalOperatorComponent implements OnInit {
           this.ListaSubcontratistasCombinacion.push(e)
           this.loadingIndicatorSub = false
         });
+        this.cantidadObligaciones = this.ListaSubcontratistasCombinacion.length
+        this.ListaOPPSUB = this.ListaSubcontratistasCombinacion
         // console.log(this.ListaSubcontratistasCombinacion)
         this.rowsListaSubC = this.ListaSubcontratistasCombinacion
         this.tempDataListaSubC = this.rowsListaSubC
+
+        console.log(this.ListaOPPSUB)
+
       },
       (error) => {
         console.log(error)
@@ -863,6 +894,180 @@ export class PrivatePostalOperatorComponent implements OnInit {
   }
 
 
+  async ModalPagosObligaciones(modal: any, data: any) {
+    // console.log(data)
+    this.title = data.operador
+    await this.VerSubContratistas(data.id_opp)
+    this.title_modal = data.operador
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'xl',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  async ProcesarOblicacionColectivas() {
+    let array = this.ListaOPPSUB
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      this.IpagarRecaudacion.id_opp = element.oss_id_sub
+      this.IpagarRecaudacion.status_pc = 4
+      this.IpagarRecaudacion.tipo_pago_pc = this.obligacion.id
+      this.IpagarRecaudacion.monto_pc = '0'
+      this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
+      this.IpagarRecaudacion.petro_dia = this.pPetro.toString()
+      this.IpagarRecaudacion.observacion_pc = this.observacion
+      this.IpagarRecaudacion.fecha_pc = this.utilService.FechaActual()
+      this.IpagarRecaudacion.user_created = element.os_id_opp
+      await this.ProcesarObligacionesColectiva(this.IpagarRecaudacion)
+    }
+    // console.log(this.IpagarRecaudacion)
+  }
+
+  ProcesarObligacionesColectiva(obligacionColectiva: any) {
+    console.log(obligacionColectiva)
+    this.sectionBlockUI.start('Generando Recibo, Por favor Espere!!!');
+    this.generarConciliacion.GuardarCreacionRecaudacionIndividual(obligacionColectiva)
+      .then((resultado) => {
+        // Manejar el resolve
+        // console.log('Operación exitosa:', resultado);
+        // this.List_Pagos_Recaudacion = []
+        this.modalService.dismissAll('Cerrar Modal')
+        // this.LimpiarModal()
+        this.utilService.alertConfirmMini('success', 'Recibos Generados Exitosamente')
+      })
+      .catch((error) => {
+        // Manejar el reject
+        // console.error('Error en la operación:', error);
+        this.utilService.alertConfirmMini('error', 'Lo sentimos algo salio mal!')
+      })
+      .finally(() => {
+        // Este bloque se ejecutará después de que la promesa se resuelva o se rechace
+        // console.log('Procesamiento finalizado');
+        // this.ListaPagosObligaciones()
+        this.sectionBlockUI.stop()
+      });
+  }
+
+  CapturarObligacion(obligacion: any) {
+    this.tasa_petro = obligacion.tasa_petro
+
+    // console.log(obligacion)
+    switch (obligacion.id) {
+      case 2: // Derecho Semestral 1
+        this.observacion = obligacion.nombre_tipo_pagos
+        if (this.TipoRegistro === 1) { // OPP
+          this.monto = this.pPetro
+          this.conversion = this.monto * this.pDolar
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+        } else { // SUB
+          this.monto = this.pPetro / 2
+          this.conversion = this.monto * this.pDolar
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+        }
+        break;
+      case 3: // Derecho Semestral 2
+        this.observacion = obligacion.nombre_tipo_pagos
+        if (this.TipoRegistro === 1) { // OPP
+          this.monto = this.pPetro
+          this.conversion = this.monto * this.pDolar
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+
+        } else { // SUB
+          this.monto = this.pPetro / 2
+          this.conversion = this.monto * this.pDolar
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+
+        }
+        break;
+      case 4: //Anualidad
+        this.observacion = obligacion.nombre_tipo_pagos
+        if (this.TipoRegistro === 1) { // OPP
+          this.monto = this.pPetro * 6
+          this.conversion = this.monto * this.pDolar
+          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+        } else { // SUB
+          this.monto = this.pPetro * 3
+          this.conversion = this.monto * this.pDolar
+          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+        }
+        break;
+      case 5: // Autorizacion de Subcontrato
+        this.observacion = obligacion.nombre_tipo_pagos
+        if (this.TipoRegistro === 2) { // OPP
+          this.monto = this.pPetro
+          this.conversion = this.monto * this.pDolar
+          this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+        } else {
+          this.utilService.alertConfirmMini('error', 'Los OPP no cancelan Autorización')
+          // this.LimpiarModal()
+          this.modalService.dismissAll('Cerrar Modal')
+        }
+        break;
+      case 9: // Renovación
+        this.observacion = obligacion.nombre_tipo_pagos
+        if (this.TipoRegistro === 1) { // OPP
+          this.monto = this.pPetro
+          this.conversion = this.monto * this.pDolar
+          // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+        } else {
+          this.monto = this.pPetro
+          this.conversion = this.monto * this.pDolar
+          // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion * parseInt(this.tasa_petro)
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+        }
+        break;
+        case 10: // Mantenimiento SUB
+        this.observacion = obligacion.nombre_tipo_pagos
+        // if (this.TipoRegistro === 2) { // OPP
+          this.monto = this.tasa_petro
+          this.conversion = this.monto * this.pDolar
+          // this.IpagarRecaudacion.monto_pagar = this.conversion.toString()
+          let montoTotal = this.conversion 
+          this.IpagarRecaudacion.monto_pagar = montoTotal.toFixed(2)
+        // }
+        break;
+      default:
+        break;
+    }
+
+    // console.log(this.monto, this.conversion, this.pPetro, this.pDolar)
+  }
+
+  CapturarDolarPetro(valores: any) {
+    // console.log(valores)
+    this.pPetro = valores.petro
+    this.pDolar = valores.dolar
+  }
+
+
+  async Precio_Dolar_Petro() {
+    this.xAPI.funcion = "IPOSTEL_R_PRECIO_PETRO_DOLAR";
+    this.xAPI.parametros = ''
+    this.xAPI.valores = ''
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.DolarPetroDia = data.Cuerpo.map(e => {
+          this.CapturarDolarPetro(e)
+          return e
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+
   async CambiarStatusOPP(modal, data) {
     // console.log(data.status_empresa);
     this.title_modal = data.nombre_empresa
@@ -876,6 +1081,36 @@ export class PrivatePostalOperatorComponent implements OnInit {
       keyboard: false,
       windowClass: 'fondo-modal',
     });
+  }
+
+  async RenovarConcesion(modal, data) {
+    // console.log(data);
+    this.title_modal = data.nombre_empresa
+    this.IDResetStatus = data.id_opp
+    this.IUpdateStatusEmpresa.periodo_contrato_curp = data.periodo_contrato_curp
+    this.modalService.open(modal, {
+      centered: true,
+      size: 'lg',
+      backdrop: false,
+      keyboard: false,
+      windowClass: 'fondo-modal',
+    });
+  }
+
+  async LstObligaciones() {
+    this.xAPI.funcion = "IPOSTEL_R_Tipo_Pagos_Obligaciones";
+    await this.apiService.Ejecutar(this.xAPI).subscribe(
+      (data) => {
+        this.ListaTipoObligacion = data.Cuerpo.map(e => {
+          e.id = e.id_tipo_pagos
+          e.name = `(${e.iniciales_tipo_pagos}) ${e.nombre_tipo_pagos}`
+          return e
+        });
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
 
   async ResetStatus() {
@@ -905,6 +1140,58 @@ export class PrivatePostalOperatorComponent implements OnInit {
               this.ListaOPP_SUB(1)
               this.modalService.dismissAll('Close')
               this.utilService.alertConfirmMini('success', 'Felicidades<br>El Estatus fue actualizada satisfactoriamente!')
+            } else {
+              this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
+            }
+          },
+          (error) => {
+            console.error(error)
+          }
+        )
+      }
+    })
+  }
+
+// Función para convertir la fecha
+convertirFecha(fecha: string): string {
+  // Crea un objeto Date a partir de la cadena
+  const fechaObj = new Date(fecha + 'T00:00:00-04:00'); // Ajusta la hora a la zona horaria de Venezuela (UTC-4)
+
+  const dia = String(fechaObj.getUTCDate()).padStart(2, '0'); // Obtiene el día en UTC
+  const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, '0'); // Obtiene el mes en UTC
+  const anio = fechaObj.getUTCFullYear(); // Obtiene el año en UTC
+
+  return `${dia}/${mes}/${anio}`; // Retorna la fecha en formato DD/MM/YYYY
+}
+
+  async RenovarFechaConcesion() {
+    this.IUpdateStatusEmpresa.periodo_contrato_curp = this.convertirFecha(this.IUpdateStatusEmpresa.periodo_contrato_curp)
+    Swal.fire({
+      title: 'Esta seguro de cambiar la fecha ?',
+      text: "Tenga en cuenta que este cambio afectara al usuario!",
+      icon: 'warning',
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Deseo Actualizarlo',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.IUpdateStatusEmpresa.id_opp = this.IDResetStatus
+        this.xAPI.funcion = 'IPOSTEL_U_CambiarFechaCertificadoOPP'
+        this.xAPI.parametros = ''
+        this.xAPI.valores = JSON.stringify(this.IUpdateStatusEmpresa)
+        this.apiService.EjecutarDev(this.xAPI).subscribe(
+          (data) => {
+            this.rowsOPP_SUB.push(this.List_OPP_SUB)
+            if (data.tipo == 1) {
+              this.List_OPP_SUB = []
+              this.ListaOPP_SUB(1)
+              this.modalService.dismissAll('Close')
+              this.utilService.alertConfirmMini('success', 'Felicidades<br>La Fecha fue actualizada satisfactoriamente!')
             } else {
               this.utilService.alertConfirmMini('error', '<font color="red">Oops Lo sentimos!</font> <br> Algo salio mal!, Verifique e intente de nuevo')
             }
@@ -998,8 +1285,6 @@ export class PrivatePostalOperatorComponent implements OnInit {
       }
     })
   }
-
-
 
 
 }

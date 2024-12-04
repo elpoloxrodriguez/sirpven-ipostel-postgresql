@@ -59,6 +59,9 @@ import { UsersModule } from '../sirp-ven/users/users.module';
 import { AuditModule } from '../audit/audit.module';
 import { PaymetRelationsRoutingModule } from '../sirp-ven/module-admin/paymet-relations/paymet-relations-routing.module';
 import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations/paymet-relations.module';
+import { LicenseRoutingModule } from '../license/license-routing.module';
+import { ReportPaymentComponent } from '../license/report-payment/report-payment.component';
+
 
 
 
@@ -82,6 +85,7 @@ import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations
     SystemUsersComponent,
     DupvenAdminComponent,
     DupvenOppComponent,
+    ReportPaymentComponent
   ],
   imports: [
     CommonModule,
@@ -117,7 +121,8 @@ import { PaymetRelationsModule } from '../sirp-ven/module-admin/paymet-relations
     BranchOfficesModule,
     UsersModule,
     AuditModule,
-    PaymetRelationsRoutingModule
+    PaymetRelationsRoutingModule,
+    LicenseRoutingModule
   ],
   exports: [],
   providers: [DatePipe]

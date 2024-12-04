@@ -413,6 +413,25 @@ export interface IPOSTEL_U_PagosDeclaracionOPP_SUB { // ACTUALIZA PAGO EN RECAUD
 	id_pc: number
 }
 
+export interface IPOSTEL_U_Pagos_Mantenimiento { // ACTUALIZA PAGO EN MANTENIMIENTO
+	status: any
+	tipo_pago: any
+	fecha: string
+	id_banco: any
+	referencia_bancaria: string
+	cedula_rif_banco: string
+	telefono_banco: string
+	monto_pagar: any
+	monto_pagado: any
+	dolar_dia: string
+	archivo_adjunto: any
+	observacion: string
+	user_created: any
+	user_updated: any
+	date_updated: any
+	id: number
+}
+
 
 export interface IPOSTEL_I_OtorgamientoConcesion { // INSERTAR REGISTRO PARA OTORGAMIENTO POSTAL
 	id_opp: any
@@ -432,6 +451,7 @@ export interface IPOSTEL_I_OtorgamientoConcesion { // INSERTAR REGISTRO PARA OTO
 export interface IPOSTEL_U_CambiarStatusOPPSUB { //Cambiar estatus de empresa de los opp y sub
 	status_empresa: number
 	observacion: string
+	periodo_contrato_curp ?: string
 	id_opp: number
 }
 

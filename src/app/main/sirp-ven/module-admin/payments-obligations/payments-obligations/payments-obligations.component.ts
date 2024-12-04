@@ -395,7 +395,7 @@ export class PaymentsObligationsComponent implements OnInit {
 
   async ProcesarOblicacion() {
     this.IpagarRecaudacion.id_opp = this.oppsub
-    this.IpagarRecaudacion.status_pc = 0
+    this.IpagarRecaudacion.status_pc = 4
     this.IpagarRecaudacion.tipo_pago_pc = this.obligacion.id
     this.IpagarRecaudacion.monto_pc = '0'
     this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()
@@ -425,7 +425,7 @@ export class PaymentsObligationsComponent implements OnInit {
     for (let i = 0; i < array.length; i++) {
       const element = array[i];
       this.IpagarRecaudacion.id_opp = element.id_opp
-      this.IpagarRecaudacion.status_pc = 0
+      this.IpagarRecaudacion.status_pc = 4
       this.IpagarRecaudacion.tipo_pago_pc = this.obligacion.id
       this.IpagarRecaudacion.monto_pc = '0'
       this.IpagarRecaudacion.dolar_dia = this.pDolar.toString()

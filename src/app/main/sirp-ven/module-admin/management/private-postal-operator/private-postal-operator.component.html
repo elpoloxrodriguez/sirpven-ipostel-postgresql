@@ -128,6 +128,9 @@
                             [data-feather]="'key'" [class]="'mr-50'"></span> Cambiar Contraseña</a>
                         <a (click)="EliminarOPP(row)" ngbDropdownItem><span [size]="16" [data-feather]="'trash'"
                             [class]="'mr-50'"></span> Eliminar OPP</a>
+                        <a (click)="RenovarConcesion(ModalRenovarConcesion,row)" *ngIf="row.id_curp != null"
+                          ngbDropdownItem><span [size]="16" [data-feather]="'edit'" [class]="'mr-50'"></span> Renovar
+                          Fecha Certificado</a>
                       </div>
                     </div>
                   </ng-template>
@@ -346,6 +349,9 @@
                         <a (click)="ModalVerSubContratistas(VerSubContratistas,row)" ngbDropdownItem><span
                             [data-feather]="'eye'" [size]="16" [class]="'mr-50'"></span>
                           Ver Subcontratistas </a>
+                          <a (click)="ModalPagosObligaciones(ModalMultasColectiva,row)" ngbDropdownItem><span
+                            [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span>
+                          Pagos Obligaciones </a>
                       </div>
                     </div>
                   </ng-template>
@@ -503,6 +509,44 @@
   <div class="modal-footer">
     <button class="btn bg-gradient-success text-white" (click)="ResetStatus()">
       <span class="fa fa-edit"></span> Cambiar Status de Usuario</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #ModalRenovarConcesion let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Renovar Fecha Certificado: <strong> {{ title_modal }} </strong></h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <div class="row">
+
+        <div class="col-md-12 col-12">
+          <div class="form-group">
+            <label class="form-label">Seleccione Nuevo Estatus</label>
+            <!-- <ng-select [items]="SelectStatus" bindValue="id" [(ngModel)]="IUpdateStatusEmpresa.status_empresa"
+              [ngModelOptions]="{standalone: true, required: true}" bindLabel="name" placeholder="Seleccione Status"
+              required autocomplete="off">
+            </ng-select> -->
+
+            <input required type="date" class="form-control" [(ngModel)]="IUpdateStatusEmpresa.periodo_contrato_curp"
+              [ngModelOptions]="{standalone: true}" placeholder="Ingrese Fecha" />
+
+
+          </div>
+        </div>
+
+      </div>
+      <!-- Header Ends -->
+    </div>
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button class="btn bg-gradient-success text-white" (click)="RenovarFechaConcesion()">
+      <span class="fa fa-edit"></span> Cambiar Fecha Certificado</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>
@@ -842,8 +886,6 @@
 </div>
 </ng-template>
 
-
-
 <ng-template #VerSubContratistas let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="myModalLabel160">Lista de Subcontratistas de <strong>{{ title_modal }}</strong></h5>
@@ -999,6 +1041,75 @@
   <!--/ Invoice -->
   <div class="modal-footer">
 
+    <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+      Cerrar
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #ModalMultasColectiva let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Generar Obligaciones Colectivas a <strong> {{ title }}</strong> </h5>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="col-xl-12 col-md-12 col-12">
+      <!-- Header Starts -->
+      <!-- <form class="form" (ngSubmit)="(formUsersRegister.form.valid)" #formUsersRegister="ngForm" class="invoice-repeater"> -->
+      <form #formUsersRegister="ngForm" (ngSubmit)="submitForm()" novalidate>
+        <div class="row d-flex align-items-end">
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="tiposubopp">LISTA DE TODOS LOS SUBCONTRATISTAS</label>
+              <input type="text" class="form-control" placeholder="Total de Obligaciones a Generar" readonly autocomplete="off"
+              [(ngModel)]="cantidadObligaciones" [ngModelOptions]="{standalone: true}" />
+            </div>
+          </div>
+
+          
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="obligacion">Seleccion Tipo Obligación</label>
+              <ng-select [items]="ListaTipoObligacion" [(ngModel)]="obligacion" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="CapturarObligacion($event)" bindLabel="name"
+                placeholder="Seleccione Tipo de Obligación" required autocomplete="off">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="obligacion">Tasa de Obligación</label>
+              <input type="text" class="form-control" placeholder="Tasa de Obligación" readonly autocomplete="off"
+                [(ngModel)]="tasa_petro" [ngModelOptions]="{standalone: true}" />
+            </div>
+          </div>
+
+          <div class="col-md-12 col-12">
+            <div class="form-group">
+              <label for="observacion">Observación de Pago</label>
+              <div class="custom-file">
+                <textarea class="form-control" [(ngModel)]="observacion" [ngModelOptions]="{standalone: true}"
+                  id="basicTextarea" rows="3" placeholder="Ingrese Observación de Pago"></textarea>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+      </form>
+
+    </div>
+    <!-- Header Starts -->
+    <!-- </div> -->
+    <!-- Header Ends -->
+  </div>
+  <!--/ Invoice -->
+  <div class="modal-footer">
+    <button type="submit" [disabled]="!formUsersRegister.form.valid" (click)="ProcesarOblicacionColectivas()"
+      rippleEffect class="btn btn-success mr-1">Procesar Obligación</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
       Cerrar
     </button>

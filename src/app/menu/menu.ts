@@ -12,6 +12,43 @@ export const menu: CoreMenu[] = [
     type: 'item',
     url: 'home',
   },
+  // PAGOS DEL SISTEMA 
+  // {
+  //   id: 'philately-admin',
+  //   nombre: 'Pagos Soporte',
+  //   title: 'Pagos Soporte',
+  //   role: [1,2],
+  //   type: 'collapsible',
+  //   icono: 'dollar-sign',
+  //   children: [
+  //     {
+  //       id: 'report-payment',
+  //       nombre: 'Reportar Pago',
+  //       type: 'item',
+  //       icono: 'circle',
+  //       url: 'license/report-payment'
+  //     },
+  //   ]
+  // },
+    // PAGOS DEL SISTEMA 
+    // {
+    //   id: 'philately-admin',
+    //   nombre: 'Pagos Soporte',
+    //   title: 'Pagos Soporte',
+    //   role: [3],
+    //   type: 'collapsible',
+    //   icono: 'dollar-sign',
+    //   children: [
+    //     {
+    //       id: 'report-payment',
+    //       nombre: 'Lista Pagos',
+    //       type: 'item',
+    //       icono: 'circle',
+    //       url: 'license/report-payment'
+    //     },
+    //   ]
+    // },
+
   // FILATELIA ADMIN
   {
     id: 'philately-admin',
@@ -285,6 +322,31 @@ export const menu: CoreMenu[] = [
 
 
   // MENU ADMINISTRACION
+
+  {
+    id: 'register-opp-sub',
+    nombre: 'Registrar OPP - SUB',
+    title: 'Registrar OPP - SUB',
+    role: [3,6],
+    type: 'collapsible',
+    icono: 'edit',
+    children: [
+      {
+        id: 'register-opp',
+        nombre: 'Registrar Opp',
+        type: 'item',
+        icono: 'circle',
+        url: 'register-opp'
+      },
+      {
+        id: 'register-sub',
+        nombre: 'Registrar Subcontratista',
+        type: 'item',
+        icono: 'circle',
+        url: 'register-sub'
+      },
+    ]
+  },
 
   {
     id: 'TablaPrecios',
